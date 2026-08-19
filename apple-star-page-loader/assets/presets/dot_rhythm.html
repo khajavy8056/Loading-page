@@ -1,0 +1,26 @@
+<!-- Dot Rhythm: three dots marching to the right -->
+<div class="asp-loader asp-theme-rhythm">
+  <div class="asp-backdrop"></div>
+  <div class="asp-stage">
+    <div class="asp-logo-wrap" id="asp-logo-slot"></div>
+    <div class="asp-dots"><div></div><div></div><div></div></div>
+    <div class="asp-wave-word" id="asp-word"></div>
+  </div>
+  <style>
+    .asp-theme-rhythm{position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Vazirmatn",Tahoma,Arial,sans-serif;}
+    .asp-theme-rhythm .asp-backdrop{position:absolute;inset:0;background:var(--asp-bg,rgba(10,10,15,0.85));backdrop-filter:blur(var(--asp-blur,12px));-webkit-backdrop-filter:blur(var(--asp-blur,12px));}
+    .asp-theme-rhythm .asp-stage{position:relative;display:flex;flex-direction:column;align-items:center;gap:24px;}
+    .asp-theme-rhythm .asp-logo-wrap img{max-height:70px;max-width:220px;object-fit:contain;filter:drop-shadow(0 6px 18px rgba(0,0,0,.5));}
+    .asp-theme-rhythm .asp-dots{position:relative;width:64px;height:20px;}
+    .asp-theme-rhythm .asp-dots div{position:absolute;width:10px;height:10px;background:var(--asp-text,#fff);border-radius:50%;top:5px;left:0;animation:asp-ry 1.5s infinite cubic-bezier(.165,.84,.44,1);}
+    .asp-theme-rhythm .asp-dots div:nth-child(1){animation-delay:0s;}
+    .asp-theme-rhythm .asp-dots div:nth-child(2){animation-delay:.2s;background:var(--asp-accent,#00c3ff);box-shadow:0 0 12px var(--asp-accent,rgba(0,195,255,.6));}
+    .asp-theme-rhythm .asp-dots div:nth-child(3){animation-delay:.4s;}
+    @keyframes asp-ry{0%{transform:translateX(0) scale(1);opacity:1;}50%{opacity:1;}100%{transform:translateX(54px) scale(0);opacity:0;}}
+    .asp-theme-rhythm .asp-wave-word{display:flex;align-items:center;gap:.08em;justify-content:center;flex-wrap:wrap;max-width:90vw;font-weight:700;letter-spacing:.18em;font-size:clamp(1rem,3.5vw,1.5rem);color:var(--asp-text,#fff);opacity:.9;direction:ltr;}
+    html[dir="rtl"] .asp-theme-rhythm .asp-wave-word{direction:rtl;letter-spacing:0;font-weight:600;}
+    .asp-theme-rhythm .asp-wave-word .ltr,.asp-theme-rhythm .asp-wave-word .rtl{display:inline-block;}
+    .asp-theme-rhythm .asp-wave-word .sp{width:.4em;display:inline-block;}
+    @media (prefers-reduced-motion: reduce){.asp-theme-rhythm .asp-dots div{animation:none;left:50%!important;transform:translateX(-50%)!important;opacity:1!important;}}
+  </style>
+</div>

@@ -1,113 +1,77 @@
-# Apple Star Page Loader v2.0 🌟
+# 🍎 Apple Star Page Loader — WordPress Plugin
 
-یک افزونه **حرفه‌ای، کاملاً متحرک و پر از جذابیت بصری** برای نمایش صفحه‌ی لودینگ در وردپرس و ووکامرس — با حروف موجی، درصد شمارنده پرش‌کننده، نوار پیشرفت متحرک، ۶ طرح آماده، آپلود لوگو، شخصی‌سازی رنگ‌ها، پنل مدیریت کاملاً بازطراحی‌شده و پیش‌نمایش زنده.
+Animated Apple-style page preloader for WordPress & WooCommerce. Version **3.0.0**.
 
-A professional, fully animated preloader plugin for WordPress & WooCommerce — wave letters, bouncing percentage counter, animated progress bar, 6 built-in presets, logo upload, color customization, a beautiful redesigned admin dashboard and live preview.
+![Version](https://img.shields.io/badge/version-3.0.0-blue) ![WordPress](https://img.shields.io/badge/WordPress-6.0%2B-blue) ![PHP](https://img.shields.io/badge/PHP-7.4%2B-8892bf) ![License](https://img.shields.io/badge/license-GPLv2-green)
 
----
+## ✨ ویژگی‌ها (Features)
 
-## ✨ امکانات / Features
+- **۱۱ مدل لودینگ اپل‌استایل** با انیمیشن CSS خالص:
+  - **Apple Star Pulse (ECG)** — مدل اصلی: پس‌زمینه شیشه‌ای، خط ECG، نقطه اسکنر، و موج/نبض حرف‌به‌حرف
+  - Classic Pulse, Equalizer Bars, Sine Wave Dots, ECG Heartbeat, Siri Orbit
+  - Concentric Radar, Breathing Core, Quantum Spin, Wave Morph, Dot Rhythm
+- **حالت بروزرسانی (Maintenance Mode)** با شمارنده معکوس ساعت/دقیقه/ثانیه و پیام سفارشی (پیش‌فرض خاموش)
+- **پشتیبانی کامل فارسی/RTL** — متن فارسی کلمه‌به‌کلمه موج می‌خورد تا اتصال حروف نشکند
+- **پیش‌نمایش زنده** در ادمین با iframe واقعی (جاوااسکریپت اجرا می‌شود) + دکمه تمام‌صفحه
+- **صبر تا لود آخرین عکس** — صفحه تا کامل‌بارگذاری همه چیز پشت لودینگ می‌ماند
+- **آپلود لوگو** با کتابخانه رسانه وردپرس
+- **انتخابگر رنگ، بلور، شفافیت، زمان‌بندی**
+- **سوئیچ‌های iOS-styel** سبز (روشن) / قرمز (خاموش)
+- **کاملاً ریسپانسیو** (موبایل، تبلت، دسکتاپ)
+- **CSS سفارشی** برای کاربران حرفه‌ای
 
-| قابلیت | توضیح |
-|---|---|
-| 🎞️ **حروف موجی (Wave Letters)** | هر حرف به‌صورت مجزا بالا و پایین می‌رود با افکت موج پشت سر هم |
-| 🔢 **درصد شمارنده پرش‌کننده** | عدد ۰ تا ۱۰۰ با انیمیشن و بانس در هر ~۱۰٪ تغییر می‌کند |
-| 📊 **نوار پیشرفت متحرک** | نوار با Easing نرم، شاین، نور متحرک و داتِ دنبال‌کننده پر می‌شود |
-| 🎨 **۶ طرح آماده حرفه‌ای** | Apple Star (Glass), Wave Letters, Spinner Pro, Progress Bar, Particles Glow, Minimal Dot |
-| 🖼️ **آپلود لوگو** | از Media Library وردپرس، بالاتر از همه چیز نمایش داده می‌شود |
-| 🔤 **متن دلخواه** | متن لودینگ را به اسم برند خودتان تغییر دهید — خودکار موجی می‌شود |
-| 🎛️ **داشبورد جدید** | ۶ تب: Dashboard، General، Design، Content، Timing، Advanced |
-| 👀 **پیش‌نمایش زنده** | Preview داخل سایدبار + دکمه Fullscreen + سوییچ موبایل/تبلت/دسکتاپ |
-| 🌈 **رنگ‌بندی کامل** | Color Picker وردپرس برای بک‌گراند، متن، اکسنت، پرایمری |
-| 💬 **نکات چرخشی (Tips)** | جملات دوستانه هنگام لود به‌صورت متناوب |
-| ⏱️ **کنترل زمان** | Min Display Time (جلوگیری از فلیکر)، Fallback Timeout، Fade Duration |
-| 🌫️ **Blur و شفافیت** | محو کردن پشت‌زمینه و تنظیم اپاسیتی |
-| 📍 **هدف نمایش** | تمام صفحات، فقط صفحه اصلی، وبلاگ، پست‌ها، برگه‌ها، یا فقط ووکامرس |
-| 🔒 **قفل اسکرول** | هنگام لود اسکرول قفل و بعد نرم باز می‌شود |
-| 🚫 **عدم قفل دائم** | Fallback تضمین می‌کند هیچ‌گاه سایت پشت لودینگ گیر نمی‌کند |
-| 📱 **کاملاً ریسپانسیو** | موبایل کوچک تا دسکتاپ ۴K با clamp() و media query |
-| ♿ **پشتیبانی از `prefers-reduced-motion`** | برای کاربرانی که انیمیشن خاموش کرده‌اند |
-| 🧩 **Custom CSS + Custom Code** | امکان اضافه کردن CSS دلخواه یا کد HTML/CSS کاملاً سفارشی |
-| 🎆 **Particles Canvas** | پرست Particles با شبکه‌ی ذرات متحرک روی بوم (canvas) |
+## 📦 نصب (Installation)
 
----
+1. فایل زیپ پلاگین را از قسمت **Releases** گیتهاب دانلود کنید.
+2. در وردپرس به **افزونه‌ها ← افزودن جدید ← بارگذاری افزونه** بروید و فایل زیپ را آپلود کنید.
+3. افزونه را فعال کنید.
+4. از منوی **Apple Star Loader** در سایدبار ادمین تنظیمات را باز کنید، مدل دلخواه را انتخاب کنید و ذخیره کنید.
 
-## 📁 ساختار فایل‌ها / File structure
+یا: پوشه `apple-star-page-loader` را درون `wp-content/plugins/` اکستراکت کنید و از بخش افزونه‌ها فعالش کنید.
+
+## 🛠️ حالت بروزرسانی (Maintenance Mode)
+
+- پیش‌فرض **خاموش** است.
+- وقتی روشن شود، سایت برای بازدیدکنندگان تا پایان شمارنده معکوس پشت صفحه لودینگ می‌ماند.
+- در حالت بروزرسانی لودینگ در **همه صفحات** نمایش داده می‌شود (نه فقط صفحه اصلی).
+- یادتان باشد بعد از اتمام کار، دوباره آن را خاموش کنید!
+
+## 🧑‍💻 توسعه (Development)
 
 ```
 apple-star-page-loader/
-├── apple-star-page-loader.php        # فایل اصلی افزونه
+├── apple-star-page-loader.php     # فایل اصلی پلاگین
 ├── includes/
-│   ├── class-aspl-defaults.php       # گزینه‌های پیش‌فرض و پرست‌ها
-│   ├── class-aspl-settings.php       # صفحه تنظیمات حرفه‌ای جدید (تب‌بندی شده)
-│   └── class-aspl-frontend.php       # تزریق لودینگ + ردیابی پیشرفت + انیمیشن %
+│   ├── class-aspl-defaults.php    # تنظیمات پیش‌فرض + لیست پریست‌ها
+│   ├── class-aspl-frontend.php    # تزریق لودینگ در فرانت‌اند
+│   └── class-aspl-settings.php    # صفحه ادمین + پیش‌نمایش زنده
 ├── assets/
-│   ├── default-loader-code.html      # کد پیش‌فرض (ارتقا یافته)
-│   └── presets/
-│       ├── apple_star.html
-│       ├── wave_letters.html
-│       ├── spinner_pro.html
-│       ├── progress_bar.html
-│       ├── particles.html
-│       └── minimal_dot.html
-├── uninstall.php
-└── readme.txt
+│   ├── default-loader-code.html
+│   └── presets/                   # فایل‌های HTML پریست‌ها (هر مدل یک فایل)
+└── readme.txt                     # readme مخزن وردپرس
 ```
 
----
+برای ساخت مجدد فایل زیپ نصب:
+```bash
+rm -f dist/apple-star-page-loader.zip
+zip -r dist/apple-star-page-loader.zip apple-star-page-loader -x "*/.DS_Store"
+```
 
-## 🚀 نصب / Installation
+## 📝 تغییرات (Changelog)
 
-**پیشنهادی:** فایل آماده‌ی نصب در `dist/apple-star-page-loader.zip` است.
-In WP admin: **Plugins → Add New → Upload Plugin** → فایل zip را آپلود و Active کنید.
+### 3.0.0
+- بازطراحی کامل: مدل اصلی **Apple Star Pulse (ECG)** دقیقاً مطابق HTML مرجع کاربر بازگشت
+- اضافه‌شدن ۱۰ مدل لودینگ جدید اپل‌استایل (مجموع ۱۱ مدل)
+- اضافه‌شدن **حالت بروزرسانی** با شمارنده معکوس و پیام سفارشی
+- بازنویسی پنل ادمین با کارت‌های پریست، سوئیچ‌های واضح سبز/قرمز، بخش بروزرسانی
+- رفع مشکل پیش‌نمایش زنده (iframe با `allow-scripts` واقعی اجرا می‌شود)
+- بهبود پشتیبانی فارسی/RTL (انیمیشن کلمه‌به‌کلمه)
+- حذف نوار پیشرفت و درصد مطابق درخواست
 
-**روش دستی:** فولدر `apple-star-page-loader` را داخل `wp-content/plugins/` کپی و Active کنید.
+## 📄 لایسنس (License)
 
-بعد از فعال‌سازی: منوی **Apple Star Loader** در نوار کناری پیشخوان ظاهر می‌شود. از تب **Design** یک طرح انتخاب کنید، رنگ‌ها و متن دلخواه را بدهید، از Preview لذت ببرید و ذخیره کنید.
-
----
-
-## ⚙️ منطق فنی / Technical flow
-
-1. `wp_body_open` (priority 1): کد پرست انتخابی + متغیرهای CSS رنگ‌ها + لوگو + اسکریپت پیشرفت تزریق می‌شود.
-2. کلاس `html.asp-scroll-lock` روی `<html>` → اسکرول قفل.
-3. **پیشرفت ۰→۱۰۰**:
-   * بلافاصله ۸٪، سپس ۱۸٪ و ۳۰٪ (برای حس زنده بودن)
-   * از روی `img` های صفحه: هر عکسی که لود شد درصدی اضافه می‌شود (تا ~۸۵٪)
-   * به‌صورت time-based در طول ۸ ثانیه به‌سمت ۹۲٪ میل می‌کند
-   * در لحظه `window.load` به ۱۰۰٪ می‌رسد و با بانس نمایش داده می‌شود
-4. حروف متن بارگذاری با JS به span های مجزا تبدیل شده و animation-delay پلکانی می‌گیرند (افکت موج).
-5. پس از `load` → fade-out نرم → حذف کامل از DOM.
-6. اگر `load` نیامد → Fallback Timeout (پیش‌فرض ۱۵ ثانیه) لودینگ را می‌بندد.
-7. `noscript` fallback: اگر JS خاموش باشد لودینگ نمایش داده نمی‌شود.
+GPL v2 or later — same as WordPress.
 
 ---
 
-## 🧪 سازگاری / Compatibility
-
-- WordPress: **6.0+** (tested up to **7.0**)
-- WooCommerce: **11.0+**
-- Elementor: بله، طراحی‌شده برای صفحات سنگین المنتور
-- PHP: **7.4+** (سازگار با 8.2 / 8.4)
-- Browser: Chrome, Safari, Firefox, Edge (iOS / Android)
-
----
-
-## 📝 تغییرات نسخه ۲.۰ / What's new in v2.0
-
-* بازنویسی کامل موتور لودینگ با انیمیشن‌های نرم‌تر
-* ۶ پرست حرفه‌ای جدید
-* درصد شمارنده با انیمیشن bounce در هر تغییر عدد
-* نوار پیشرفت با shine / dot / gradient متحرک
-* پنل مدیریت کاملاً جدید با UI مدرن (تب، کارت، سوئیچ، رنج اسلایدر)
-* آپلود لوگو از Media Library
-* پیش‌نمایش زنده داخل سایدبار + فول‌اسکرین
-* رنگ‌بندی کامل با WP Color Picker
-* قابلیت نمایش روی برگه‌ها، پست‌ها، صفحه اصلی یا فقط ووکامرس
-* گزینه مخفی کردن از کاربران لاگین‌شده / موبایل
-* Custom CSS و Custom Code
-* افکت Particles با canvas
-
-## 📄 لایسنس / License
-
-GPLv2 or later.
+**ساخته‌شده با ❤ برای وردپرس فارسی**

@@ -1,10 +1,11 @@
 <?php
 /**
- * Frontend v2.1 — Simple wave-letter preloader.
+ * Frontend loader injection — v3.0.
  *
- * Core goal: show the wave-letter wordmark until EVERYTHING on the page is
- * fully loaded (DOM, images, fonts, last image) so the visitor never sees a
- * half-rendered / broken layout. Then fade out cleanly and remove itself.
+ * Supports 11 presets, RTL word-level splitting for Persian/Arabic text,
+ * optional logo upload, image-wait until the last asset loads, minimum
+ * display time, fallback timeout, AND a maintenance mode with a live
+ * HH:MM:SS countdown that locks the loader until the timer reaches 0.
  *
  * @package Apple_Star_Loader
  */
@@ -40,6 +41,7 @@ class ASPL_Frontend {
 		}
 
 		if ( ! empty( $options['hide_for_logged_in'] ) && is_user_logged_in() ) {
+			// Exception: admin/editor previewing? We still hide for all logged-in per option.
 			return false;
 		}
 
@@ -47,26 +49,32 @@ class ASPL_Frontend {
 			return false;
 		}
 
-		$target = isset( $options['target'] ) ? $options['target'] : 'front_page';
-		if ( 'front_page' === $target && ! is_front_page() ) {
-			return false;
-		}
-		if ( 'home_posts' === $target && ! ( is_front_page() || is_home() ) ) {
-			return false;
-		}
-		if ( 'posts_only' === $target && ! is_singular( 'post' ) ) {
-			return false;
-		}
-		if ( 'pages_only' === $target && ! is_page() ) {
-			return false;
-		}
-		if ( 'woocommerce' === $target ) {
-			if ( ! function_exists( 'is_woocommerce' ) ) {
+		// Maintenance mode: show everywhere it's enabled regardless of target,
+		// because you never want a half-open "under maintenance" site.
+		$maintenance = ! empty( $options['maintenance_mode'] );
+
+		if ( ! $maintenance ) {
+			$target = isset( $options['target'] ) ? $options['target'] : 'front_page';
+			if ( 'front_page' === $target && ! is_front_page() ) {
 				return false;
 			}
-			if ( ! is_woocommerce() && ! is_cart() && ! is_checkout() && ! is_account_page() ) {
-				if ( ! ( function_exists( 'is_shop' ) && is_shop() ) && ! ( function_exists( 'is_product' ) && is_product() ) ) {
+			if ( 'home_posts' === $target && ! ( is_front_page() || is_home() ) ) {
+				return false;
+			}
+			if ( 'posts_only' === $target && ! is_singular( 'post' ) ) {
+				return false;
+			}
+			if ( 'pages_only' === $target && ! is_page() ) {
+				return false;
+			}
+			if ( 'woocommerce' === $target ) {
+				if ( ! function_exists( 'is_woocommerce' ) ) {
 					return false;
+				}
+				if ( ! is_woocommerce() && ! is_cart() && ! is_checkout() && ! is_account_page() ) {
+					if ( ! ( function_exists( 'is_shop' ) && is_shop() ) && ! ( function_exists( 'is_product' ) && is_product() ) ) {
+						return false;
+					}
 				}
 			}
 		}
@@ -87,16 +95,20 @@ class ASPL_Frontend {
 	 */
 	private function resolve_code( $options ) {
 		$preset = isset( $options['preset'] ) ? $options['preset'] : 'apple_star';
-		if ( 'custom_code' === $preset ) {
-			return isset( $options['code'] ) ? (string) $options['code'] : '';
-		}
-		$code = ASPL_Defaults::get_preset_code( $preset );
+		$code   = ASPL_Defaults::get_preset_code( $preset );
 		if ( '' === $code ) {
 			$code = ASPL_Defaults::get_preset_code( 'apple_star' );
 		}
 		return $code;
 	}
 
+	/**
+	 * Convert a hex color (+ opacity 0-100) to rgba().
+	 *
+	 * @param string $hex
+	 * @param int    $alpha
+	 * @return string
+	 */
 	private function hex_to_rgba( $hex, $alpha = 100 ) {
 		$hex = ltrim( (string) $hex, '#' );
 		if ( 3 === strlen( $hex ) ) {
@@ -130,19 +142,19 @@ class ASPL_Frontend {
 	private function output_loader() {
 		$options       = ASPL_Settings::get_options();
 		$code          = $this->resolve_code( $options );
-		$timeout       = max( 1, (int) ( isset( $options['timeout'] ) ? $options['timeout'] : 15 ) );
+		$timeout       = max( 1, (int) ( isset( $options['timeout'] ) ? $options['timeout'] : 20 ) );
 		$min_time      = max( 0, (int) ( isset( $options['min_time'] ) ? $options['min_time'] : 800 ) );
 		$fade_duration = max( 100, (int) ( isset( $options['fade_duration'] ) ? $options['fade_duration'] : 700 ) );
 		$z_index       = max( 1000, (int) ( isset( $options['z_index'] ) ? $options['z_index'] : 99999999 ) );
-		$blur          = max( 0, (int) ( isset( $options['blur_amount'] ) ? $options['blur_amount'] : 0 ) );
-		$bg_opacity    = max( 0, min( 100, (int) ( isset( $options['bg_opacity'] ) ? $options['bg_opacity'] : 100 ) ) );
+		$blur          = max( 0, (int) ( isset( $options['blur_amount'] ) ? $options['blur_amount'] : 16 ) );
+		$bg_opacity    = max( 0, min( 100, (int) ( isset( $options['bg_opacity'] ) ? $options['bg_opacity'] : 85 ) ) );
 
 		$bg_color      = isset( $options['bg_color'] ) ? $options['bg_color'] : '#0a0a0f';
 		$text_color    = isset( $options['text_color'] ) ? $options['text_color'] : '#ffffff';
-		$accent_color  = isset( $options['accent_color'] ) ? $options['accent_color'] : '#0071e3';
+		$accent_color  = isset( $options['accent_color'] ) ? $options['accent_color'] : '#00c3ff';
 		$wait_images   = ! empty( $options['wait_images'] );
 
-		// Resolve text: prefer site title if use_site_title is on.
+		// Resolve text.
 		$text = isset( $options['text'] ) ? (string) $options['text'] : 'APPLE STAR';
 		if ( ! empty( $options['use_site_title'] ) ) {
 			$blogname = get_bloginfo( 'name' );
@@ -151,10 +163,17 @@ class ASPL_Frontend {
 			}
 		}
 
-		$logo = isset( $options['logo'] ) ? (string) $options['logo'] : '';
+		$logo       = isset( $options['logo'] ) ? (string) $options['logo'] : '';
 		$custom_css = isset( $options['custom_css'] ) ? (string) $options['custom_css'] : '';
 
-		// Compute bg RGBA so opacity slider works.
+		// Maintenance mode config.
+		$maintenance       = ! empty( $options['maintenance_mode'] );
+		$maint_h           = max( 0, (int) ( isset( $options['maintenance_hours'] ) ? $options['maintenance_hours'] : 0 ) );
+		$maint_m           = max( 0, min( 59, (int) ( isset( $options['maintenance_minutes'] ) ? $options['maintenance_minutes'] : 30 ) ) );
+		$maint_s           = max( 0, min( 59, (int) ( isset( $options['maintenance_seconds'] ) ? $options['maintenance_seconds'] : 0 ) ) );
+		$maint_total_sec   = ( $maint_h * 3600 ) + ( $maint_m * 60 ) + $maint_s;
+		$maint_msg         = isset( $options['maintenance_msg'] ) ? (string) $options['maintenance_msg'] : 'ما در حال بروز رسانی هستیم. بزودی با ارائه خدمات بهتر در خدمت شما هستیم.';
+
 		$bg_rgba = $this->hex_to_rgba( $bg_color, $bg_opacity );
 
 		ob_start();
@@ -181,33 +200,36 @@ class ASPL_Frontend {
 	if ( window.__aspLoaderActive ) { return; }
 	window.__aspLoaderActive = true;
 
-	var root       = document.getElementById( 'asp-loader-root' );
+	var root        = document.getElementById( 'asp-loader-root' );
 	if ( ! root ) { return; }
 
-	var startedAt  = Date.now();
-	var minTime    = <?php echo (int) $min_time; ?>;
-	var fadeMs     = <?php echo (int) $fade_duration; ?>;
-	var timeoutMs  = <?php echo (int) $timeout; ?> * 1000;
-	var waitImages = <?php echo $wait_images ? 'true' : 'false'; ?>;
-	var finished   = false;
-	var fallbackT  = null;
+	var startedAt   = Date.now();
+	var minTime     = <?php echo (int) $min_time; ?>;
+	var fadeMs      = <?php echo (int) $fade_duration; ?>;
+	var timeoutMs   = <?php echo (int) $timeout; ?> * 1000;
+	var waitImages  = <?php echo $wait_images ? 'true' : 'false'; ?>;
 
-	var text       = <?php echo wp_json_encode( $text ); ?>;
-	var logoUrl    = <?php echo wp_json_encode( $logo ); ?>;
+	var maintenance = <?php echo $maintenance ? 'true' : 'false'; ?>;
+	var maintTotal  = <?php echo (int) $maint_total_sec; ?>; // seconds
+	var maintMsg    = <?php echo wp_json_encode( $maint_msg ); ?>;
 
-	/** RTL detection (Persian/Arabic/Hebrew) */
+	var finished    = false;
+	var fallbackT   = null;
+	var pageReady   = false;
+	var timerReady  = false;
+
+	var text        = <?php echo wp_json_encode( $text ); ?>;
+	var logoUrl     = <?php echo wp_json_encode( $logo ); ?>;
+
+	/* ------------ RTL detection & word/letter filling ------------- */
+
 	function isRTLText( s ) {
 		return /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF\u0590-\u05FF]/.test( s );
 	}
 
-	/**
-	 * Fill the word element. For Latin: one <span> per letter (classic wave).
-	 * For RTL/Arabic-script: one <span> per WORD (preserves connected glyphs
-	 * and bidi; avoids the "mirrored letters" bug).
-	 */
 	function fillWord( el, txt ) {
-		if ( ! el ) return;
-		if ( el.dataset.filled ) return;
+		if ( ! el ) { return; }
+		if ( el.dataset.filled ) { return; }
 		el.dataset.filled = '1';
 		el.innerHTML = '';
 		var rtl = isRTLText( txt );
@@ -225,7 +247,7 @@ class ASPL_Frontend {
 					el.appendChild( sp );
 					continue;
 				}
-				if ( ! chunk ) continue;
+				if ( ! chunk ) { continue; }
 				var w = document.createElement( 'span' );
 				w.className = 'rtl';
 				w.textContent = chunk;
@@ -254,95 +276,197 @@ class ASPL_Frontend {
 		}
 	}
 
-	// Inject logo above the wordmark if provided.
+	/* ------------ Logo injection ------------- */
+
 	var stage = root.querySelector( '.asp-stage' );
 	if ( logoUrl && stage ) {
-		var wrap = document.createElement( 'div' );
-		wrap.className = 'asp-logo-wrap';
-		var img  = document.createElement( 'img' );
-		img.src  = logoUrl;
-		img.alt  = '';
+		var logoSlot = stage.querySelector( '#asp-logo-slot' );
+		var wrap;
+		if ( logoSlot ) {
+			wrap = logoSlot;
+			wrap.className = 'asp-logo-wrap';
+		} else {
+			wrap = document.createElement( 'div' );
+			wrap.className = 'asp-logo-wrap';
+			stage.insertBefore( wrap, stage.firstChild );
+		}
+		var img = document.createElement( 'img' );
+		img.src = logoUrl;
+		img.alt = '';
 		img.draggable = false;
 		wrap.appendChild( img );
-		stage.insertBefore( wrap, stage.firstChild );
 	}
 
-	// Fill the word element with wave spans.
+	/* ------------ Fill #asp-word ------------- */
+
 	var word = root.querySelector( '#asp-word' ) || root.querySelector( '.asp-wave-word' );
 	fillWord( word, text );
 
+	/* ------------ Maintenance mode: countdown + message ------------- */
+
+	if ( maintenance && stage ) {
+		var maint = document.createElement( 'div' );
+		maint.className = 'asp-maint';
+
+		var lbl = document.createElement( 'div' );
+		lbl.className = 'asp-maint-lbl';
+		lbl.textContent = 'در حال بروز رسانی';
+		maint.appendChild( lbl );
+
+		var timer = document.createElement( 'div' );
+		timer.className = 'asp-maint-timer';
+		timer.id = 'asp-maint-timer';
+		maint.appendChild( timer );
+
+		var msg = document.createElement( 'div' );
+		msg.className = 'asp-maint-msg';
+		msg.textContent = maintMsg;
+		maint.appendChild( msg );
+
+		// Append at end of stage (works for all presets since they have .asp-stage).
+		stage.appendChild( maint );
+
+		// Also ensure page direction is reflected so Persian text renders correctly.
+		maint.setAttribute( 'dir', 'rtl' );
+
+		// Run countdown. If the total seconds is 0, we treat as "immediate"
+		// but still wait for page load.
+		var remaining = Math.max( 0, maintTotal | 0 );
+		var timerEl = document.getElementById( 'asp-maint-timer' );
+
+		function pad( n ) { n = n | 0; return n < 10 ? '0' + n : '' + n; }
+		function renderTimer() {
+			if ( ! timerEl ) { return; }
+			var h = Math.floor( remaining / 3600 );
+			var m = Math.floor( ( remaining % 3600 ) / 60 );
+			var s = remaining % 60;
+			timerEl.innerHTML =
+				'<span class="asp-hh">' + pad( h ) + '</span>' +
+				'<span class="asp-sep">:</span>' +
+				'<span class="asp-mm">' + pad( m ) + '</span>' +
+				'<span class="asp-sep">:</span>' +
+				'<span class="asp-ss">' + pad( s ) + '</span>';
+		}
+		renderTimer();
+
+		if ( remaining <= 0 ) {
+			timerReady = true;
+		} else {
+			var iv = setInterval( function () {
+				remaining--;
+				if ( remaining <= 0 ) {
+					remaining = 0;
+					renderTimer();
+					clearInterval( iv );
+					timerReady = true;
+					tryFinish();
+				} else {
+					renderTimer();
+				}
+			}, 1000 );
+			// Hard cap: never let maintenance run more than 12h.
+			setTimeout( function () {
+				clearInterval( iv );
+				timerReady = true;
+				remaining = 0;
+				renderTimer();
+				tryFinish();
+			}, 12 * 60 * 60 * 1000 );
+		}
+	} else {
+		timerReady = true;
+	}
+
 	// Lock scroll.
 	document.documentElement.classList.add( 'asp-scroll-lock' );
-	if ( document.body ) document.body.classList.add( 'asp-scroll-lock' );
+	if ( document.body ) { document.body.classList.add( 'asp-scroll-lock' ); }
 
-	/* --- Fade-out / removal -------------------------------------------- */
+	/* ------------ Fade out / removal ------------- */
+
 	function removeLoader() {
 		if ( root && root.parentNode ) {
-			if ( 'function' === typeof root.remove ) root.remove();
-			else if ( root.parentNode ) root.parentNode.removeChild( root );
+			if ( 'function' === typeof root.remove ) { root.remove(); }
+			else if ( root.parentNode ) { root.parentNode.removeChild( root ); }
 		}
 	}
 
-	function finish() {
-		if ( finished ) return;
+	function tryFinish() {
+		if ( finished ) { return; }
+		if ( ! pageReady ) { return; }
+		if ( maintenance && ! timerReady ) { return; }
+
 		var elapsed = Date.now() - startedAt;
 		var wait    = Math.max( 0, minTime - elapsed );
 		setTimeout( doFinish, wait );
 	}
 
 	function doFinish() {
-		if ( finished ) return;
+		if ( finished ) { return; }
 		finished = true;
 		window.removeEventListener( 'load', onWindowLoad );
-		if ( fallbackT ) clearTimeout( fallbackT );
+		if ( fallbackT ) { clearTimeout( fallbackT ); }
 
 		document.documentElement.classList.remove( 'asp-scroll-lock' );
-		if ( document.body ) document.body.classList.remove( 'asp-scroll-lock' );
+		if ( document.body ) { document.body.classList.remove( 'asp-scroll-lock' ); }
 
 		root.classList.add( 'asp-fade-out' );
 
 		var removed = false;
 		function doRemove() {
-			if ( removed ) return;
+			if ( removed ) { return; }
 			removed = true;
 			removeLoader();
 		}
 		root.addEventListener( 'transitionend', function ( ev ) {
-			if ( ev.target === root && ev.propertyName === 'opacity' ) doRemove();
+			if ( ev.target === root && ev.propertyName === 'opacity' ) { doRemove(); }
 		} );
 		// Safety net.
 		setTimeout( doRemove, fadeMs + 300 );
 	}
 
+	function markPageReady() {
+		pageReady = true;
+		tryFinish();
+	}
+
 	function onWindowLoad() {
-		if ( ! waitImages ) { finish(); return; }
-		// Wait for every image on the page to finish loading (or error out),
-		// so the "last image" the user waits for is actually there.
+		if ( ! waitImages ) { markPageReady(); return; }
+		// Wait for every image to complete (load or error) so the last image
+		// the visitor sees is actually rendered.
 		var imgs = Array.prototype.slice.call( document.images || [] );
 		var remaining = imgs.length;
-		if ( remaining === 0 ) { finish(); return; }
+		if ( remaining === 0 ) { markPageReady(); return; }
 		function oneDone() {
 			remaining--;
-			if ( remaining <= 0 ) finish();
+			if ( remaining <= 0 ) { markPageReady(); }
 		}
 		imgs.forEach( function ( im ) {
 			if ( im.complete ) { oneDone(); return; }
 			im.addEventListener( 'load', oneDone );
 			im.addEventListener( 'error', oneDone );
 		} );
-		// But don't wait forever for images beyond the timeout.
-		setTimeout( finish, Math.max( 0, timeoutMs - ( Date.now() - startedAt ) ) );
+		// Don't wait for stuck images beyond the timeout.
+		var timeLeft = Math.max( 0, timeoutMs - ( Date.now() - startedAt ) );
+		setTimeout( markPageReady, timeLeft );
 	}
 
-	// Wait for the real window load event (fonts, images, heavy assets).
+	// Wait for real window load event (fonts, images, heavy assets).
 	window.addEventListener( 'load', onWindowLoad );
 
-	// Hard fallback: if the load event never fires, release the page anyway.
-	fallbackT = setTimeout( finish, timeoutMs );
+	// Hard fallback: if load event never fires, release page anyway.
+	// (Longer for maintenance mode because countdown is the real release.)
+	var hardLimit = maintenance ? Math.max( timeoutMs * 3, 60000 ) : timeoutMs;
+	fallbackT = setTimeout( function () {
+		pageReady = true;
+		// In maintenance we still respect the countdown — but if the countdown
+		// timer element is somehow broken, force release after a generous cap.
+		if ( maintenance ) { timerReady = true; }
+		tryFinish();
+	}, hardLimit );
 
-	// Edge case: script injected after load.
+	// Edge case: script injected after load already completed.
 	if ( document.readyState === 'complete' ) {
-		setTimeout( finish, Math.max( 0, minTime - ( Date.now() - startedAt ) ) );
+		setTimeout( onWindowLoad, 0 );
 	}
 }() );
 </script>

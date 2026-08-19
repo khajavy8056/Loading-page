@@ -1,0 +1,23 @@
+<!-- Wave Morph: a horizontal bar that morphs into a tall pill and back -->
+<div class="asp-loader asp-theme-morph">
+  <div class="asp-backdrop"></div>
+  <div class="asp-stage">
+    <div class="asp-logo-wrap" id="asp-logo-slot"></div>
+    <div class="asp-morph"><div></div></div>
+    <div class="asp-wave-word" id="asp-word"></div>
+  </div>
+  <style>
+    .asp-theme-morph{position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Vazirmatn",Tahoma,Arial,sans-serif;}
+    .asp-theme-morph .asp-backdrop{position:absolute;inset:0;background:var(--asp-bg,rgba(10,10,15,0.85));backdrop-filter:blur(var(--asp-blur,12px));-webkit-backdrop-filter:blur(var(--asp-blur,12px));}
+    .asp-theme-morph .asp-stage{position:relative;display:flex;flex-direction:column;align-items:center;gap:24px;}
+    .asp-theme-morph .asp-logo-wrap img{max-height:70px;max-width:220px;object-fit:contain;filter:drop-shadow(0 6px 18px rgba(0,0,0,.5));}
+    .asp-theme-morph .asp-morph{display:flex;align-items:center;justify-content:center;width:70px;height:60px;}
+    .asp-theme-morph .asp-morph div{width:100%;height:4px;background:var(--asp-text,#fff);border-radius:4px;animation:asp-mp 2s infinite ease-in-out;}
+    @keyframes asp-mp{0%,100%{transform:scaleX(1);height:4px;border-radius:4px;box-shadow:none;}50%{transform:scaleX(.2);height:44px;border-radius:22px;background:var(--asp-accent,#00c3ff);box-shadow:0 0 20px var(--asp-accent,rgba(0,195,255,.7));}}
+    .asp-theme-morph .asp-wave-word{display:flex;align-items:center;gap:.08em;justify-content:center;flex-wrap:wrap;max-width:90vw;font-weight:700;letter-spacing:.18em;font-size:clamp(1rem,3.5vw,1.5rem);color:var(--asp-text,#fff);opacity:.9;direction:ltr;}
+    html[dir="rtl"] .asp-theme-morph .asp-wave-word{direction:rtl;letter-spacing:0;font-weight:600;}
+    .asp-theme-morph .asp-wave-word .ltr,.asp-theme-morph .asp-wave-word .rtl{display:inline-block;}
+    .asp-theme-morph .asp-wave-word .sp{width:.4em;display:inline-block;}
+    @media (prefers-reduced-motion: reduce){.asp-theme-morph .asp-morph div{animation:none;}}
+  </style>
+</div>

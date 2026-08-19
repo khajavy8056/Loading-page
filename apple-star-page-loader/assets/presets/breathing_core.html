@@ -1,0 +1,22 @@
+<!-- Breathing Core: radial glow that inhales/exhales -->
+<div class="asp-loader asp-theme-breath">
+  <div class="asp-backdrop"></div>
+  <div class="asp-stage">
+    <div class="asp-logo-wrap" id="asp-logo-slot"></div>
+    <div class="asp-breath"></div>
+    <div class="asp-wave-word" id="asp-word"></div>
+  </div>
+  <style>
+    .asp-theme-breath{position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Vazirmatn",Tahoma,Arial,sans-serif;}
+    .asp-theme-breath .asp-backdrop{position:absolute;inset:0;background:var(--asp-bg,rgba(10,10,15,0.85));backdrop-filter:blur(var(--asp-blur,12px));-webkit-backdrop-filter:blur(var(--asp-blur,12px));}
+    .asp-theme-breath .asp-stage{position:relative;display:flex;flex-direction:column;align-items:center;gap:24px;}
+    .asp-theme-breath .asp-logo-wrap img{max-height:70px;max-width:220px;object-fit:contain;filter:drop-shadow(0 6px 18px rgba(0,0,0,.5));}
+    .asp-theme-breath .asp-breath{width:44px;height:44px;background:radial-gradient(circle,var(--asp-accent,#fff) 0%,rgba(255,255,255,0) 70%);border-radius:50%;animation:asp-brth 3s infinite ease-in-out;box-shadow:0 0 24px var(--asp-accent,rgba(255,255,255,.6));}
+    @keyframes asp-brth{0%,100%{transform:scale(.75);opacity:.6;box-shadow:0 0 12px var(--asp-accent,rgba(255,255,255,.3));}50%{transform:scale(1.5);opacity:1;box-shadow:0 0 40px var(--asp-accent,rgba(255,255,255,.9));}}
+    .asp-theme-breath .asp-wave-word{display:flex;align-items:center;gap:.08em;justify-content:center;flex-wrap:wrap;max-width:90vw;font-weight:700;letter-spacing:.18em;font-size:clamp(1rem,3.5vw,1.5rem);color:var(--asp-text,#fff);opacity:.9;direction:ltr;}
+    html[dir="rtl"] .asp-theme-breath .asp-wave-word{direction:rtl;letter-spacing:0;font-weight:600;}
+    .asp-theme-breath .asp-wave-word .ltr,.asp-theme-breath .asp-wave-word .rtl{display:inline-block;}
+    .asp-theme-breath .asp-wave-word .sp{width:.4em;display:inline-block;}
+    @media (prefers-reduced-motion: reduce){.asp-theme-breath .asp-breath{animation:none;transform:scale(1)!important;opacity:1!important;}}
+  </style>
+</div>
