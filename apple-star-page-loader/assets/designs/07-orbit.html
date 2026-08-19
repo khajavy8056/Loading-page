@@ -1,0 +1,21 @@
+<div class="asld asld--orbit" dir="ltr" role="status" aria-label="Loading">
+  <div class="asld__orbit">
+    <div class="asld__star"></div>
+    <div class="asld__orb asld__orb--1"></div>
+    <div class="asld__orb asld__orb--2"></div>
+  </div>
+  <p class="asld__text">APPLE STAR</p>
+</div>
+<style>
+body{overflow:hidden!important}
+.asld{position:fixed;top:0;right:0;bottom:0;left:0;inset:0;z-index:99999999;display:flex;flex-direction:column;align-items:center;justify-content:center;direction:ltr;background:rgba(8,8,12,0.94);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;gap:20px}
+.asld__orbit{position:relative;width:clamp(80px,18vw,120px);height:clamp(80px,18vw,120px)}
+.asld__star{position:absolute;top:50%;left:50%;width:28px;height:28px;background:#fff;clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);transform:translate(-50%,-50%)}
+.asld__orb{position:absolute;top:50%;left:50%;width:10px;height:10px;background:#6ec1ff;border-radius:50%;margin:-5px 0 0 -5px;animation:asld-orbit 2s linear infinite}
+.asld__orb--1{animation-duration:2s}
+.asld__orb--2{background:#ff6e8a;width:8px;height:8px;margin:-4px 0 0 -4px;animation-duration:1.4s;animation-direction:reverse}
+.asld__text{font-size:clamp(0.85rem,3vw,1.1rem);letter-spacing:0.4em;color:rgba(255,255,255,0.9);margin:0}
+@keyframes asld-orbit{0%{transform:rotate(0deg) translateX(clamp(32px,7vw,48px)) rotate(0deg)}100%{transform:rotate(360deg) translateX(clamp(32px,7vw,48px)) rotate(-360deg)}}
+@media (max-width:480px){.asld__orbit{width:90px;height:90px}}
+@media (prefers-reduced-motion: reduce){.asld__orb{animation:none!important}}
+</style>
