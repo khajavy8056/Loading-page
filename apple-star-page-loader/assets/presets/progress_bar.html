@@ -1,5 +1,5 @@
 <!--
-  Preset: Progress Bar — bold gradient bar + huge percentage.
+  Preset: Progress Bar — bold percent with animated gradient bar.
 -->
 <div class="asp-loader asp-theme-bar">
   <div class="asp-backdrop"></div>
@@ -7,37 +7,34 @@
     <div class="asp-percent-big">
       <span class="asp-percent" data-value="0">0</span><span class="asp-percent-sign">%</span>
     </div>
-    <div class="asp-wave-text asp-sub"></div>
+    <div class="asp-sub asp-wave-text"></div>
     <div class="asp-bar-wrap">
       <div class="asp-bar">
         <div class="asp-bar-fill"></div>
-        <div class="asp-bar-track-text"><span class="asp-bar-percent-inline">0</span>%</div>
       </div>
     </div>
     <div class="asp-tip"></div>
   </div>
   <style>
-    .asp-theme-bar{position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+    .asp-theme-bar{position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Vazirmatn",Tahoma,sans-serif;}
     .asp-theme-bar .asp-backdrop{position:absolute;inset:0;background:var(--asp-bg,#04060b);backdrop-filter:blur(var(--asp-blur,0px));-webkit-backdrop-filter:blur(var(--asp-blur,0px));}
     .asp-theme-bar .asp-stage{position:relative;display:flex;flex-direction:column;align-items:center;gap:18px;width:min(640px,86vw);}
-    .asp-theme-bar .asp-percent-big{font-family:"Inter",-apple-system,Segoe UI,sans-serif;font-weight:900;font-size:clamp(4rem,22vw,10rem);line-height:1;color:var(--asp-text,#fff);letter-spacing:-0.04em;display:flex;align-items:flex-start;background:linear-gradient(180deg,#fff 0%,var(--asp-accent,#4aa3ff) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 6px 30px rgba(74,163,255,0.3));}
+    .asp-theme-bar .asp-percent-big{font-family:"Inter",-apple-system,Segoe UI,sans-serif;font-weight:900;font-size:clamp(3.5rem,20vw,8rem);line-height:1;color:var(--asp-text,#fff);letter-spacing:-0.04em;display:flex;align-items:flex-start;background:linear-gradient(180deg,#fff 0%,var(--asp-accent,#4aa3ff) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 6px 30px rgba(74,163,255,0.3));direction:ltr;}
     .asp-theme-bar .asp-percent{display:inline-block;font-variant-numeric:tabular-nums;min-width:1.6em;text-align:right;}
-    .asp-theme-bar .asp-percent.asp-digit-bounce{animation:aspDigitBounceB 0.35s ease-out;}
-    .asp-theme-bar .asp-percent-sign{font-size:0.35em;margin-top:0.15em;margin-left:6px;-webkit-text-fill-color:rgba(255,255,255,0.6);}
-    .asp-theme-bar .asp-sub{font-family:-apple-system,sans-serif;font-size:clamp(0.85rem,2vw,1.1rem);letter-spacing:0.4em;text-transform:uppercase;color:rgba(255,255,255,0.6);font-weight:600;margin-bottom:6px;}
-    .asp-theme-bar .asp-sub .asp-wave-letter{display:inline-block;animation:aspWaveB 2s infinite ease-in-out;animation-delay:calc(var(--w)*0.07s);}
+    .asp-theme-bar .asp-percent.asp-digit-bounce{animation:aspDigitBounceB .35s ease-out;}
+    .asp-theme-bar .asp-percent-sign{font-size:0.35em;margin-top:0.2em;margin-left:6px;-webkit-text-fill-color:rgba(255,255,255,0.6);}
+    .asp-theme-bar .asp-sub{font-family:inherit;font-size:clamp(0.8rem,2vw,1rem);letter-spacing:0.3em;text-transform:uppercase;color:rgba(255,255,255,0.7);font-weight:600;margin-bottom:6px;direction:rtl;unicode-bidi:plaintext;}
+    html[dir="ltr"] .asp-theme-bar .asp-sub{direction:ltr;letter-spacing:0.45em;}
+    .asp-theme-bar .asp-sub .asp-wave-letter,.asp-theme-bar .asp-sub .asp-wave-word{display:inline-block;animation:aspWaveB 2s infinite ease-in-out;animation-delay:calc(var(--w)*0.07s);}
     .asp-theme-bar .asp-bar-wrap{width:100%;}
-    .asp-theme-bar .asp-bar{position:relative;width:100%;height:14px;background:var(--asp-bar-bg,rgba(255,255,255,0.08));border-radius:999px;overflow:hidden;box-shadow:inset 0 2px 6px rgba(0,0,0,0.5);}
-    .asp-theme-bar .asp-bar-fill{position:absolute;inset:0;width:0%;background:linear-gradient(90deg,var(--asp-accent,#4aa3ff),#a855f7,#ec4899);background-size:200% 100%;border-radius:999px;transition:width 0.3s cubic-bezier(0.22,1,0.36,1);animation:aspBarFlow 3s linear infinite;}
-    .asp-theme-bar .asp-bar::after{content:"";position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,0.2),transparent);border-radius:999px;pointer-events:none;}
-    .asp-theme-bar .asp-bar-track-text{position:absolute;top:50%;right:12px;transform:translateY(-50%);font-family:ui-monospace,monospace;font-size:10px;color:rgba(255,255,255,0.7);font-weight:700;letter-spacing:0.05em;}
-    .asp-theme-bar .asp-tip{font-size:12px;color:rgba(255,255,255,0.4);font-family:-apple-system,sans-serif;letter-spacing:0.15em;margin-top:10px;min-height:16px;text-align:center;}
+    .asp-theme-bar .asp-bar{position:relative;width:100%;height:12px;background:var(--asp-bar-bg,rgba(255,255,255,0.08));border-radius:999px;overflow:hidden;box-shadow:inset 0 2px 6px rgba(0,0,0,0.5);}
+    .asp-theme-bar .asp-bar-fill{position:absolute;inset:0;width:0%;background:linear-gradient(90deg,var(--asp-accent,#4aa3ff),#a855f7,#ec4899);background-size:200% 100%;border-radius:999px;transition:width .3s cubic-bezier(.22,1,.36,1);animation:aspBarFlow 3s linear infinite;box-shadow:0 0 20px var(--asp-accent,#4aa3ff);}
+    .asp-theme-bar .asp-tip{font-size:12px;color:rgba(255,255,255,0.45);font-family:inherit;letter-spacing:0.1em;margin-top:6px;min-height:16px;text-align:center;direction:rtl;unicode-bidi:plaintext;}
+    html[dir="ltr"] .asp-theme-bar .asp-tip{direction:ltr;}
     .asp-theme-bar .asp-logo-wrap img{max-height:54px;max-width:200px;object-fit:contain;margin-bottom:4px;}
     @keyframes aspWaveB{0%,100%{transform:translateY(0);}50%{transform:translateY(-5px);}}
     @keyframes aspDigitBounceB{0%{transform:translateY(0) rotateX(0);}40%{transform:translateY(-12px) rotateX(20deg);}100%{transform:translateY(0) rotateX(0);}}
     @keyframes aspBarFlow{0%{background-position:0% 50%;}100%{background-position:200% 50%;}}
-    @media (prefers-reduced-motion: reduce){
-      .asp-theme-bar .asp-sub .asp-wave-letter,.asp-theme-bar .asp-bar-fill{animation:none!important;}
-    }
+    @media (prefers-reduced-motion: reduce){.asp-theme-bar .asp-sub .asp-wave-letter,.asp-theme-bar .asp-sub .asp-wave-word,.asp-theme-bar .asp-bar-fill{animation:none!important;}}
   </style>
 </div>

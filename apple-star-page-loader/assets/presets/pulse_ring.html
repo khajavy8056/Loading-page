@@ -1,0 +1,44 @@
+<!--
+  Preset: Pulse Ring — یک دایره با حلقه‌های تپنده (برندبن).
+  ساده، تمیز، با متن و درصد و نوار پیشرفت.
+-->
+<div class="asp-loader asp-theme-pulse">
+  <div class="asp-backdrop"></div>
+  <div class="asp-stage">
+    <div class="asp-pulse">
+      <span class="asp-pulse-ring asp-r1"></span>
+      <span class="asp-pulse-ring asp-r2"></span>
+      <span class="asp-pulse-ring asp-r3"></span>
+      <span class="asp-pulse-core">
+        <span class="asp-percent" data-value="0">0</span><span class="asp-percent-sign">%</span>
+      </span>
+    </div>
+    <div class="asp-sub asp-wave-text"></div>
+    <div class="asp-bar"><div class="asp-bar-fill"></div></div>
+    <div class="asp-tip"></div>
+  </div>
+  <style>
+    .asp-theme-pulse{position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Vazirmatn",Tahoma,sans-serif;}
+    .asp-theme-pulse .asp-backdrop{position:absolute;inset:0;background:var(--asp-bg,#0a0e1a);backdrop-filter:blur(var(--asp-blur,0px));-webkit-backdrop-filter:blur(var(--asp-blur,0px));}
+    .asp-theme-pulse .asp-stage{position:relative;display:flex;flex-direction:column;align-items:center;gap:24px;}
+    .asp-theme-pulse .asp-pulse{position:relative;width:180px;height:180px;display:flex;align-items:center;justify-content:center;}
+    .asp-theme-pulse .asp-pulse-ring{position:absolute;inset:0;border-radius:50%;border:2px solid var(--asp-accent,#4aa3ff);opacity:0;animation:aspPulse 2.4s infinite ease-out;}
+    .asp-theme-pulse .asp-r2{animation-delay:.8s;}
+    .asp-theme-pulse .asp-r3{animation-delay:1.6s;}
+    .asp-theme-pulse .asp-pulse-core{position:relative;width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,var(--asp-accent,#4aa3ff),#a855f7);display:flex;align-items:center;justify-content:center;color:#fff;font-family:ui-monospace,SF Mono,monospace;font-weight:700;font-size:22px;box-shadow:0 10px 40px var(--asp-accent,#4aa3ff);direction:ltr;}
+    .asp-theme-pulse .asp-percent{font-variant-numeric:tabular-nums;}
+    .asp-theme-pulse .asp-percent.asp-digit-bounce{animation:aspDigitPB .4s ease-out;}
+    .asp-theme-pulse .asp-percent-sign{font-size:0.55em;opacity:0.8;margin-left:2px;}
+    .asp-theme-pulse .asp-sub{font-size:14px;color:rgba(255,255,255,0.75);letter-spacing:.2em;text-transform:uppercase;font-weight:600;direction:rtl;unicode-bidi:plaintext;}
+    html[dir="ltr"] .asp-theme-pulse .asp-sub{direction:ltr;letter-spacing:.35em;}
+    .asp-theme-pulse .asp-sub .asp-wave-word{display:inline-block;animation:aspSubPB 2.2s infinite ease-in-out;}
+    .asp-theme-pulse .asp-bar{width:min(280px,70vw);height:3px;background:var(--asp-bar-bg,rgba(255,255,255,0.1));border-radius:999px;overflow:hidden;}
+    .asp-theme-pulse .asp-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--asp-accent,#4aa3ff),#a855f7);border-radius:999px;transition:width .35s cubic-bezier(.22,1,.36,1);}
+    .asp-theme-pulse .asp-tip{font-size:11px;color:rgba(255,255,255,0.45);letter-spacing:.1em;min-height:14px;direction:rtl;unicode-bidi:plaintext;}
+    html[dir="ltr"] .asp-theme-pulse .asp-tip{direction:ltr;}
+    @keyframes aspPulse{0%{transform:scale(.6);opacity:.8;}100%{transform:scale(1.8);opacity:0;}}
+    @keyframes aspSubPB{0%,100%{opacity:.7;}50%{opacity:1;}}
+    @keyframes aspDigitPB{0%{transform:scale(1);}50%{transform:scale(1.2);}100%{transform:scale(1);}}
+    @media (prefers-reduced-motion: reduce){.asp-theme-pulse .asp-pulse-ring{animation:none!important;display:none;}.asp-theme-pulse .asp-pulse-core{animation:none!important;}}
+  </style>
+</div>

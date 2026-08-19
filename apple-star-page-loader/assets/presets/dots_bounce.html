@@ -1,0 +1,42 @@
+<!--
+  Preset: Dots Bounce — سه نقطه که با تاخیر می‌پرند (مانند تایپ/لودینگ کلاسیک).
+  خیلی ساده، فارسی‌دوست، خوانا.
+-->
+<div class="asp-loader asp-theme-dots">
+  <div class="asp-backdrop"></div>
+  <div class="asp-stage">
+    <div class="asp-dots">
+      <span style="--d:0"></span>
+      <span style="--d:1"></span>
+      <span style="--d:2"></span>
+    </div>
+    <div class="asp-sub asp-wave-text"></div>
+    <div class="asp-percent-row">
+      <span class="asp-percent" data-value="0">0</span><span class="asp-percent-sign">%</span>
+    </div>
+    <div class="asp-bar"><div class="asp-bar-fill"></div></div>
+    <div class="asp-tip"></div>
+  </div>
+  <style>
+    .asp-theme-dots{position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Vazirmatn",Tahoma,sans-serif;}
+    .asp-theme-dots .asp-backdrop{position:absolute;inset:0;background:var(--asp-bg,#ffffff);backdrop-filter:blur(var(--asp-blur,0px));-webkit-backdrop-filter:blur(var(--asp-blur,0px));}
+    .asp-theme-dots .asp-stage{position:relative;display:flex;flex-direction:column;align-items:center;gap:22px;}
+    .asp-theme-dots .asp-dots{display:flex;gap:14px;}
+    .asp-theme-dots .asp-dots span{width:16px;height:16px;background:var(--asp-accent,#0071e3);border-radius:50%;animation:aspDotB .9s infinite ease-in-out;animation-delay:calc(var(--d)*0.18s);box-shadow:0 6px 20px rgba(0,113,227,.3);}
+    .asp-theme-dots .asp-sub{font-size:14px;color:var(--asp-text,#111);letter-spacing:.15em;text-transform:uppercase;font-weight:600;direction:rtl;unicode-bidi:plaintext;}
+    html[dir="ltr"] .asp-theme-dots .asp-sub{direction:ltr;letter-spacing:.3em;}
+    .asp-theme-dots .asp-sub .asp-wave-word{display:inline-block;animation:aspSubDots 2s infinite ease-in-out;}
+    .asp-theme-dots .asp-percent-row{font-family:ui-monospace,SF Mono,monospace;font-weight:600;font-size:clamp(1.4rem,4vw,2rem);color:var(--asp-text,#111);direction:ltr;display:flex;align-items:baseline;}
+    .asp-theme-dots .asp-percent{font-variant-numeric:tabular-nums;}
+    .asp-theme-dots .asp-percent.asp-digit-bounce{animation:aspDigitDots .35s ease-out;}
+    .asp-theme-dots .asp-percent-sign{font-size:.55em;opacity:.6;margin-left:3px;}
+    .asp-theme-dots .asp-bar{width:min(240px,60vw);height:3px;background:var(--asp-bar-bg,rgba(0,0,0,.08));border-radius:999px;overflow:hidden;}
+    .asp-theme-dots .asp-bar-fill{height:100%;width:0%;background:var(--asp-accent,#0071e3);border-radius:999px;transition:width .35s cubic-bezier(.22,1,.36,1);}
+    .asp-theme-dots .asp-tip{font-size:11px;color:var(--asp-text,#111);opacity:.45;letter-spacing:.1em;min-height:14px;direction:rtl;unicode-bidi:plaintext;}
+    html[dir="ltr"] .asp-theme-dots .asp-tip{direction:ltr;}
+    @keyframes aspDotB{0%,80%,100%{transform:scale(0.6);opacity:.4;}40%{transform:scale(1.15);opacity:1;}}
+    @keyframes aspSubDots{0%,100%{opacity:.7;}50%{opacity:1;}}
+    @keyframes aspDigitDots{0%{transform:translateY(0);}50%{transform:translateY(-5px);}100%{transform:translateY(0);}}
+    @media (prefers-reduced-motion: reduce){.asp-theme-dots .asp-dots span,.asp-theme-dots .asp-sub .asp-wave-word{animation:none!important;}.asp-theme-dots .asp-dots span{transform:scale(1);opacity:1;}}
+  </style>
+</div>

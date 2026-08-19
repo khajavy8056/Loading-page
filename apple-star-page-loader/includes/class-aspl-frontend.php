@@ -267,34 +267,76 @@ class ASPL_Frontend {
 		}
 	}
 
-	// Turn text into wave-letters in every .asp-wave-text element and
-	// any .asp-sub, .asp-sub-text element that is empty.
+	// ==== RTL detection ==============================================
+	// If text contains Arabic/Persian/Hebrew letters we treat it as RTL
+	// and wave at WORD level (letter-level split breaks the connected
+	// glyphs and makes Persian look mirrored).
+	function isRTLText( s ) {
+		return /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF\u0590-\u05FF]/.test( s );
+	}
+
+	/**
+	 * Fill an element with animated text.
+	 * - For LTR text: one <span class="asp-wave-letter"> per CHARACTER
+	 * - For RTL/Arabic/Persian: one <span class="asp-wave-word"> per WORD
+	 *   (preserves letter joining, bidi, and prevents mirroring).
+	 */
 	function waveify( el, text ) {
 		if ( ! el ) { return; }
-		// If element already has content from preset, leave it alone only if it has letters.
-		if ( el.getAttribute( 'data-text-attr' ) === 'text' || el.childElementCount === 0 && el.textContent.trim() === '' ) {
-			el.textContent = '';
+		// Skip elements whose content was pre-rendered by the preset (e.g. the
+		// APPLE STAR wordmark) unless they are explicitly marked for text fill.
+		var forced = el.getAttribute( 'data-text-attr' ) === 'text';
+		var brand  = el.getAttribute( 'data-text-attr' ) === 'brand';
+		if ( brand ) return; // leave brand wordmark alone (handled by preset)
+		if ( ! forced && el.childElementCount > 0 ) return;
+		if ( ! forced && el.textContent.trim() !== '' ) return;
+
+		el.textContent = '';
+		var isRTL = isRTLText( text );
+
+		if ( isRTL ) {
+			// Word-level split for Persian/Arabic — preserves connected letters.
 			var words = String( text || '' ).split( /(\s+)/ );
 			var idx = 0;
 			words.forEach( function ( chunk ) {
 				if ( /^\s+$/.test( chunk ) ) {
 					var sp = document.createElement( 'span' );
-					sp.className = 'asp-wave-letter asp-space';
-					sp.innerHTML = '&nbsp;';
-					sp.style.setProperty( '--w', idx );
+					sp.style.whiteSpace = 'pre';
+					sp.textContent = chunk;
 					el.appendChild( sp );
-					idx++;
 					return;
 				}
-				for ( var i = 0; i < chunk.length; i++ ) {
-					var s = document.createElement( 'span' );
-					s.className = 'asp-wave-letter';
-					s.textContent = chunk.charAt( i );
-					s.style.setProperty( '--w', idx );
-					el.appendChild( s );
-					idx++;
-				}
+				if ( chunk === '' ) return;
+				var w = document.createElement( 'span' );
+				w.className = 'asp-wave-word';
+				w.textContent = chunk;
+				w.style.setProperty( '--w', idx );
+				el.appendChild( w );
+				idx++;
 			} );
+			el.setAttribute( 'dir', 'rtl' );
+		} else {
+			// Letter-level for LTR (Latin) — original wave behavior.
+			var chars = String( text || '' ).split( '' );
+			var idx2 = 0;
+			chars.forEach( function ( ch ) {
+				if ( ch === ' ' ) {
+					var sp2 = document.createElement( 'span' );
+					sp2.className = 'asp-wave-letter asp-space';
+					sp2.innerHTML = '&nbsp;';
+					sp2.style.setProperty( '--w', idx2 );
+					el.appendChild( sp2 );
+					idx2++;
+					return;
+				}
+				var s = document.createElement( 'span' );
+				s.className = 'asp-wave-letter';
+				s.textContent = ch;
+				s.style.setProperty( '--w', idx2 );
+				el.appendChild( s );
+				idx2++;
+			} );
+			el.setAttribute( 'dir', 'ltr' );
 		}
 	}
 	// Apply to all .asp-wave-text nodes and known sub text classes.
@@ -303,7 +345,11 @@ class ASPL_Frontend {
 	} );
 	// Dedicated wave word target (used by wave_letters preset).
 	var waveWord = root.querySelector( '.asp-wave-word' );
-	if ( waveWord ) { waveify( waveWord, loadingText ); }
+	// Note: .asp-wave-word is also the class we add for RTL chunks; only the
+	// container that's a direct child of the stage (the preset's big word
+	// container) should be waveified here.
+	var waveContainer = root.querySelector( '.asp-stage .asp-wave-word' );
+	if ( waveContainer ) { waveify( waveContainer, loadingText ); }
 
 	// Hide percentage / bar when disabled.
 	if ( ! showPercent ) {

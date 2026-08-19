@@ -1,6 +1,6 @@
 <?php
 /**
- * Default options for v2.0.0 — multiple presets, colors, logo, progress, branding.
+ * Default options for v2.0.1 — multiple presets, colors, logo, progress, branding.
  *
  * @package Apple_Star_Loader
  */
@@ -23,36 +23,35 @@ class ASPL_Defaults {
 	 */
 	public static function get_presets() {
 		return array(
-			'apple_star'    => __( 'Apple Star (Glass)', 'apple-star-loader' ),
-			'wave_letters'  => __( 'Wave Letters', 'apple-star-loader' ),
-			'spinner_pro'   => __( 'Spinner Pro', 'apple-star-loader' ),
-			'progress_bar'  => __( 'Progress Bar', 'apple-star-loader' ),
-			'particles'     => __( 'Particles Glow', 'apple-star-loader' ),
-			'minimal_dot'   => __( 'Minimal Dot', 'apple-star-loader' ),
-			'custom_code'   => __( 'Custom Code', 'apple-star-loader' ),
+			'apple_star'   => __( 'Apple Star (ECG / نبض قلب)', 'apple-star-loader' ),
+			'wave_letters' => __( 'Wave Letters / حروف موجی', 'apple-star-loader' ),
+			'spinner_pro'  => __( 'Spinner Pro / حلقه دوگانه', 'apple-star-loader' ),
+			'progress_bar' => __( 'Progress Bar / نوار بزرگ', 'apple-star-loader' ),
+			'pulse_ring'   => __( 'Pulse Ring / حلقه نبض', 'apple-star-loader' ),
+			'bars'         => __( 'Equalizer Bars / اکولایزر', 'apple-star-loader' ),
+			'dots_bounce'  => __( 'Dots Bounce / سه نقطه', 'apple-star-loader' ),
+			'neon_line'    => __( 'Neon Line / خط نئون', 'apple-star-loader' ),
+			'particles'    => __( 'Particles Glow / ذرات', 'apple-star-loader' ),
+			'minimal_dot'  => __( 'Minimal Dot / نقطه ساده', 'apple-star-loader' ),
+			'custom_code'  => __( 'Custom Code / کد سفارشی', 'apple-star-loader' ),
 		);
 	}
 
 	/**
-	 * Default option values (used on activation and as fallbacks).
+	 * Default option values.
 	 *
 	 * @return array
 	 */
 	public static function get_options() {
 		return array(
-			// General.
 			'enabled'           => 1,
 			'target'            => 'all_pages',
 			'preset'            => 'apple_star',
-
-			// Content.
-			'text'              => 'LOADING',
+			'text'              => is_rtl() ? 'در حال بارگذاری' : 'LOADING',
 			'logo'              => '',
 			'show_percentage'   => 1,
 			'show_progress_bar' => 1,
 			'show_tips'         => 1,
-
-			// Colors.
 			'bg_color'          => '#0b0b0f',
 			'bg_opacity'        => 100,
 			'primary_color'     => '#ffffff',
@@ -60,21 +59,15 @@ class ASPL_Defaults {
 			'text_color'        => '#ffffff',
 			'bar_bg_color'      => 'rgba(255,255,255,0.15)',
 			'bar_fg_color'      => '#ffffff',
-
-			// Timing.
 			'timeout'           => 15,
 			'min_time'          => 600,
 			'fade_duration'     => 600,
-
-			// Extras.
 			'hide_for_logged_in'=> 0,
 			'show_on_mobile'    => 1,
 			'blur_amount'       => 0,
 			'z_index'           => 99999999,
-
-			// Advanced.
 			'custom_css'        => '',
-			'code'              => '', // custom code when preset === 'custom_code'
+			'code'              => '',
 		);
 	}
 
@@ -96,7 +89,7 @@ class ASPL_Defaults {
 	}
 
 	/**
-	 * The default loader HTML/CSS used when the user has no custom code saved.
+	 * The default loader code (used by "Reset to default" button).
 	 *
 	 * @return string
 	 */

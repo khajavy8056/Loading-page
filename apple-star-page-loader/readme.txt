@@ -4,7 +4,7 @@ Tags: loader, preloader, loading, loading screen, page loader, progress, animate
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 2.0.0
+Stable tag: 2.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -104,3 +104,18 @@ Yes. Every preset uses `clamp()`, flexbox and media queries to scale from phones
 
 = 1.0.0 =
 * Initial release.
+
+== Changelog ==
+
+= 2.0.1 =
+* Fix: Persian/Arabic (RTL) text no longer appears "mirrored" or split into disconnected letters — RTL text is animated word-by-word, preserving connected glyphs.
+* Fix: Live preview iframe in the admin dashboard now runs scripts (sandbox `allow-scripts`), so animations and the bouncing percentage counter work while editing.
+* Fix: Mobile admin layout — cards, preset grid, color pickers and buttons stack correctly on small screens.
+* Fix: Apple Star preset returned to true ECG/heartbeat feel with a per-letter pulse synced to the accent color.
+* New presets added: Pulse Ring, Equalizer Bars, Dots Bounce, Neon Line (total 10 presets).
+* Percentage counter now bounces on every change on the frontend as well, not just in preview.
+* Progress bar advances smoothly during load.
+* Better font stack with Vazirmatn/Tahoma fallback for Persian text.
+
+= 2.0.0 =
+* Initial v2 release: wave-animated letters, bouncing percentage counter, animated progress bar, presets, color customization, logo upload, rotating tips, redesigned admin.

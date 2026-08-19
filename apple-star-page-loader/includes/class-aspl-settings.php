@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin: professional "Apple Star Loader" settings dashboard v2.0.0.
+ * Admin: professional "Apple Star Loader" settings dashboard v2.0.1.
  *
  * Tabs: General | Design | Content | Timing | Custom Code | Preview
  *
@@ -301,9 +301,9 @@ class ASPL_Settings {
 									<button type="button" class="aspl-device-btn" data-w="1200" title="Desktop">🖥️</button>
 								</div>
 							</div>
-							<div class="aspl-preview-box">
-								<iframe id="aspl-frame" class="aspl-preview-frame" title="<?php esc_attr_e( 'Loader preview', 'apple-star-loader' ); ?>" sandbox="allow-same-origin"></iframe>
-							</div>
+				<div class="aspl-preview-box">
+						<iframe id="aspl-frame" class="aspl-preview-frame" title="<?php esc_attr_e( 'Loader preview', 'apple-star-loader' ); ?>" sandbox="allow-same-origin allow-scripts allow-popups"></iframe>
+				</div>
 							<p class="description aspl-hint"><?php esc_html_e( 'Updates live as you change settings. Tap Live Preview for fullscreen.', 'apple-star-loader' ); ?></p>
 						</div>
 
@@ -334,7 +334,7 @@ class ASPL_Settings {
 			<div class="aspl-modal-backdrop"></div>
 			<div class="aspl-modal-frame">
 				<button type="button" class="aspl-modal-close" id="aspl-modal-close" aria-label="<?php esc_attr_e( 'Close', 'apple-star-loader' ); ?>">✕</button>
-				<iframe id="aspl-modal-frame" class="aspl-modal-iframe" sandbox="allow-same-origin"></iframe>
+				<iframe id="aspl-modal-frame" class="aspl-modal-iframe" sandbox="allow-same-origin allow-scripts allow-popups"></iframe>
 			</div>
 		</div>
 
@@ -364,10 +364,10 @@ class ASPL_Settings {
 		<div class="aspl-card aspl-hero">
 			<div class="aspl-hero-msg">
 				<h2><?php esc_html_e( 'Welcome to Apple Star Loader 2.0!', 'apple-star-loader' ); ?> 🎉</h2>
-				<p><?php esc_html_e( 'A complete rewrite featuring animated wave letters, a live percentage counter that bounces with every tick, animated progress bars, 6 professional presets, color customization, logo upload, rotating tips, min-time, fallback timeout and much more.', 'apple-star-loader' ); ?></p>
+				<p><?php esc_html_e( 'نسخه جدید با حروف موجی، درصد شمارنده پرش‌کننده، نوار پیشرفت متحرک، ۱۰ طرح آماده، پشتیبانی کامل فارسی (حروف به‌هم نمی‌ریزند)، آپلود لوگو، رنگ‌بندی، نکات چرخشی، پیش‌نمایش زنده و ده‌ها امکانات حرفه‌ای دیگر.', 'apple-star-loader' ); ?></p>
 			</div>
 			<div class="aspl-hero-stats">
-				<div class="aspl-hero-stat"><b>6</b><span><?php esc_html_e( 'Presets', 'apple-star-loader' ); ?></span></div>
+				<div class="aspl-hero-stat"><b>10</b><span><?php esc_html_e( 'Presets', 'apple-star-loader' ); ?></span></div>
 				<div class="aspl-hero-stat"><b>∞</b><span><?php esc_html_e( 'Color combos', 'apple-star-loader' ); ?></span></div>
 				<div class="aspl-hero-stat"><b>0–100</b><span><?php esc_html_e( 'Progress', 'apple-star-loader' ); ?></span></div>
 				<div class="aspl-hero-stat"><b>100%</b><span><?php esc_html_e( 'Responsive', 'apple-star-loader' ); ?></span></div>
@@ -406,7 +406,8 @@ class ASPL_Settings {
 				<div class="aspl-feature">🌊 <b><?php esc_html_e( 'Wave-animated letters', 'apple-star-loader' ); ?></b><p><?php esc_html_e( 'Every character in the wordmark rises and falls in a smooth cascading wave.', 'apple-star-loader' ); ?></p></div>
 				<div class="aspl-feature">🔢 <b><?php esc_html_e( 'Bouncing percentage counter', 'apple-star-loader' ); ?></b><p><?php esc_html_e( 'The numbers actually animate and bounce as the counter goes 0→100.', 'apple-star-loader' ); ?></p></div>
 				<div class="aspl-feature">📊 <b><?php esc_html_e( 'Animated progress bar', 'apple-star-loader' ); ?></b><p><?php esc_html_e( 'Smooth-filling bars, shine effects, traveling dots — per 10% increments.', 'apple-star-loader' ); ?></p></div>
-				<div class="aspl-feature">🎨 <b><?php esc_html_e( '6 professional presets', 'apple-star-loader' ); ?></b><p><?php esc_html_e( 'Apple Star, Wave Letters, Spinner Pro, Progress Bar, Particles & Minimal Dot.', 'apple-star-loader' ); ?></p></div>
+				<div class="aspl-feature">🎨 <b><?php esc_html_e( '10 professional presets', 'apple-star-loader' ); ?></b><p><?php esc_html_e( 'Apple Star ECG, Wave Letters, Spinner Pro, Progress Bar, Pulse Ring, Equalizer Bars, Dots Bounce, Neon Line, Particles & Minimal Dot.', 'apple-star-loader' ); ?></p></div>
+			<div class="aspl-feature">🆎 <b><?php esc_html_e( 'RTL / Persian support', 'apple-star-loader' ); ?></b><p><?php esc_html_e( 'Persian & Arabic text is animated word-by-word so letters stay connected and never appear mirrored.', 'apple-star-loader' ); ?></p></div>
 				<div class="aspl-feature">🖼️ <b><?php esc_html_e( 'Logo + text branding', 'apple-star-loader' ); ?></b><p><?php esc_html_e( 'Upload your logo, change the loading text, and match your brand colors.', 'apple-star-loader' ); ?></p></div>
 				<div class="aspl-feature">💬 <b><?php esc_html_e( 'Rotating tips', 'apple-star-loader' ); ?></b><p><?php esc_html_e( 'Friendly messages cycle while visitors wait.', 'apple-star-loader' ); ?></p></div>
 				<div class="aspl-feature">🎛️ <b><?php esc_html_e( 'Redesigned dashboard', 'apple-star-loader' ); ?></b><p><?php esc_html_e( 'Clean tabbed UI with live side preview and color pickers.', 'apple-star-loader' ); ?></p></div>
@@ -491,6 +492,10 @@ class ASPL_Settings {
 					'wave_letters' => '🌊',
 					'spinner_pro'  => '🎯',
 					'progress_bar' => '📊',
+					'pulse_ring'   => '◎',
+					'bars'         => '📶',
+					'dots_bounce'  => '⋯',
+					'neon_line'    => '━',
 					'particles'    => '✨',
 					'minimal_dot'  => '●',
 					'custom_code'  => '🧩',
@@ -830,6 +835,35 @@ class ASPL_Settings {
 .aspl-modal-close{position:absolute;top:20px;right:20px;width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.1);color:#fff;font-size:18px;cursor:pointer;z-index:10;backdrop-filter:blur(10px);}
 .aspl-modal-close:hover{background:rgba(255,255,255,.2);}
 
+/* Mobile / small screen: stack columns and tighten cards */
+@media (max-width:782px){
+  .aspl-admin{margin:6px 10px 0 0;}
+  .aspl-topbar{padding:16px 18px;border-radius:14px;gap:10px;}
+  .aspl-logo-badge{width:40px;height:40px;font-size:20px;border-radius:10px;}
+  .aspl-title{font-size:18px;}
+  .aspl-tabs{padding:4px;gap:2px;}
+  .aspl-tab{padding:8px 10px;font-size:12px;}
+  .aspl-radio-grid{grid-template-columns:1fr;}
+  .aspl-preset-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;}
+  .aspl-preset-card{padding:6px;}
+  .aspl-preset-preview{height:60px;font-size:22px;}
+  .aspl-color-grid{grid-template-columns:1fr;gap:12px;}
+  .aspl-card{padding:18px 16px;border-radius:14px;}
+  .aspl-quick-grid{grid-template-columns:1fr;}
+  .aspl-feature-grid{grid-template-columns:1fr;}
+  .aspl-actions .button{width:100%;margin:0;}
+  .aspl-logo-upload{flex-direction:column;align-items:flex-start;}
+  .aspl-preview-frame{height:260px;}
+  .aspl-device-switch{margin-top:8px;}
+  .aspl-side-preview .aspl-card-head{flex-direction:column;align-items:flex-start;gap:8px;}
+  .aspl-hero-stats{grid-template-columns:repeat(2,1fr);gap:8px;}
+  .aspl-hero-stat{padding:10px;border-radius:10px;}
+  .aspl-hero-stat b{font-size:18px;}
+  .wp-picker-container .wp-color-result.button{margin-bottom:6px;}
+  .wp-picker-holder{position:relative!important;}
+  .aspl-textinput{max-width:100%;}
+}
+
 /* WordPress admin tweaks inside our page */
 .aspl-admin .wp-picker-holder{position:absolute;z-index:10;}
 CSS;
@@ -877,6 +911,7 @@ CSS;
 		return 'rgba('+r+','+g+','+b+','+a/100+')';
 	}
 
+	var __aspInlineScript = "(function(){\nfunction isRTL(s){return /[\u0600-\u06ff\u0750-\u077f\u08a0-\u08ff\ufb50-\ufdff\ufe70-\ufeff\u0590-\u05ff]/.test(s);}\nfunction wave(el,t){\n  if(!el)return; if(el.dataset.filled)return; el.dataset.filled=1; el.innerHTML=\"\";\n  var rtl=isRTL(t);\n  if(rtl){\n    var parts=String(t||\"\").split(/(\\s+)/), i2=0;\n    for(var k=0;k<parts.length;k++){\n      var part=parts[k];\n      if(/^\\s+$/.test(part)){ el.appendChild(document.createTextNode(part)); continue; }\n      if(!part)continue;\n      var w=document.createElement(\"span\"); w.className=\"asp-wave-word\"; w.textContent=part;\n      w.style.setProperty(\"--w\",i2); el.appendChild(w); i2++;\n    }\n    el.setAttribute(\"dir\",\"rtl\");\n  }else{\n    var chars=String(t||\"\").split(\"\"), i=0;\n    for(var m=0;m<chars.length;m++){\n      var ch=chars[m];\n      if(ch===\" \"){ var sp=document.createElement(\"span\"); sp.className=\"asp-wave-letter asp-space\"; sp.innerHTML=\"&nbsp;\"; sp.style.setProperty(\"--w\",i); el.appendChild(sp); i++; continue; }\n      var s=document.createElement(\"span\"); s.className=\"asp-wave-letter\"; s.textContent=ch; s.style.setProperty(\"--w\",i); el.appendChild(s); i++;\n    }\n    el.setAttribute(\"dir\",\"ltr\");\n  }\n}\ndocument.querySelectorAll(\"#asp-loader-root .asp-wave-text,#asp-loader-root .asp-sub,#asp-loader-root .asp-sub-text,#asp-loader-root .asp-sub-top\").forEach(function(e){wave(e,window.__aspText);});\nvar ww=document.querySelector(\"#asp-loader-root .asp-stage .asp-wave-word\"); if(ww)wave(ww,window.__aspText);\nif(window.__aspLogo){var st=document.querySelector(\"#asp-loader-root .asp-stage\");if(st){var wd=document.createElement(\"div\");wd.className=\"asp-logo-wrap\";var im=document.createElement(\"img\");im.src=window.__aspLogo;wd.appendChild(im);st.insertBefore(wd,st.firstChild);}}\n(function(){var pEl=document.querySelector(\"#asp-loader-root .asp-percent\"), bEl=document.querySelector(\"#asp-loader-root .asp-bar-fill\"), bD=document.querySelector(\"#asp-loader-root .asp-bar-dot\"), p=0;\nfunction tick(){p+=Math.random()*6+1.5; if(p>100)p=0; var r=Math.round(p);\n  if(pEl){var old=parseInt(pEl.textContent,10)||0; pEl.textContent=r; if(r!==old){pEl.classList.remove(\"asp-digit-bounce\"); void pEl.offsetWidth; pEl.classList.add(\"asp-digit-bounce\");}}\n  if(bEl)bEl.style.width=r+\"%\"; if(bD)bD.style.left=r+\"%\"; setTimeout(tick,420);}\nsetTimeout(tick,400);})();\n})();";
 	function buildPreviewHTML() {
 		var o = collectOpts();
 		var preset = o.preset || 'apple_star';
@@ -892,23 +927,16 @@ CSS;
 			'--asp-blur:'+(o.blur_amount||0)+'px'
 		].join(';');
 		var logoHTML = '';
-		if ( o.logo ) {
-			logoHTML = '<style>.asp-logo-wrap img{max-height:60px;max-width:200px;object-fit:contain;}</style>';
-		}
 		var text = (o.text||'LOADING').replace(/[<>&]/g,function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;'}[c];});
-		// Inject text into .asp-wave-text,.asp-sub,.asp-sub-text,.asp-wave-word and wordmark letters
-		// We do this by a small post-process script in the previewed iframe.
-		var script = '<script>(function(){function wave(el,t){if(!el)return;if(el.dataset.filled)return;el.dataset.filled=1;el.innerHTML="";var words=String(t||"").split(/(\\s+)/);var idx=0;words.forEach(function(ch){if(/^\\s+$/.test(ch)){var sp=document.createElement("span");sp.className="asp-wave-letter asp-space";sp.innerHTML="&nbsp;";sp.style.setProperty("--w",idx);el.appendChild(sp);idx++;return;}for(var i=0;i<ch.length;i++){var s=document.createElement("span");s.className="asp-wave-letter";s.textContent=ch.charAt(i);s.style.setProperty("--w",idx);el.appendChild(s);idx++;}});}document.querySelectorAll("#asp-loader-root .asp-wave-text,#asp-loader-root .asp-sub,#asp-loader-root .asp-sub-text,#asp-loader-root .asp-wave-word").forEach(function(e){wave(e,'+JSON.stringify(text)+');});var logo='+JSON.stringify(o.logo||'')+';if(logo){var st=document.querySelector("#asp-loader-root .asp-stage");if(st){var w=document.createElement("div");w.className="asp-logo-wrap";var im=document.createElement("img");im.src=logo;w.appendChild(im);st.insertBefore(w,st.firstChild);}}})();<\/script>';
-		// Hide things based on toggles
 		var hideCSS = '<style>';
 		if(!o.show_percentage) hideCSS += '.asp-percent,.asp-percent-sign,.asp-percent-row,.asp-percent-big,.asp-percent-wrap,.asp-ring-core{display:none!important;}';
 		if(!o.show_progress_bar) hideCSS += '.asp-bar,.asp-bar-wrap{display:none!important;}';
 		if(!o.show_tips) hideCSS += '.asp-tip{display:none!important;}';
-		// Force z-index to fit iframe
 		hideCSS += '#asp-loader-root{z-index:1!important;position:absolute!important;}';
 		hideCSS += '<\/style>';
-
-		var doc = '<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body{margin:0;padding:0;height:100%;background:#0b0b0c;overflow:hidden;}#asp-loader-root{'+vars+'}</style>'+logoHTML+hideCSS+'</head><body>'+code+script+'</body></html>';
+		var bootstrap = '<script>window.__aspText='+JSON.stringify(text)+';window.__aspLogo='+JSON.stringify(o.logo||'')+';<\/script>';
+		var script = '<script>'+__aspInlineScript.replace(/<\//g,'<\\/')+'<\/script>';
+		var doc = '<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body{margin:0;padding:0;height:100%;background:#0b0b0c;overflow:hidden;}#asp-loader-root{'+vars+'}</style>'+hideCSS+'</head><body>'+bootstrap+code+script+'</body></html>';
 		return doc;
 	}
 

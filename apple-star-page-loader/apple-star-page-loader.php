@@ -3,7 +3,7 @@
  * Plugin Name:       Apple Star Page Loader
  * Plugin URI:        https://github.com/khajavy8056/Loading-page
  * Description:       Professional animated preloader for WordPress & WooCommerce. Features 6+ animated loader designs (Apple Star, Wave Letters, Spinner Pro, Progress Bar, Particles, Minimal Dot), real-time progress counter (0-100%) with wave-animated digits, smooth percentage increments on resource load, customizable colors, logo, text, branding, and a beautiful redesigned admin dashboard with live preview.
- * Version:           2.0.0
+ * Version:           2.0.1
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Author:            Khajavy
@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Current plugin version.
  */
-define( 'ASPL_VERSION', '2.0.0' );
+define( 'ASPL_VERSION', '2.0.1' );
 
 /**
  * Absolute path to the main plugin file.
