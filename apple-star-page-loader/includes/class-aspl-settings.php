@@ -431,14 +431,14 @@ class ASPL_Settings {
 		<div class="aspl-models-grid">
 		<?php foreach ( $designs as $key => $info ) : ?>
 			<label class="aspl-model-card <?php echo $current === $key ? 'is-selected' : ''; ?>" data-model="<?php echo esc_attr( $key ); ?>">
-				<input type="radio" name="<?php echo esc_attr( $args['option_name'] ); ?>[model]" value="<?php echo esc_attr( $key ); ?>" <?php checked( $current, $key ); ?> hidden />
+				<input type="radio" name="<?php echo esc_attr( $args['option_name'] ); ?>[model]" value="<?php echo esc_attr( $key ); ?>" <?php checked( $current, $key ); ?> style="display:none" />
 				<div class="aspl-model-thumb"><iframe sandbox="" title="<?php echo esc_attr( $info['name'] ); ?>" data-thumb="<?php echo esc_attr( $key ); ?>"></iframe></div>
 				<span class="aspl-model-name"><?php echo esc_html( $info['name'] ); ?></span>
 				<span class="aspl-model-key"><?php echo esc_html( $key ); ?></span>
 			</label>
 		<?php endforeach; ?>
 			<label class="aspl-model-card aspl-model-card--custom <?php echo 'custom' === $current ? 'is-selected' : ''; ?>" data-model="custom">
-				<input type="radio" name="<?php echo esc_attr( $args['option_name'] ); ?>[model]" value="custom" <?php checked( $current, 'custom' ); ?> hidden />
+				<input type="radio" name="<?php echo esc_attr( $args['option_name'] ); ?>[model]" value="custom" <?php checked( $current, 'custom' ); ?> style="display:none" />
 				<div class="aspl-model-thumb aspl-model-thumb--custom"><span>✏️</span></div>
 				<span class="aspl-model-name"><?php esc_html_e( 'Custom', 'apple-star-loader' ); ?></span>
 				<span class="aspl-model-key">custom</span>

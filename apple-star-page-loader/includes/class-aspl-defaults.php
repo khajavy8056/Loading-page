@@ -27,7 +27,7 @@ class ASPL_Defaults {
 	public static function get_options() {
 		return array(
 			'enabled'             => 1,
-			'target'              => 'front_page',
+			'target'              => 'all_pages',
 			'model'               => self::DEFAULT_DESIGN,
 			'code'                => self::get_loader_code(),
 			'timeout'             => 10,
