@@ -3,7 +3,7 @@
  * Plugin Name:       Apple Star Page Loader
  * Plugin URI:        https://github.com/khajavy8056/Loading-page
  * Description:       Animated Apple-style page preloader with 11 loader designs, maintenance-mode countdown, live preview, logo upload, Persian/RTL support.
- * Version:           3.0.3
+ * Version:           3.1.0
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Author:            Khajavy
@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Current plugin version.
  */
-define( 'ASPL_VERSION', '3.0.3' );
+define( 'ASPL_VERSION', '3.1.0' );
 
 /**
  * Absolute path to the main plugin file.

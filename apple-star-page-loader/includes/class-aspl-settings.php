@@ -264,7 +264,7 @@ class ASPL_Settings {
 				<div class="aspl-row">
 					<label class="aspl-lbl"><?php esc_html_e( 'متن لودینگ', 'apple-star-loader' ); ?></label>
 					<input type="text" name="<?php echo esc_attr( self::OPTION ); ?>[text]" value="<?php echo esc_attr( $opts['text'] ); ?>" class="aspl-text" maxlength="40" data-k="text">
-					<small class="aspl-hint"><?php esc_html_e( 'فارسی یا انگلیسی — در مدل Apple Star Pulse حروف یکی‌یکی موج (نبض) می‌خورند.', 'apple-star-loader' ); ?></small>
+					<small class="aspl-hint"><?php esc_html_e( 'فارسی یا انگلیسی — متن به‌صورت ثابت نمایش داده می‌شود (جهت خودکار بر اساس متن).', 'apple-star-loader' ); ?></small>
 				</div>
 				<div class="aspl-row">
 					<label class="aspl-lbl"><?php esc_html_e( 'لوگو (اختیاری)', 'apple-star-loader' ); ?></label>
@@ -395,7 +395,7 @@ class ASPL_Settings {
 				<ul class="aspl-tips">
 					<li><?php esc_html_e( 'لودینگ تا بارگذاری کامل صفحه (شامل آخرین عکس) می‌ماند و سپس محو می‌شود.', 'apple-star-loader' ); ?></li>
 					<li><?php esc_html_e( 'حالت بروزرسانی: شمارنده معکوس تا صفر شدن فعال می‌ماند.', 'apple-star-loader' ); ?></li>
-					<li><?php esc_html_e( 'متن فارسی به‌صورت کلمه‌به‌کلمه موج می‌خورد تا اتصال حروف به‌هم نریزد.', 'apple-star-loader' ); ?></li>
+					<li><?php esc_html_e( 'متن به‌صورت ثابت نمایش داده می‌شود و انیمیشن فقط روی آیکون SVG است (مقاوم به بهینه‌سازها).', 'apple-star-loader' ); ?></li>
 					<li><?php esc_html_e( 'برای جلوگیری از فلیکر، «حداقل زمان نمایش» را روی ۴۰۰ تا ۸۰۰ میلی‌ثانیه بگذارید.', 'apple-star-loader' ); ?></li>
 					<li><?php esc_html_e( 'Timeout تضمین می‌کند سایت هیچ‌گاه پشت لودینگ قفل نمی‌شود.', 'apple-star-loader' ); ?></li>
 				</ul>
@@ -603,7 +603,8 @@ CSS;
 	if(!$f.length) return;
 
 	function isRTLText(s){return /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF\u0590-\u05FF]/.test(s);}
-	function hex2rgba(hex,a){hex=(hex||'#000').replace('#','');if(hex.length===3)hex=hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];if(hex.length!==6)return 'rgba(0,0,0,'+(a||100)/100+')';var r=parseInt(hex.substring(0,2),16),g=parseInt(hex.substring(2,4),16),b=parseInt(hex.substring(4,6),16);return 'rgba('+r+','+g+','+b+','+((a||100)/100)+')';}
+	function escHtml(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+	function hex2rgba(hex,a){hex=String(hex||'#000').replace('#','');if(hex.length===3)hex=hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];if(hex.length!==6)return 'rgba(0,0,0,'+(a/100)+')';var r=parseInt(hex.substring(0,2),16),g=parseInt(hex.substring(2,4),16),b=parseInt(hex.substring(4,6),16);return 'rgba('+r+','+g+','+b+','+(a/100)+')';}
 	function val(name){
 		var sel='[name$="['+name+']"]';
 		var $el=$form.find(sel);
@@ -613,28 +614,6 @@ CSS;
 		return $el.val();
 	}
 	function num(name,def){var v=parseFloat(val(name));return isNaN(v)?def:v;}
-
-	function buildSpans(text){
-		var rtl=isRTLText(text);
-		var spans='';
-		if(rtl){
-			var words=String(text).split(/(\s+)/); var idx=0;
-			for(var i=0;i<words.length;i++){
-				var c=words[i];
-				if(/^\s+$/.test(c)){spans+='<span class="sp">'+c+'</span>';continue;}
-				if(!c)continue;
-				spans+='<span class="rtl" style="--w:'+idx+'">'+c.replace(/</g,'&lt;')+'</span>';idx++;
-			}
-		}else{
-			var ch=String(text).split('');
-			for(var k=0;k<ch.length;k++){
-				if(ch[k]===' '){spans+='<span class="sp" style="--w:'+k+'">&nbsp;</span>';}
-				else spans+='<span class="ltr" style="--w:'+k+'">'+ch[k].replace(/</g,'&lt;')+'</span>';
-			}
-		}
-		return {html:spans, rtl:rtl};
-	}
-
 	function pad(n){n=n|0;return n<10?'0'+n:''+n;}
 
 	function build(){
@@ -650,47 +629,13 @@ CSS;
 		var accent = val('accent_color')||'#00c3ff';
 		var blur = num('blur_amount',16);
 
-		// Split preset into structural HTML and CSS (presets ship with a <style> block)
-		var presetCss = '';
-		var presetHtml = code.replace(/<style[^>]*>([\s\S]*?)<\/style>/gi, function(m, css){
-			presetCss += '\n' + css;
-			return '';
-		}).replace(/\n\s*\n\s*\n/g, '\n\n').trim();
-
-		var rootCss = 'html,body{margin:0;padding:0;height:100%;background:#0a0a0f;overflow:hidden;}'
-			+ '#asp-loader-root{position:fixed;inset:0;z-index:1;'
-			+ '--asp-bg:'+bg+';--asp-text:'+textCol+';--asp-accent:'+accent+';--asp-blur:'+blur+'px;}';
-
-		// Build word spans (mirrors server-side builder in class-aspl-frontend.php)
-		var sp = buildSpans(text);
-		var dirAttr = sp.rtl?'dir="rtl"':'dir="ltr"';
+		var dirAttr = isRTLText(text) ? 'dir="rtl"' : 'dir="ltr"';
 
 		// Logo
 		var logoUrl = val('logo')||'';
-		var logoCss = '';
-		var logoHtml = '';
-		if(logoUrl){
-			logoCss = '.asp-logo-wrap img{max-height:70px;max-width:220px;object-fit:contain;filter:drop-shadow(0 6px 18px rgba(0,0,0,.5));}';
-			logoHtml = '<div class="asp-logo-wrap" id="asp-logo-slot"><img src="'+logoUrl.replace(/"/g,'&quot;')+'"></div>';
-		}
+		var logoHtml = logoUrl ? '<div class="asp-logo"><img src="'+escHtml(logoUrl)+'" alt="" draggable="false"></div>' : '';
 
-		// Inject logo into stage (replace placeholder slot, or prepend to .asp-stage)
-		if(presetHtml.indexOf('id="asp-logo-slot"')!==-1){
-			presetHtml = presetHtml.replace(/<div class="asp-logo-wrap" id="asp-logo-slot"><\/div>/, logoHtml);
-		} else if(logoHtml) {
-			presetHtml = presetHtml.replace(/(<div class="asp-stage">)/, '$1'+logoHtml);
-		} else {
-			presetHtml = presetHtml.replace(/<div class="asp-logo-wrap" id="asp-logo-slot"><\/div>/g, '');
-		}
-
-		// Inject word spans into #asp-word
-		presetHtml = presetHtml.replace(/(<[^>]*id=["']asp-word["'][^>]*>)[\s\S]*?(<\/[^>]+>)/, '$1'+sp.html+'$2');
-		if(presetHtml.indexOf('id="asp-word"')===-1){
-			presetHtml = presetHtml.replace(/(<[^>]*class=["'][^"']*asp-wave-word[^"']*["'][^>]*>)[\s\S]*?(<\/[^>]+>)/, '$1'+sp.html+'$2');
-		}
-		presetHtml = presetHtml.replace(/id=["']asp-word["']/, 'id="asp-word" '+dirAttr);
-
-		// Maintenance preview (30 second default if 0)
+		// Maintenance
 		var maintOn = $form.find('[name$="[maintenance_mode]"]').is(':checked');
 		var maintMsg = val('maintenance_msg')||'ما در حال بروز رسانی هستیم.';
 		var maintH = num('maintenance_hours',0), maintM = num('maintenance_minutes',30), maintS = num('maintenance_seconds',0);
@@ -699,7 +644,6 @@ CSS;
 		if(maintOn){
 			var totalSec = (maintH*3600)+(maintM*60)+maintS;
 			if(totalSec<=0) totalSec = 30;
-			var previewSec = Math.min(totalSec, 99*3600+59*60+59);
 			maintHtml = '<div class="asp-maint" dir="rtl">'
 				+ '<div class="asp-maint-lbl">در حال بروز رسانی</div>'
 				+ '<div class="asp-maint-timer" id="asp-maint-timer">'
@@ -707,30 +651,53 @@ CSS;
 				+ '<span class="asp-mm">'+pad(maintM)+'</span><span class="asp-sep">:</span>'
 				+ '<span class="asp-ss">'+pad(maintS)+'</span>'
 				+ '</div>'
-				+ '<div class="asp-maint-msg">'+maintMsg.replace(/</g,'&lt;').replace(/\n/g,'<br>')+'</div>'
+				+ '<div class="asp-maint-msg">'+escHtml(maintMsg).replace(/\n/g,'<br>')+'</div>'
 				+ '</div>';
-			// Append to .asp-stage (safe: all presets end .asp-stage with a </div> right before </div><style>)
-			presetHtml = presetHtml.replace(/(<\/div>\s*)(<\/div>\s*$)/, '$1'+maintHtml+'$2');
-			// Countdown script (runs in iframe after DOM builds)
-			maintScript = '<script>(function(){'
-				+ 'var r='+previewSec+';var e=document.getElementById("asp-maint-timer");'
+			maintScript = '<scr'+'ipt>(function(){'
+				+ 'var r='+totalSec+';var e=document.getElementById("asp-maint-timer");'
 				+ 'function p(n){n=n|0;return n<10?"0"+n:""+n;}'
 				+ 'if(!e)return;'
 				+ 'setInterval(function(){'
-				+ 'if(r<=0){r='+previewSec+';}r--;'
-				+ 'var h=Math.floor(r/3600),m=Math.floor((r%3600)/60),s=r%60;'
-				+ 'var hh=e.querySelector(".asp-hh"),mm=e.querySelector(".asp-mm"),ss=e.querySelector(".asp-ss");'
-				+ 'if(hh)hh.textContent=p(h);if(mm)mm.textContent=p(m);if(ss)ss.textContent=p(s);'
+				+ 'if(r<=0){r='+totalSec+';}r--;'
+				+ 'var hh=Math.floor(r/3600),mm=Math.floor((r%3600)/60),ss=r%60;'
+				+ 'var a=e.querySelector(".asp-hh"),b=e.querySelector(".asp-mm"),c=e.querySelector(".asp-ss");'
+				+ 'if(a)a.textContent=p(hh);if(b)b.textContent=p(mm);if(c)c.textContent=p(ss);'
 				+ '},1000);'
-				+ '})();<\/script>';
+				+ '})();</scr'+'ipt>';
 		}
 
-		// Wrap everything inside #asp-loader-root so CSS variables apply
-		var bodyHtml = '<div id="asp-loader-root">' + presetHtml + '</div>';
+		// Substitute placeholders in preset HTML (same as frontend strtr)
+		var presetHtml = code
+			.replace(/\{\{LOGO\}\}/g, logoHtml)
+			.replace(/\{\{TEXT\}\}/g, escHtml(text))
+			.replace(/\{\{DIR\}\}/g, dirAttr)
+			.replace(/\{\{TEXT_COLOR\}\}/g, escHtml(textCol))
+			.replace(/\{\{ACCENT\}\}/g, escHtml(accent))
+			.replace(/\{\{MAINT\}\}/g, maintHtml);
+
+		// Strip any leftover <style> blocks from presets (v3.1 presets don't have any, but be safe)
+		presetHtml = presetHtml.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '').trim();
+
+		// Layout CSS — zero @keyframes; animations live as SMIL inside the inline SVG.
+		var css = 'html,body{margin:0;padding:0;height:100%;background:#0a0a0f;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Vazirmatn",Tahoma,Arial,sans-serif;}'
+			+ '#asp-loader-root{position:fixed;inset:0;z-index:1;background:'+bg+';'
+			+ 'backdrop-filter:blur('+blur+'px);-webkit-backdrop-filter:blur('+blur+'px);'
+			+ 'display:flex;align-items:center;justify-content:center;margin:0;padding:0;}'
+			+ '#asp-loader-root *,.asp-loader-inner *{box-sizing:border-box;}'
+			+ '.asp-loader-inner{display:flex;flex-direction:column;align-items:center;gap:28px;padding:20px;text-align:center;max-width:92vw;}'
+			+ '.asp-logo img{max-height:80px;max-width:260px;object-fit:contain;filter:drop-shadow(0 6px 20px rgba(0,0,0,.55));}'
+			+ '.asp-icon-svg{width:clamp(140px,40vw,240px);height:auto;max-height:120px;display:block;overflow:visible;}'
+			+ '.asp-brand-text{font-size:clamp(1.4rem,6.5vw,3.2rem);font-weight:800;letter-spacing:.08em;line-height:1.1;color:'+textCol+';padding:0;margin:0;}'
+			+ '.asp-brand-text[dir="rtl"]{letter-spacing:0;font-weight:700;}'
+			+ '.asp-maint{color:rgba(255,255,255,.9);}'
+			+ '.asp-maint-lbl{font-size:11px;letter-spacing:.2em;text-transform:uppercase;opacity:.55;margin-bottom:8px;}'
+			+ '.asp-maint-timer{font-family:ui-monospace,SF Mono,Menlo,Consolas,monospace;font-size:clamp(1.2rem,3.5vw,2rem);font-weight:700;letter-spacing:.08em;color:#fff;text-shadow:0 0 20px rgba(255,255,255,.4);direction:ltr;unicode-bidi:isolate;display:inline-block;}'
+			+ '.asp-maint-timer .asp-sep{opacity:.5;}'
+			+ '.asp-maint-msg{margin-top:12px;font-size:clamp(.85rem,1.8vw,1rem);line-height:1.8;opacity:.82;}';
+
+		var bodyHtml = '<div id="asp-loader-root"><div class="asp-loader-inner">'+presetHtml+'</div></div>';
 		var doc = '<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1">'
-			+ '<style id="asp-loader-styles">' + rootCss + '\n' + presetCss + '\n' + logoCss
-			+ '@keyframes asp-blink{50%{opacity:.15;}}'
-			+ '<\/style><\/head><body>'
+			+ '<style id="asp-loader-styles">'+css+'<\/style><\/head><body>'
 			+ bodyHtml + maintScript + '<\/body><\/html>';
 		return doc;
 	}
@@ -740,7 +707,6 @@ CSS;
 
 	$form.on('input change',':input',function(){
 		var k = ($(this).attr('name')||'').replace(/^.+\[(\w+)\]$/,'$1');
-		// Range labels
 		if($(this).hasClass('aspl-range')){
 			var unit = (k==='blur_amount')?'px':(k==='bg_opacity'?'%':'ms');
 			var lblId = k+'Lbl';
@@ -748,14 +714,12 @@ CSS;
 			var lbl = document.getElementById(lblId);
 			if(lbl) lbl.textContent = $(this).val()+unit;
 		}
-		// Maintenance body toggle
 		if(k==='maintenance_mode'){
 			$('#maintBody').toggle($(this).is(':checked'));
 		}
 		update();
 	});
 
-	// Preset card visual selection
 	$('.aspl-preset-card').on('click',function(e){
 		if($(e.target).is('input')) return;
 		$(this).find('input').prop('checked',true).trigger('change');
@@ -765,7 +729,6 @@ CSS;
 		$('.aspl-preset-card[data-slug="'+$(this).val()+'"]').addClass('selected');
 	});
 
-	// Logo picker
 	var media=null;
 	$('#logoUp').on('click',function(e){
 		e.preventDefault();
@@ -781,13 +744,11 @@ CSS;
 	});
 	$('#logoRm').on('click',function(e){e.preventDefault();$('#logoIn').val('');$('#logoPrev').html('<span>بدون لوگو</span>');update();});
 
-	// Fullscreen
 	$('#asplFs').on('click',function(){$modal.addClass('open');});
 	$('#asplRefresh').on('click',function(){update();});
 	$('#asplModalX,.aspl-modal-bg').on('click',function(){$modal.removeClass('open');});
 	$(document).on('keydown',function(e){if(e.key==='Escape')$modal.removeClass('open');});
 
-	// Trigger initial preview (wait for color pickers to init)
 	setTimeout(update, 150);
 })(jQuery);
 JS;

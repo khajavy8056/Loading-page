@@ -1,84 +1,25 @@
-<!--
-  Apple Star Page Loader — Apple Star Pulse (ECG)
-  Exact recreation of the user's design: glass backdrop, ECG track with
-  scanning blip, and per-letter heartbeat (Latin: letter-level, RTL: word-level)
-  synced to a 2.4s master timeframe.
-  NOTE: direction is controlled by the `dir` attribute set by JS on the
-  .asp-wave-word element itself, so LTR text stays LTR even on RTL pages
-  (prevents the "mirrored letters" bug).
--->
-<div class="asp-loader asp-theme-apple-star">
-  <div class="asp-backdrop"></div>
-  <div class="asp-stage">
-    <div class="asp-brand-wrap">
-      <div class="asp-ecg-box">
-        <div class="asp-ecg-track"></div>
-        <div class="asp-ecg-blip"></div>
-        <div class="asp-wave-word" id="asp-word" dir="ltr"></div>
-      </div>
-    </div>
-  </div>
-  <style>
-    .asp-theme-apple-star{position:fixed;inset:0;z-index:2147483647;display:flex!important;align-items:center;justify-content:center;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Vazirmatn",Tahoma,Arial,sans-serif!important;margin:0!important;padding:0!important;}
-    .asp-theme-apple-star .asp-backdrop{position:absolute;inset:0;background:var(--asp-bg,rgba(0,0,0,0.75))!important;backdrop-filter:blur(var(--asp-blur,16px));-webkit-backdrop-filter:blur(var(--asp-blur,16px));}
-    .asp-theme-apple-star .asp-stage{position:relative;display:flex;flex-direction:column;align-items:center;gap:20px;z-index:2;}
-    .asp-theme-apple-star .asp-logo-wrap{margin-bottom:14px;}
-    .asp-theme-apple-star .asp-logo-wrap img{max-height:80px;max-width:240px;object-fit:contain;filter:drop-shadow(0 6px 20px rgba(0,0,0,0.6));}
-    .asp-theme-apple-star .asp-brand-wrap{position:relative;padding:20px 40px;display:flex;align-items:center;justify-content:center;}
-    .asp-theme-apple-star .asp-ecg-box{position:relative;display:flex;align-items:center;gap:4px;}
-
-    /* ECG horizontal line behind text */
-    .asp-theme-apple-star .asp-ecg-track{position:absolute;top:50%;left:0;width:100%;height:1px;background:linear-gradient(90deg,rgba(255,255,255,0) 0%,rgba(255,255,255,0.25) 20%,rgba(255,255,255,0.25) 80%,rgba(255,255,255,0) 100%);transform:translateY(-50%);z-index:0;}
-    /* Scanning white blip */
-    .asp-theme-apple-star .asp-ecg-blip{position:absolute;top:50%;left:0;width:8px;height:8px;background:#fff!important;border-radius:50%;box-shadow:0 0 15px 4px rgba(255,255,255,0.8),0 0 30px 8px var(--asp-accent, rgba(0,195,255,0.4))!important;transform:translate(-50%,-50%);z-index:2;animation:asp-ecg-sweep 2.4s infinite cubic-bezier(0.25,0.1,0.25,1)!important;}
-
-    /* Word container — direction set via dir attribute, NO html[dir] override */
-    .asp-theme-apple-star .asp-wave-word{position:relative;display:flex!important;align-items:baseline;gap:0.04em;justify-content:center;flex-wrap:wrap;max-width:94vw;z-index:1;font-weight:800!important;letter-spacing:0.1em;font-size:clamp(1.8rem,9vw,4.5rem);line-height:1.2;padding:0;margin:0;unicode-bidi:isolate;direction:ltr;}
-    .asp-theme-apple-star .asp-wave-word[dir="rtl"]{direction:rtl;letter-spacing:0;font-weight:700;font-size:clamp(1.6rem,8vw,4rem);}
-
-    /* LTR letters */
-    .asp-theme-apple-star .asp-wave-word .ltr{position:relative;z-index:1;color:rgba(255,255,255,0.2)!important;-webkit-text-fill-color:rgba(255,255,255,0.2)!important;text-transform:uppercase;animation:asp-letter-hb 2.4s infinite ease-in-out!important;animation-delay:calc(var(--w) * 0.18s)!important;will-change:transform,color,text-shadow;display:inline-block;transform-origin:center bottom;}
-    /* RTL words */
-    .asp-theme-apple-star .asp-wave-word .rtl{position:relative;z-index:1;color:rgba(255,255,255,0.3)!important;-webkit-text-fill-color:rgba(255,255,255,0.3)!important;animation:asp-word-hb 2.4s infinite ease-in-out!important;animation-delay:calc(var(--w) * 0.22s)!important;will-change:transform,color,text-shadow;display:inline-block;white-space:nowrap;transform-origin:center bottom;}
-    /* Spacer between words */
-    .asp-theme-apple-star .asp-wave-word .sp{width:0.5em;display:inline-block;flex-shrink:0;}
-
-    @keyframes asp-ecg-sweep{
-      0%{left:-5%;opacity:0;}
-      10%{opacity:1;}
-      90%{opacity:1;}
-      100%{left:105%;opacity:0;}
-    }
-    @keyframes asp-letter-hb{
-      0%,25%,100%{color:rgba(255,255,255,0.2);-webkit-text-fill-color:rgba(255,255,255,0.2);transform:translateY(0) scale(1);text-shadow:none;}
-      10%{color:#ffffff;-webkit-text-fill-color:#ffffff;transform:translateY(-14px) scale(1.12);text-shadow:0 0 22px rgba(255,255,255,0.95),0 10px 14px rgba(0,0,0,0.6);}
-      15%{transform:translateY(5px) scale(0.94);}
-      20%{transform:translateY(0) scale(1);}
-    }
-    @keyframes asp-word-hb{
-      0%,25%,100%{color:rgba(255,255,255,0.3);-webkit-text-fill-color:rgba(255,255,255,0.3);transform:translateY(0);text-shadow:none;}
-      10%{color:#ffffff;-webkit-text-fill-color:#ffffff;transform:translateY(-12px) scale(1.08);text-shadow:0 0 22px rgba(255,255,255,0.9);}
-      15%{transform:translateY(4px) scale(0.96);}
-      20%{transform:translateY(0) scale(1);}
-    }
-
-    /* Maintenance block */
-    .asp-theme-apple-star .asp-maint{margin-top:28px;text-align:center;color:rgba(255,255,255,0.85)!important;max-width:600px;padding:0 20px;}
-    .asp-theme-apple-star .asp-maint-timer{font-family:ui-monospace,SF Mono,Menlo,Consolas,monospace!important;font-size:clamp(1.2rem,3.5vw,2rem);font-weight:700;letter-spacing:0.08em;color:#fff!important;-webkit-text-fill-color:#fff!important;text-shadow:0 0 24px rgba(255,255,255,0.5);direction:ltr!important;unicode-bidi:isolate;display:inline-block;}
-    .asp-theme-apple-star .asp-maint-timer .asp-sep{opacity:0.6;display:inline-block;animation:asp-blink 1s steps(2) infinite;margin:0 2px;}
-    @keyframes asp-blink{50%{opacity:0.15;}}
-    .asp-theme-apple-star .asp-maint-msg{margin-top:14px;font-size:clamp(0.9rem,2vw,1.05rem);line-height:1.8;opacity:0.85;}
-    .asp-theme-apple-star .asp-maint-lbl{margin-bottom:6px;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;opacity:0.55;}
-
-    @media (prefers-reduced-motion: reduce){
-      .asp-theme-apple-star .asp-ecg-blip,
-      .asp-theme-apple-star .asp-wave-word .ltr,
-      .asp-theme-apple-star .asp-wave-word .rtl{animation:none!important;color:#fff!important;-webkit-text-fill-color:#fff!important;opacity:1!important;}
-    }
-    @media (max-width:480px){
-      .asp-theme-apple-star .asp-brand-wrap{padding:12px 18px;}
-      .asp-theme-apple-star .asp-wave-word{letter-spacing:0.06em;}
-      .asp-theme-apple-star .asp-wave-word .sp{width:0.35em;}
-    }
-  </style>
-</div>
+{{LOGO}}
+<svg class="asp-icon-svg" viewBox="0 0 240 80" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="asg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fff" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <line x1="10" y1="40" x2="230" y2="40" stroke="rgba(255,255,255,0.22)" stroke-width="1"/>
+  <line x1="0"  y1="40" x2="34"  y2="40" stroke="rgba(255,255,255,0)" stroke-width="1"/>
+  <line x1="206" y1="40" x2="240" y2="40" stroke="rgba(255,255,255,0)" stroke-width="1"/>
+  <!-- Scanning blip (main dot) -->
+  <circle cx="20" cy="40" r="4" fill="#ffffff">
+    <animate attributeName="cx" values="10;230" dur="2.4s" repeatCount="indefinite" calcMode="spline" keySplines="0.25 0.1 0.25 1" keyTimes="0;1"/>
+    <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.08;0.92;1" dur="2.4s" repeatCount="indefinite"/>
+  </circle>
+  <!-- Outer glow -->
+  <circle cx="20" cy="40" r="3" fill="url(#asg)">
+    <animate attributeName="cx" values="10;230" dur="2.4s" repeatCount="indefinite" calcMode="spline" keySplines="0.25 0.1 0.25 1" keyTimes="0;1"/>
+    <animate attributeName="r" values="6;18;6" dur="2.4s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.08;0.92;1" dur="2.4s" repeatCount="indefinite"/>
+  </circle>
+</svg>
+<div class="asp-brand-text" {{DIR}}>{{TEXT}}</div>
+{{MAINT}}
