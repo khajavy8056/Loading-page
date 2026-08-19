@@ -1,0 +1,19 @@
+<div class="asld asld--pulse-ring" dir="ltr" role="status" aria-label="Loading">
+  <div class="asld__pulse"><div class="asld__dot"></div><div class="asld__ring"></div><div class="asld__ring asld__ring--2"></div><div class="asld__ring asld__ring--3"></div></div>
+  <p class="asld__text">Loading</p>
+</div>
+<style>
+body{overflow:hidden!important}
+.asld{position:fixed;top:0;right:0;bottom:0;left:0;inset:0;z-index:99999999;display:flex;flex-direction:column;align-items:center;justify-content:center;direction:ltr;background:radial-gradient(circle at center, #1c1c2a 0%, #07070c 75%);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;gap:26px}
+.asld__pulse{position:relative;width:clamp(64px,16vw,88px);height:clamp(64px,16vw,88px);display:flex;align-items:center;justify-content:center}
+.asld__dot{width:18px;height:18px;background:#fff;border-radius:50%;box-shadow:0 0 16px rgba(255,255,255,1), 0 0 32px rgba(100,120,255,0.7);position:relative;z-index:2;animation:asld-dot-pulse 1.4s infinite ease-in-out}
+.asld__ring{position:absolute;inset:0;border:2px solid rgba(255,255,255,0.45);border-radius:50%;animation:asld-ripple 1.7s infinite ease-out}
+.asld__ring--2{animation-delay:0.4s;border-color:rgba(120,140,255,0.5)}
+.asld__ring--3{animation-delay:0.8s;border-color:rgba(255,255,255,0.25)}
+.asld__text{font-size:clamp(0.85rem,3vw,1rem);letter-spacing:0.45em;color:rgba(255,255,255,0.9);margin:0;text-transform:uppercase;animation:asld-text-pulse 1.6s infinite ease-in-out}
+@keyframes asld-ripple{0%{transform:scale(0.28);opacity:1}100%{transform:scale(1.15);opacity:0}}
+@keyframes asld-dot-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+@keyframes asld-text-pulse{0%,100%{opacity:0.7}50%{opacity:1}}
+@media (max-width:480px){.asld__dot{width:16px;height:16px}}
+@media (prefers-reduced-motion: reduce){.asld__ring,.asld__dot,.asld__text{animation:none!important;opacity:0.85}}
+</style>

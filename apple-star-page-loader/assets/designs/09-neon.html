@@ -1,0 +1,17 @@
+<div class="asld asld--neon" dir="ltr" role="status" aria-label="Loading">
+  <div class="asld__star"></div>
+  <p class="asld__text">APPLE STAR</p>
+  <div class="asld__line"></div>
+</div>
+<style>
+body{overflow:hidden!important}
+.asld{position:fixed;top:0;right:0;bottom:0;left:0;inset:0;z-index:99999999;display:flex;flex-direction:column;align-items:center;justify-content:center;direction:ltr;background:radial-gradient(ellipse at center, #0a1020 0%, #04060f 70%);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;gap:18px}
+.asld__star{width:clamp(50px,12vw,72px);height:clamp(50px,12vw,72px);background:#00e5ff;clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);filter:drop-shadow(0 0 14px #00e5ff) drop-shadow(0 0 34px rgba(0,229,255,0.65));animation:asld-neon-pulse 1.45s infinite ease-in-out}
+.asld__text{font-size:clamp(1rem,4.2vw,1.55rem);font-weight:800;letter-spacing:0.46em;color:#00e5ff;text-shadow:0 0 14px rgba(0,229,255,0.9), 0 0 32px rgba(0,229,255,0.45);margin:0;animation:asld-neon-flicker 2.8s infinite}
+.asld__line{width:clamp(120px,30vw,180px);height:2px;background:linear-gradient(90deg, transparent, #00e5ff, transparent);opacity:0.7;animation:asld-line 1.6s infinite ease-in-out}
+@keyframes asld-neon-pulse{0%,100%{filter:drop-shadow(0 0 14px #00e5ff) drop-shadow(0 0 34px rgba(0,229,255,0.65));transform:scale(1)}50%{filter:drop-shadow(0 0 22px #00e5ff) drop-shadow(0 0 52px rgba(0,229,255,1));transform:scale(1.07)}}
+@keyframes asld-neon-flicker{0%,18%,22%,25%,53%,57%,100%{opacity:1}20%,24%,55%{opacity:0.55}}
+@keyframes asld-line{0%,100%{transform:scaleX(0.7);opacity:0.5}50%{transform:scaleX(1);opacity:1}}
+@media (max-width:480px){.asld__text{letter-spacing:0.3em}}
+@media (prefers-reduced-motion: reduce){.asld__star,.asld__text,.asld__line{animation:none!important}}
+</style>

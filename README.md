@@ -1,8 +1,8 @@
-# Apple Star Page Loader — Apple Star Page Loader 🌟
+# Apple Star Page Loader v1.3.1 🌟
 
-یک افزونه اختصاصی وردپرس (Production-Ready) برای نمایش **لودینگ صفحه‌ای شیشه‌ای «Apple Star»** روی سایت — کاملاً ریسپانسیو، سازگار با آخرین نسخه‌های **WordPress 7.0** و **WooCommerce 11.0** و مناسب برای صفحات سنگین المنتور.
+یک افزونه اختصاصی وردپرس (Production-Ready) برای نمایش **لودینگ صفحه‌ای شیشه‌ای «Apple Star»** + حالت **Maintenance / Coming Soon** — کاملاً ریسپانسیو، سازگار با **WordPress 7.0** و **WooCommerce 11.0**.
 
-A production-ready WordPress plugin that puts a custom **"Apple Star" glass preloader** in front of your visitors — fully responsive, compatible with the latest WordPress (7.0) and WooCommerce (11.0), built for heavy Elementor pages.
+A production-ready WordPress plugin — custom **"Apple Star" glass preloader** + **Maintenance / Coming Soon** mode — fully responsive, WP 7.0 & WooCommerce 11.0 compatible.
 
 ---
 
@@ -10,70 +10,74 @@ A production-ready WordPress plugin that puts a custom **"Apple Star" glass prel
 
 | قابلیت | توضیح |
 |---|---|
-| 🎛️ صفحه تنظیمات | در نوار کناری پیشخوان: **Apple Star Loader** + زیر **Settings → Apple Star Loader** |
-| ✅ Enable / Disable | کلید روشن/خاموش بدون دست زدن به کد |
-| 📍 Display Target | فقط صفحه اصلی (پیشنهادی) یا تمام صفحات سایت |
-|  کد لودینگ کاملاً باز | Textarea بزرگ برای HTML/CSS لودینگ — هر لحظه با طراحی خودتان عوض می‌شود + **پیش‌نمایش زنده** (موبایل/تبلت/دسکتاپ) + دکمه Reset به کد پیش‌فرض |
-| ⏱️ Fallback Timeout | عدد بر حسب ثانیه (پیش‌فرض ۱۰) — اگر عکسی گیر کند لودینگ بسته می‌شود و سایت قفل نمی‌ماند |
-| 📄 تزریق در بالاترین نقطه | از طریق هوک `wp_body_open` (priority 1) + بازگشت‌پذیر روی `wp_footer` برای تم‌های بدون `body_open` |
-| 🔒 قفل اسکرول | `overflow: hidden` در زمان فعال بودن لودینگ (از سمت خود افزونه، حتی اگر کد شما قفل نداشته باشد) |
-| 🖼️ شنود رویداد load | `window.addEventListener('load')` — صبر تا تمام اجزای سنگین المنتور، فونت‌ها و عکس‌ها دانلود شوند |
-| 🌫️ محو شدن نرم | Fade-out با تغییر `opacity` و سپس حذف کامل المان از DOM با `loader.remove()` |
-| 📱 کاملاً ریسپانسیو | کد پیش‌فرض با `clamp()` + media queries از موبایل کوچک تا دسکتاپ + پشتیبانی از `prefers-reduced-motion` |
+| 🎛️ صفحه تنظیمات | **Apple Star Loader** در سایدبار + **Settings → Apple Star Loader** |
+| ✅ سوئیچ Master ON/OFF | با بنر وضعیت و پیل Active/Disabled |
+| 🎨 ۱۰ مدل لودینگ | یک‌کلیک انتخاب + حالت Custom |
+| 🔧 کد لودینگ باز | HTML/CSS خام (فقط trim) + پیش‌نمایش زنده (375/768/100%) + Reset |
+| ⏱️ Fallback Timeout | پیش‌فرض ۱۰ث (1–120) |
+| 🛠️ Maintenance / Coming Soon | صفحه تمام‌صفحه opaque + پیام قابل ویرایش + تایمر زنده (پیش‌فرض 48h) + خاموش خودکار + 503 + Retry-After + bypass ادمین |
+
+**10 Loader Designs / ۱۰ مدل:**
+
+| # | کلید | ظاهر |
+|---|---|---|
+| 1 | `apple-star` | شیشه تیره + ECG + scanner + حروف APPLE STAR stagger 0.09s forwards |
+| 2 | `star-frost` | شیشه روشن + حروف تیره |
+| 3 | `dots` | سه نقطه پرشی |
+| 4 | `spinner` | حلقه اسپینر کلاسیک |
+| 5 | `progress-bar` | نوار گرادیان indeterminate |
+| 6 | `pulse-ring` | نقطه + دو حلقه ripple |
+| 7 | `orbit` | ستاره clip-path + دو نقطه در مدار |
+| 8 | `typing` | LOADING... چشمک‌زن |
+| 9 | `neon` | ستاره نئونی pulsing glow |
+| 10 | `wave` | حروف موجی + LOADING |
+
+## 🛠️ Maintenance Flow / جریان حالت تعمیر
+
+1. ادمین Maintenance را ON + پیام + نوع تایمر (off / hours / datetime) را ذخیره می‌کند.
+2. `countdown_end` محاسبه می‌شود (hours: `time()+hours*3600` / datetime: `strtotime()` / off: 0).
+3. WP-Cron `aspl_maintenance_end` برای زمان پایان زمان‌بندی می‌شود.
+4. بازدیدکنندگان عادی: `status_header(503)` + `Retry-After` + صفحه opaque `rgba(4,4,8,0.97)` با `z-index:99999999` — پشتش چیزی دیده نمی‌شود.
+5. تایمر هر ثانیه با `Date.now()` به‌روز می‌شود (d/h/m/s با `tabular-nums`).
+6. وقتی `diff<=0` → همه 00 + کلاس `aspm__count--done` + `clearInterval`.
+7. Cron به‌صورت خودکار `maintenance_enabled=0` می‌کند — سایت باز می‌شود. ادمین‌ها همیشه bypass می‌کنند و بنر بالای صفحه را می‌بینند.
 
 ## 📁 ساختار فایل‌ها / File structure
 
 ```
 apple-star-page-loader/
-├── apple-star-page-loader.php        # فایل اصلی افزونه (هدرهای استاندارد WP)
+├── apple-star-page-loader.php        # v1.3.1 — singleton + cron handler
 ├── includes/
-│   ├── class-aspl-defaults.php       # گزینه‌ها و کد پیش‌فرض
-│   ├── class-aspl-settings.php       # صفحه تنظیمات پیشخوان (Settings API)
-│   └── class-aspl-frontend.php       # تزریق لودینگ، قفل اسکرول، fade-out
-├── assets/
-│   └── default-loader-code.html      # کد پیش‌فرض «Apple Star» (ریسپانسیو)
-├── uninstall.php                     # پاک‌سازی کامل هنگام حذف افزونه
-└── readme.txt                        # readme استاندارد وردپرس
+│   ├── class-aspl-defaults.php       # پیش‌فرض‌ها (maintenance خاموش، 48h)
+│   ├── class-aspl-designs.php        # رجیستری ۱۰ مدل
+│   ├── class-aspl-settings.php       # Settings API + JS منطق‌ها
+│   └── class-aspl-frontend.php       # لودینگ + Maintenance + بنر ادمین
+├── assets/designs/
+│   ├── 01-apple-star.html  ... 10-wave.html   # ۱۰ مدل (HTML+CSS، بدون script)
+│   └── default-loader-code.html      # legacy fallback
+├── uninstall.php
+└── readme.txt                        # Stable tag: 1.2.0
+dist/apple-star-page-loader.zip       # فایل نصبی (با فولدر سطح‌بالا)
 ```
 
-##  نصب / Installation
+## 📦 نصب / Installation
 
-**گزینه ۱ — فایل نصبی (پیشنهادی):**
-فایل آماده‌ی نصب در [`dist/apple-star-page-loader.zip`](dist/apple-star-page-loader.zip) موجود است.
-در پیشخوان وردپرس: **Plugins → Add New → Upload Plugin** → فایل zip را آپلود و Active کنید.
-
-*Option 1 — installable zip:* grab [`dist/apple-star-page-loader.zip`](dist/apple-star-page-loader.zip), then in WP admin: **Plugins → Add New → Upload Plugin** → upload and activate.
-
-**گزینه ۲ — کپی فولدر:**
-فولدر `apple-star-page-loader` را داخل `wp-content/plugins/` کپی و Active کنید.
-
-*Option 2 — copy the `apple-star-page-loader` folder into `wp-content/plugins/` and activate.*
-
-بعد از فعال‌سازی: **Apple Star Loader** در نوار کناری پیشخوان (آیکون ستاره) یا **Settings → Apple Star Loader**.
-
-## ⚙️ منطق فنی / Technical flow
-
-1. `wp_body_open` (priority 1): کل کد لودینگ داخل یک ریشه‌ی واحد `<div id="asp-loader-root">` تزریق می‌شود.
-2. `html.asp-scroll-lock` روی `<html>` → اسکرول قفل.
-3. `window.addEventListener('load', ...)` → بعد از دانلود کامل همه‌ی داربست‌ها (المنتور، فونت، عکس):
-   - کلاس `asp-fade-out` → `opacity: 0` در ۰.۶ ثانیه،
-   - سپس `loader.remove()` → حذف کامل از DOM (با time-out امنیتی ۱.۵ ثانیه‌ای حتی اگر `transitionend` نیاید).
-4. اگر رویداد `load` تا زمان Timeout نیامد → لودینگ به هر حال بسته می‌شود (سایت قفل نمی‌ماند).
-5. `noscript` fallback: اگر JS خاموش باشد، لودینگ اصلاً نمایش داده نمی‌شود.
+**zip:** `dist/apple-star-page-loader.zip` → **Plugins → Add New → Upload Plugin**
+**کپی:** فولدر `apple-star-page-loader` → `wp-content/plugins/` → Activate
 
 ## 🧪 سازگاری / Compatibility
 
 - WordPress: Tested up to **7.0** (Requires at least 6.0)
-- WooCommerce: سازگار با **11.0** (بدون تداخل با هوک‌های فروشگاه)
-- Elementor: طراحی‌شده برای صبر روی صفحات سنگین المنتور
-- PHP: 7.4+ (سازگار با PHP 8.2/8.4)
-- Browser: همه‌ی مرورگرهای مدرن (Chrome, Safari, Firefox, Edge — iOS/Android)
+- WooCommerce: **11.0**
+- PHP: 7.4+ (8.2/8.4 tested)
+- Browser: Chrome, Safari, Firefox, Edge — iOS/Android
 
 ## 🔒 امنیت / Security
 
-- دسترسی به صفحه تنظیمات فقط با `manage_options` (ادمین).
-- فیلد «Loader Code» به‌صورت پیش‌فرض یک فیلد کد خام HTML/CSS است (مثل قسمت Footer Code) و فقط در مرورگر بازدیدکنندگان همان سایت اجرا می‌شود؛ محتوای آن عیناً ذخیره و ارسال می‌شود و مسئولیت کد با نویسنده‌ی آن است.
-- با حذف افزونه (`uninstall.php`) تمام optionها پاک می‌شود.
+- `manage_options` برای تنظیمات
+- فیلد `code` خام — فقط trim، بدون strip/escape (مثل Footer Code)
+- `maintenance_message` با `wp_strip_all_tags` + `esc_html`
+- `uninstall.php` → `delete_option('aspl_settings')`
 
 ## 📄 لایسنس / License
 

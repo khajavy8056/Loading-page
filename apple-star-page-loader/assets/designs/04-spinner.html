@@ -1,0 +1,17 @@
+<div class="asld asld--spinner" dir="ltr" role="status" aria-label="Loading">
+  <div class="asld__wrap"><div class="asld__spinner"></div><div class="asld__glow"></div></div>
+  <p class="asld__text">Loading</p>
+</div>
+<style>
+body{overflow:hidden!important}
+.asld{position:fixed;top:0;right:0;bottom:0;left:0;inset:0;z-index:99999999;display:flex;flex-direction:column;align-items:center;justify-content:center;direction:ltr;background:#ffffff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;gap:24px}
+.asld__wrap{position:relative;width:clamp(52px,12vw,64px);height:clamp(52px,12vw,64px);display:flex;align-items:center;justify-content:center}
+.asld__spinner{position:absolute;inset:0;border:4px solid #e8e8ed;border-top-color:#0071e3;border-right-color:#42a5f5;border-radius:50%;animation:asld-spin 0.85s linear infinite}
+.asld__glow{position:absolute;inset:6px;border-radius:50%;background:radial-gradient(circle, rgba(0,113,227,0.12) 0%, transparent 70%);animation:asld-glow 1.4s infinite ease-in-out}
+.asld__text{font-size:clamp(0.85rem,3vw,1rem);letter-spacing:0.4em;color:#1d1d1f;margin:0;text-transform:uppercase;animation:asld-fade-pulse 1.8s infinite ease-in-out}
+@keyframes asld-spin{to{transform:rotate(360deg)}}
+@keyframes asld-glow{0%,100%{opacity:0.6;transform:scale(1)}50%{opacity:1;transform:scale(1.08)}}
+@keyframes asld-fade-pulse{0%,100%{opacity:0.6}50%{opacity:1}}
+@media (max-width:480px){.asld__spinner{border-width:3px}}
+@media (prefers-reduced-motion: reduce){.asld__spinner,.asld__glow,.asld__text{animation:none!important}}
+</style>

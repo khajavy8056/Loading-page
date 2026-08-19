@@ -1,0 +1,20 @@
+<div class="asld asld--progress-bar" dir="ltr" role="status" aria-label="Loading">
+  <div class="asld__brand" dir="ltr"><span class="asld__star"></span><span>APPLE STAR</span></div>
+  <div class="asld__track"><div class="asld__bar"></div><div class="asld__shimmer"></div></div>
+  <p class="asld__text">Please wait…</p>
+</div>
+<style>
+body{overflow:hidden!important}
+.asld{position:fixed;top:0;right:0;bottom:0;left:0;inset:0;z-index:99999999;display:flex;flex-direction:column;align-items:center;justify-content:center;direction:ltr;background:linear-gradient(180deg, #0a0a14 0%, #121230 100%);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;gap:22px}
+.asld__brand{display:flex;align-items:center;gap:8px;color:rgba(255,255,255,0.9);letter-spacing:0.35em;font-size:clamp(0.7rem,2vw,0.85rem);font-weight:700}
+.asld__star{width:18px;height:18px;background:#fff;clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);animation:asld-twinkle 1.2s infinite ease-in-out}
+.asld__track{position:relative;width:clamp(220px,64vw,380px);height:5px;background:rgba(255,255,255,0.12);border-radius:999px;overflow:hidden;box-shadow:inset 0 1px 3px rgba(0,0,0,0.4)}
+.asld__bar{position:absolute;inset:0 50% 0 0;width:46%;background:linear-gradient(90deg,#0071e3,#42a5f5,#7bb8ff);border-radius:999px;animation:asld-indeterminate 1.35s infinite cubic-bezier(0.4,0,0.2,1)}
+.asld__shimmer{position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.35),transparent);animation:asld-shimmer 1.1s infinite linear}
+.asld__text{font-size:clamp(0.82rem,2.8vw,0.95rem);letter-spacing:0.2em;color:rgba(255,255,255,0.75);margin:0}
+@keyframes asld-indeterminate{0%{transform:translateX(-110%)}50%{transform:translateX(60%)}100%{transform:translateX(220%)}}
+@keyframes asld-shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+@keyframes asld-twinkle{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.7;transform:scale(0.85)}}
+@media (max-width:480px){.asld__track{width:82vw}}
+@media (prefers-reduced-motion: reduce){.asld__bar,.asld__shimmer,.asld__star{animation:none!important;transform:none}}
+</style>
