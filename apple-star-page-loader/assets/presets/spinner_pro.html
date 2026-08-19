@@ -1,0 +1,45 @@
+<!--
+  Preset: Spinner Pro — dual-ring spinner + counter + bar.
+-->
+<div class="asp-loader asp-theme-spin">
+  <div class="asp-backdrop"></div>
+  <div class="asp-stage">
+    <div class="asp-spinner">
+      <div class="asp-ring asp-ring-1"></div>
+      <div class="asp-ring asp-ring-2"></div>
+      <div class="asp-ring-core">
+        <span class="asp-percent" data-value="0">0</span><span class="asp-percent-sign">%</span>
+      </div>
+    </div>
+    <div class="asp-wave-text asp-sub"></div>
+    <div class="asp-bar">
+      <div class="asp-bar-fill"></div>
+    </div>
+    <div class="asp-tip"></div>
+  </div>
+  <style>
+    .asp-theme-spin{position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+    .asp-theme-spin .asp-backdrop{position:absolute;inset:0;background:var(--asp-bg,#0a0a0f);backdrop-filter:blur(var(--asp-blur,0px));-webkit-backdrop-filter:blur(var(--asp-blur,0px));}
+    .asp-theme-spin .asp-stage{position:relative;display:flex;flex-direction:column;align-items:center;gap:26px;}
+    .asp-theme-spin .asp-spinner{position:relative;width:clamp(120px,30vw,180px);height:clamp(120px,30vw,180px);}
+    .asp-theme-spin .asp-ring{position:absolute;inset:0;border-radius:50%;border:2px solid transparent;}
+    .asp-theme-spin .asp-ring-1{border-top-color:var(--asp-accent,#4aa3ff);border-right-color:var(--asp-accent,#4aa3ff);animation:aspSpin 1.2s linear infinite;box-shadow:0 0 30px rgba(74,163,255,0.35) inset,0 0 20px rgba(74,163,255,0.2);}
+    .asp-theme-spin .asp-ring-2{inset:14px;border-top-color:var(--asp-text,#fff);border-left-color:var(--asp-text,#fff);animation:aspSpin 1.8s linear infinite reverse;opacity:0.6;}
+    .asp-theme-spin .asp-ring-core{position:absolute;inset:28px;border-radius:50%;background:rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:center;font-family:ui-monospace,SF Mono,monospace;font-weight:800;font-size:clamp(1.3rem,4vw,1.8rem);color:var(--asp-text,#fff);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.06);}
+    .asp-theme-spin .asp-percent{font-variant-numeric:tabular-nums;}
+    .asp-theme-spin .asp-percent.asp-digit-bounce{animation:aspDigitBounceS 0.4s ease-out;}
+    .asp-theme-spin .asp-percent-sign{font-size:0.5em;opacity:0.6;margin-left:2px;}
+    .asp-theme-spin .asp-sub{font-family:-apple-system,sans-serif;font-size:clamp(0.8rem,1.8vw,1rem);letter-spacing:0.35em;text-transform:uppercase;color:rgba(255,255,255,0.7);font-weight:600;}
+    .asp-theme-spin .asp-sub .asp-wave-letter{display:inline-block;animation:aspWaveS 2s infinite ease-in-out;animation-delay:calc(var(--w)*0.07s);}
+    .asp-theme-spin .asp-bar{position:relative;width:min(360px,70vw);height:3px;background:var(--asp-bar-bg,rgba(255,255,255,0.1));border-radius:999px;overflow:hidden;}
+    .asp-theme-spin .asp-bar-fill{position:absolute;inset:0;width:0%;background:linear-gradient(90deg,var(--asp-accent,#4aa3ff),var(--asp-text,#fff));border-radius:999px;transition:width 0.35s cubic-bezier(0.22,1,0.36,1);}
+    .asp-theme-spin .asp-tip{font-size:12px;color:rgba(255,255,255,0.4);font-family:-apple-system,sans-serif;letter-spacing:0.15em;min-height:16px;}
+    .asp-theme-spin .asp-logo-wrap img{max-height:60px;max-width:200px;object-fit:contain;margin-bottom:8px;}
+    @keyframes aspSpin{to{transform:rotate(360deg);}}
+    @keyframes aspWaveS{0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}}
+    @keyframes aspDigitBounceS{0%{transform:scale(1);}40%{transform:scale(1.2);}100%{transform:scale(1);}}
+    @media (prefers-reduced-motion: reduce){
+      .asp-theme-spin .asp-ring,.asp-theme-spin .asp-sub .asp-wave-letter{animation:none!important;}
+    }
+  </style>
+</div>

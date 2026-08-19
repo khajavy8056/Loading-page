@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Apple Star Loader v2.0 — Demo</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#0b0f1a;color:#e5e7eb;min-height:100vh;padding:40px 20px;}
+  h1{text-align:center;font-size:28px;margin-bottom:8px;background:linear-gradient(90deg,#4aa3ff,#a855f7,#ec4899);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+  p.sub{text-align:center;color:#9ca3af;margin-bottom:30px;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px;max-width:1400px;margin:0 auto;}
+  .demo-card{background:#111827;border:1px solid #1f2937;border-radius:16px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,0.3);}
+  .demo-card h3{padding:14px 18px;background:#1f2937;font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:space-between;}
+  .demo-card h3 .tag{font-size:10px;background:#4aa3ff;color:#fff;padding:2px 8px;border-radius:999px;}
+  .demo-frame{position:relative;width:100%;height:360px;background:#0b0b0c;overflow:hidden;}
+  .controls{padding:12px 18px;display:flex;gap:8px;align-items:center;background:#0f172a;border-top:1px solid #1f2937;flex-wrap:wrap;}
+  .controls button{background:#4aa3ff;color:#fff;border:0;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600;}
+  .controls button:hover{background:#2b8bff;}
+  .controls .stat{font-family:ui-monospace,monospace;font-size:12px;color:#9ca3af;margin-left:auto;}
+</style>
+</head>
+<body>
+<h1>✦ Apple Star Page Loader v2.0 — Preset Gallery</h1>
+<p class="sub">هر حرف موج می‌زند — درصد با بانس حرکت می‌کند — نوار پیشرفت پویا است / All 6 animated presets</p>
+
+<div class="grid" id="grid"></div>
+
+<script>
+const PRESETS = ['apple_star','wave_letters','spinner_pro','progress_bar','particles','minimal_dot'];
+const LABELS  = {
+  apple_star: 'Apple Star (Glass)',
+  wave_letters: 'Wave Letters',
+  spinner_pro: 'Spinner Pro',
+  progress_bar: 'Progress Bar',
+  particles: 'Particles Glow',
+  minimal_dot: 'Minimal Dot'
+};
+
+// Replicates the JS logic from class-aspl-frontend.php for standalone demo.
+function buildDemo(preset, code, container) {
+  container.innerHTML = code;
+  const root = container.querySelector('.asp-loader');
+  if (!root) return;
+
+  // inject vars
+  root.style.setProperty('--asp-bg','rgba(5,5,15,0.95)');
+  root.style.setProperty('--asp-text','#ffffff');
+  root.style.setProperty('--asp-accent','#4aa3ff');
+  root.style.setProperty('--asp-primary','#ffffff');
+  root.style.setProperty('--asp-bar-bg','rgba(255,255,255,0.12)');
+  root.style.setProperty('--asp-bar-fg','#ffffff');
+  root.style.setProperty('--asp-blur','0px');
+
+  // Apply wave text on sub
+  const text = 'LOADING';
+  function waveify(el, txt) {
+    if (!el) return;
+    el.textContent = '';
+    let idx = 0;
+    for (const ch of txt) {
+      const s = document.createElement('span');
+      s.className = 'asp-wave-letter';
+      s.textContent = ch;
+      s.style.setProperty('--w', idx);
+      el.appendChild(s);
+      idx++;
+    }
+  }
+  // wave_letters preset uses .asp-wave-word
+  const waveWord = container.querySelector('.asp-wave-word');
+  if (waveWord) waveify(waveWord, 'LOADING');
+  // Other presets use .asp-wave-text/.asp-sub/.asp-sub-text
+  container.querySelectorAll('.asp-wave-text,.asp-sub,.asp-sub-text').forEach(el => {
+    if (el.children.length === 0) waveify(el, text);
+  });
+
+  // Particles canvas boot
+  const canvas = container.querySelector('.asp-particles-canvas');
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    function resize(){canvas.width=container.clientWidth;canvas.height=container.clientHeight;}
+    resize();
+    const pts=[];
+    for(let i=0;i<50;i++){pts.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*2+0.5,vx:(Math.random()-0.5)*0.4,vy:(Math.random()-0.5)*0.4,a:Math.random()*Math.PI*2});}
+    const c={r:74,g:163,b:255};
+    function draw(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      pts.forEach((p,i)=>{
+        p.x+=p.vx;p.y+=p.vy;p.a+=0.02;
+        if(p.x<0)p.x=canvas.width;if(p.x>canvas.width)p.x=0;
+        if(p.y<0)p.y=canvas.height;if(p.y>canvas.height)p.y=0;
+        const pulse=0.5+Math.sin(p.a)*0.5;
+        ctx.beginPath();ctx.arc(p.x,p.y,p.r+pulse*1.5,0,Math.PI*2);
+        ctx.fillStyle=`rgba(${c.r},${c.g},${c.b},${0.3+pulse*0.5})`;ctx.fill();
+        for(let j=i+1;j<pts.length;j++){
+          const dx=p.x-pts[j].x,dy=p.y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
+          if(d<100){ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle=`rgba(${c.r},${c.g},${c.b},${0.1*(1-d/100)})`;ctx.lineWidth=0.6;ctx.stroke();}
+        }
+      });
+      requestAnimationFrame(draw);
+   }
+    draw();
+    window.addEventListener('resize',resize);
+  }
+
+  const percentEl  = container.querySelector('.asp-percent');
+  const percentIn  = container.querySelector('.asp-bar-percent-inline');
+  const barFill    = container.querySelector('.asp-bar-fill');
+  const barDot     = container.querySelector('.asp-bar-dot');
+  const tipEl      = container.querySelector('.asp-tip');
+  const tips       = ['Almost there…','Preparing your experience…','Loading assets…','Just a moment…','Hang tight!','Polishing pixels…'];
+  let tipIndex = 0;
+  if (tipEl) {
+    tipEl.textContent = tips[0];
+    setInterval(()=>{
+      tipIndex++;
+      tipEl.style.opacity=0;
+      setTimeout(()=>{tipEl.textContent=tips[tipIndex%tips.length];tipEl.style.transition='opacity .5s';tipEl.style.opacity=1;},400);
+    },2500);
+  }
+
+  let progress=0,target=0,rafId=null;
+  function apply(p){
+    p = Math.max(0,Math.min(100,Math.round(p)));
+    if (percentEl) {
+      const old = parseInt(percentEl.textContent,10)||0;
+      percentEl.textContent = p;
+      if (p!==old) {
+        percentEl.classList.remove('asp-digit-bounce');
+        void percentEl.offsetWidth;
+        percentEl.classList.add('asp-digit-bounce');
+      }
+    }
+    if (percentIn) percentIn.textContent = p;
+    if (barFill) barFill.style.width = p+'%';
+    if (barDot && container.querySelector('.asp-bar')) barDot.style.left = p+'%';
+    progress = p;
+  }
+  function tick(){
+    rafId=null;
+    if (progress<target){
+      const diff=target-progress;
+      const step=Math.max(0.6,diff*0.12);
+      apply(progress+Math.min(diff,step));
+      if (Math.abs(100-progress)>0.1) rafId=requestAnimationFrame(tick);
+    }
+  }
+  function setTarget(p){ target=Math.max(target,Math.min(100,p)); if(!rafId) rafId=requestAnimationFrame(tick); }
+
+  return { setTarget, apply, reset:()=>{progress=0;target=0;apply(0);} };
+}
+
+const grid = document.getElementById('grid');
+const demoInstances = {};
+
+PRESETS.forEach(slug => {
+  const card = document.createElement('div');
+  card.className = 'demo-card';
+  card.innerHTML = `
+    <h3>${LABELS[slug]} <span class="tag">${slug}</span></h3>
+    <div class="demo-frame" data-frame="${slug}"></div>
+    <div class="controls">
+      <button data-act="play">▶ Play</button>
+      <button data-act="reset">↺ Reset</button>
+      <span class="stat" data-stat="${slug}">0%</span>
+    </div>`;
+  grid.appendChild(card);
+});
+
+// Load each preset file and boot demo
+Promise.all(PRESETS.map(slug =>
+  fetch(`apple-star-page-loader/assets/presets/${slug}.html`)
+    .then(r=>r.text())
+    .then(code => {
+      const frame = document.querySelector(`[data-frame="${slug}"]`);
+      demoInstances[slug] = buildDemo(slug, code, frame);
+    })
+)).then(()=>{
+  // Animate once all loaded
+  Object.entries(demoInstances).forEach(([slug,inst])=>{
+    if(!inst) return;
+    let p=0;
+    const iv=setInterval(()=>{
+      p += Math.random()*6+2;
+      if (p>=100){p=100;inst.setTarget(p);clearInterval(iv);
+        setTimeout(()=>{inst.apply(100);document.querySelector(`[data-stat="${slug}"]`).textContent='100%';},300);
+        return;
+      }
+      inst.setTarget(p);
+      document.querySelector(`[data-stat="${slug}"]`).textContent = Math.round(p)+'%';
+    },400);
+  });
+});
+
+document.addEventListener('click',(e)=>{
+  const btn = e.target.closest('button[data-act]');
+  if (!btn) return;
+  const card = btn.closest('.demo-card');
+  const slug = card.querySelector('[data-frame]').dataset.frame;
+  const inst = demoInstances[slug];
+  if (!inst) return;
+  if (btn.dataset.act==='reset'){
+    inst.reset();
+    card.querySelector('[data-stat]').textContent='0%';
+  } else {
+    let p=0;
+    const iv=setInterval(()=>{
+      p+=Math.random()*8+3;
+      if(p>=100){p=100;inst.setTarget(p);clearInterval(iv);return;}
+      inst.setTarget(p);
+      card.querySelector('[data-stat]').textContent=Math.round(p)+'%';
+    },300);
+  }
+});
+</script>
+</body>
+</html>
