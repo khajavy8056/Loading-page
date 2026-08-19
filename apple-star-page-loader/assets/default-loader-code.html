@@ -1,0 +1,121 @@
+<!--
+  Apple Star Loader — default code.
+  Fully responsive: the wordmark scales from small phones to desktop
+  (clamp + media queries), backdrop-filter has an opaque fallback,
+  and prefers-reduced-motion is honored.
+-->
+<div id="apple-star-loader" class="apple-loader-glass">
+    <div class="brand-pulse-container">
+        <div class="ecg-track"></div>
+        <div class="scanner-dot"></div>
+        <span class="letter" style="--i:1">A</span>
+        <span class="letter" style="--i:2">P</span>
+        <span class="letter" style="--i:3">P</span>
+        <span class="letter" style="--i:4">L</span>
+        <span class="letter" style="--i:5">E</span>
+        <span class="spacer"></span>
+        <span class="letter" style="--i:6">S</span>
+        <span class="letter" style="--i:7">T</span>
+        <span class="letter" style="--i:8">A</span>
+        <span class="letter" style="--i:9">R</span>
+    </div>
+</div>
+
+<style>
+    /* Scroll lock while the loader is active (the plugin locks <html> as well). */
+    body { overflow: hidden !important; }
+
+    .apple-loader-glass {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.88);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 99999999;
+        transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+    .brand-pulse-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        max-width: 94vw;
+        padding: 0 12px;
+        box-sizing: border-box;
+    }
+    .ecg-track {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-50%);
+        z-index: 0;
+    }
+    .scanner-dot {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 8px;
+        height: 8px;
+        background: #fff;
+        border-radius: 50%;
+        box-shadow: 0 0 15px 4px rgba(255, 255, 255, 0.8);
+        transform: translate(-50%, -50%);
+        z-index: 2;
+        animation: sweep-across 2.4s infinite cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+    /* Responsive wordmark: scales with the viewport, capped at the desktop size. */
+    .letter {
+        position: relative;
+        z-index: 1;
+        font-size: clamp(1.05rem, 5.5vw, 2.2rem);
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        color: rgba(255, 255, 255, 0.15);
+        text-transform: uppercase;
+        animation: letter-heartbeat 2.4s infinite ease-in-out;
+        animation-delay: calc(var(--i) * 0.18s);
+    }
+    .spacer { width: 0.8rem; }
+
+    @keyframes sweep-across {
+        0%        { left: -5%;  opacity: 0; }
+        10%, 90%  { opacity: 1; }
+        100%      { left: 105%; opacity: 0; }
+    }
+    @keyframes letter-heartbeat {
+        0%, 25%, 100% {
+            color: rgba(255, 255, 255, 0.15);
+            transform: translateY(0) scale(1);
+        }
+        10% {
+            color: #ffffff;
+            transform: translateY(-10px) scale(1.1);
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+        }
+        15% { transform: translateY(3px) scale(0.95); }
+        20% { transform: translateY(0) scale(1); }
+    }
+
+    /* Small phones */
+    @media (max-width: 480px) {
+        .brand-pulse-container { gap: 2px; padding: 0 8px; }
+        .letter { letter-spacing: 0.04em; }
+        .spacer { width: 0.5rem; }
+    }
+
+    /* Accessibility: respect the reduced-motion preference */
+    @media (prefers-reduced-motion: reduce) {
+        .scanner-dot, .letter { animation: none; }
+        .letter { color: rgba(255, 255, 255, 0.9); }
+    }
+</style>
