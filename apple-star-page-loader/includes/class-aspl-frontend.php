@@ -14,9 +14,28 @@ class ASPL_Frontend {
 	private $rendered = false;
 
 	public function __construct() {
+		add_action( 'wp_head', array( $this, 'print_critical' ), 0 );
 		add_action( 'wp_body_open', array( $this, 'render' ), 1 );
 		add_action( 'wp_body_open', array( $this, 'render_admin_banner' ), 5 );
 		add_action( 'wp_footer', array( $this, 'render_fallback' ), 999 );
+	}
+
+	/**
+	 * Critical CSS + instant scroll-lock in <head> so loader is visible
+	 * from the very first paint, before heavy Elementor/Woo assets load.
+	 */
+	public function print_critical() {
+		if ( is_admin() || wp_doing_ajax() || wp_is_json_request() ) {
+			return;
+		}
+		$show_maint = $this->should_show_maintenance();
+		$show_load  = $this->should_render();
+		if ( ! $show_maint && ! $show_load ) {
+			return;
+		}
+		// Instant scroll-lock + placeholder background to avoid FOUC.
+		echo "<style id=\"aspl-critical\">html.asp-scroll-lock,html.asp-scroll-lock body{overflow:hidden!important}#asp-loader-root,#aspm-root{position:fixed;inset:0;z-index:99999999}</style>\n";
+		echo "<script>(function(){try{document.documentElement.classList.add('asp-scroll-lock')}catch(e){}})();</script>\n";
 	}
 
 	public function maintenance_is_live() {
