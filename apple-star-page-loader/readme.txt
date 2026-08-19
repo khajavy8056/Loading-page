@@ -1,60 +1,113 @@
 === Apple Star Page Loader ===
 Contributors: khajavy8056
-Tags: loader, preloader, loading, loading screen, apple star, page loader
+Tags: loader, preloader, loading, loading screen, page loader, animated loader, maintenance mode, coming soon
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 3.0.0
 License: GPLv2 or later
-License URI: https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-A production-ready, fully responsive "Apple Star" glass preloader for WordPress & WooCommerce, with a fully editable loader code editor in the admin panel.
+Animated Apple-style page preloader for WordPress with 11 built-in loader designs, maintenance-mode countdown timer, live preview, logo upload, full Persian/RTL support, and smart "wait until last image" loading.
 
 == Description ==
 
-Apple Star Page Loader puts a beautiful custom loading screen in front of your visitors while the page is getting ready — perfect for heavy Elementor and WooCommerce pages.
+Apple Star Page Loader shows a clean animated loading overlay to your visitors while WordPress, Elementor, WooCommerce, fonts and images finish loading — so visitors never see a half-rendered broken page.
 
-**What it does**
+Version 3.0 is a major update:
 
-* Injects your loader at the very top of the page via `wp_body_open` (earliest possible point), with a `wp_footer` safety fallback for themes that never fire `wp_body_open`.
-* Locks scrolling (`overflow: hidden`) while the loader is visible — on the plugin side, so it works even if your custom code has no lock of its own.
-* Waits for the real `window` "load" event, so heavy Elementor components, web fonts and images are fully downloaded before the page appears.
-* Fades out smoothly (opacity transition) and then removes the loader completely from the DOM (`loader.remove()`).
-* Fallback timeout (default 10 s): if a request gets stuck the loader closes anyway — your site can never stay locked.
-* Fully responsive: the default "Apple Star" design scales from small phones to desktop (`clamp()` + media queries) and honors `prefers-reduced-motion`.
-* Compatible with the latest WordPress (7.0) and WooCommerce (11.0); no conflicts with themes, Elementor or store pages.
+**11 Apple-style loader designs**
+* **Apple Star Pulse (ECG)** — the flagship: glass backdrop, scanning blip, per-letter heartbeat wave.
+* Classic Pulse, Equalizer Bars, Sine Wave Dots, ECG Heartbeat, Siri Orbit,
+* Concentric Radar, Breathing Core, Quantum Spin, Wave Morph, Dot Rhythm.
+* Pick any design with one click from visual thumbnail cards.
 
-**Admin panel** — in the admin sidebar: **Apple Star Loader**, and also under **Settings → Apple Star Loader**
+**Maintenance / Under-Construction mode**
+* Toggle switch (default OFF).
+* Configurable hours/minutes/seconds countdown.
+* Custom Persian/English message under the timer.
+* When ON the loader stays up across the whole site until the timer hits zero.
 
-* **Enable / Disable** switch.
-* **Display target:** front page only, or all pages.
-* **Loader Code:** a large textarea with the complete loader HTML + CSS — fully open, replaceable with your own design any time. Includes a **live preview** (mobile / tablet / desktop widths) and a **Reset to default code** button.
-* **Fallback timeout** in seconds (1–120).
+**Smart loading**
+* Waits for the real `window.load` event AND every image to complete
+  (so the very last image is rendered before the overlay fades).
+* Minimum display time to prevent flicker on fast loads.
+* Hard fallback timeout — site can never stay locked.
+
+**Persian / RTL support**
+* RTL text (Persian, Arabic, Hebrew) is split word-by-word so Arabic-script
+  letter joining is preserved — no more "mirrored/disconnected letters".
+* LTR text is split letter-by-letter for the classic wave effect.
+* Admin UI is fully RTL-aware.
+
+**Admin panel**
+* Single clean page (no tabs).
+* Built-in live preview iframe that really runs JavaScript
+  (sandboxed with allow-scripts / allow-same-origin).
+* Fullscreen preview button.
+* iOS-style green/red on-off switches.
+* Native WordPress color picker, range sliders with live value labels,
+  Media Library logo uploader.
+* Fully mobile responsive.
+
+**Other features**
+* Display targets: front page, all pages, home/blog, posts only, pages only, WooCommerce only.
+* Optional hide for logged-in users, optional hide on mobile.
+* Configurable background color + opacity + backdrop blur.
+* Text and accent colors.
+* Custom CSS box for advanced overrides.
+* Smooth fade-out with full DOM removal.
+* Respects `prefers-reduced-motion`.
 
 == Installation ==
 
-1. Upload `apple-star-page-loader.zip` via **Plugins → Add New → Upload Plugin** (the installable zip is in `dist/` in the repository), or extract the `apple-star-page-loader` folder into `wp-content/plugins/`.
+1. Upload `apple-star-page-loader.zip` via **Plugins → Add New → Upload Plugin**
+   (the installable zip lives in `dist/`), or extract the `apple-star-page-loader`
+   folder into `wp-content/plugins/`.
 2. Activate the plugin.
-3. Open **Apple Star Loader** in the admin sidebar (or **Settings → Apple Star Loader**) and configure it.
+3. Open **Apple Star Loader** in the admin sidebar, pick a preset, optionally
+   upload a logo, and save.
 
 == Frequently Asked Questions ==
 
-= Does it work with Elementor or WooCommerce? =
-Yes, it is built for heavy pages. The loader waits for the window load event, which covers Elementor renders, web fonts and images. Store, product and archive pages all work with the "all pages" target.
+= Does it work with Elementor / WooCommerce / heavy themes? =
+Yes. The loader waits for the real `window.load` event and for every image to
+finish, so Elementor, web fonts and hero images are all there before it fades.
 
-= Can I use my own loader design? =
-Yes — paste any self-contained HTML + CSS into the Loader Code field. Keep it self-contained (the plugin wraps the code in one root block and removes it as a whole when the page is ready). The live preview helps you check the result and the responsive behavior before saving.
+= How do I put the site in maintenance mode? =
+Turn on the **"حالت بروزرسانی"** switch, set the countdown timer (hours/minutes/seconds)
+and the message, then save. Visitors will see the loader + timer until it reaches
+zero (or the hard timeout expires). Remember to turn it off when you're done.
 
-= What if the page never finishes loading? =
-The fallback timeout closes the loader after the configured number of seconds (default 10 s), so the site is never locked behind the loader.
+= Why are Persian words animated word-by-word instead of letter-by-letter? =
+Because Arabic-script letters change shape depending on their neighbors
+(initial / medial / final / isolated forms). Splitting them into individual
+spans breaks joining and causes the "mirrored letters" bug. Word-level
+animation preserves correct typography while still giving a nice pulse.
 
-= Does it show to logged-in users? =
-Yes, so you can preview it on your own device. Turn it off any time with the switch.
-
-= Is the code field safe? =
-The field is a raw HTML/CSS area by design (the user's own loader markup), only visible to users with the `manage_options` capability (admin-level). It is only ever rendered in the visitors' browsers of the site that installed it.
+= Will the loader ever lock my site forever? =
+No. A hard fallback timeout (default 20 seconds, up to 600) always releases
+the page even if some asset never loads.
 
 == Changelog ==
 
+= 3.0.0 =
+* Major redesign. The original Apple Star Pulse (ECG track + scanning blip + per-letter heartbeat) is back as the default preset, matching the user's reference HTML exactly.
+* Added 10 more Apple-style loader designs (Classic Pulse, Equalizer Bars, Sine Wave, ECG Heartbeat, Siri Orbit, Radar Sweep, Breathing Core, Quantum Spin, Wave Morph, Dot Rhythm) — total 11 presets selectable via visual thumbnail cards.
+* New **maintenance mode** with countdown timer (HH:MM:SS) and custom message. When enabled the loader locks the site until the timer reaches zero. Default OFF.
+* Admin panel rebuilt: preset thumbnail grid, iOS-style green/red switches, dedicated maintenance section, better color controls, mobile responsive, full RTL.
+* Live preview iframe fixed (sandboxed with `allow-scripts allow-same-origin`) and now correctly previews all presets, logo upload, colors, text, and a working countdown demo.
+* Persian/RTL text still animates word-by-word to preserve Arabic-script letter joining (no more mirrored/disconnected glyphs).
+* Waits for all images to load before fading.
+* Removed the percentage counter and progress bar (per request).
+
+= 2.0.1 =
+* Fix: Persian/Arabic (RTL) text no longer appears "mirrored" or split.
+* Fix: Live preview iframe in admin now runs scripts.
+* Added extra presets (total 10 at the time).
+
+= 2.0.0 =
+* Rewrite: wave-animated letters, percentage counter, progress bar, admin dashboard.
+
 = 1.0.0 =
-* Initial release: enable/disable switch, front-page / all-pages display target, fully editable HTML+CSS loader code with live preview and reset button, fallback timeout, scroll lock, window "load" detection, smooth fade-out + full DOM removal, fully responsive default "Apple Star" design.
+* Initial release.

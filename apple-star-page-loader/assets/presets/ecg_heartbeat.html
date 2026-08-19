@@ -1,0 +1,59 @@
+<!--
+  Apple Star Page Loader — ecg heartbeat (v3.0.1)
+  Fixed: dir attribute controls LTR/RTL so English letters never appear
+  reversed on RTL sites, and the brand text gently pulses in sync with
+  the animation.
+-->
+<div class="asp-loader asp-theme-ecg">
+  <div class="asp-backdrop"></div>
+  <div class="asp-stage">
+    <div class="asp-logo-wrap" id="asp-logo-slot"></div>
+    <div class="asp-ecg-mon"><div class="asp-ecg-line"></div><div class="asp-ecg-blip2"></div></div>
+    <div class="asp-wave-word" id="asp-word" dir="ltr"></div>
+  </div>
+  <style>
+    .asp-theme-ecg{position:fixed;inset:0;z-index:2147483647;display:flex!important;align-items:center;justify-content:center;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Vazirmatn",Tahoma,Arial,sans-serif!important;margin:0!important;padding:0!important;}
+    .asp-theme-ecg .asp-backdrop{position:absolute;inset:0;background:var(--asp-bg,rgba(10,10,15,0.85))!important;backdrop-filter:blur(var(--asp-blur,16px));-webkit-backdrop-filter:blur(var(--asp-blur,16px));}
+    .asp-theme-ecg .asp-stage{position:relative;display:flex;flex-direction:column;align-items:center;gap:28px;z-index:2;}
+    .asp-theme-ecg .asp-logo-wrap img{max-height:70px;max-width:220px;object-fit:contain;filter:drop-shadow(0 6px 18px rgba(0,0,0,.5));}
+    .asp-theme-ecg .asp-wave-word{position:relative;display:flex!important;align-items:center;gap:.08em;justify-content:center;flex-wrap:wrap;max-width:92vw;font-weight:700!important;letter-spacing:.18em;font-size:clamp(0.95rem,3vw,1.4rem);color:var(--asp-text,#fff)!important;-webkit-text-fill-color:var(--asp-text,#fff)!important;opacity:.9;padding:0;margin:0;unicode-bidi:isolate;direction:ltr;}
+    .asp-theme-ecg .asp-wave-word[dir="rtl"]{direction:rtl;letter-spacing:0;font-weight:600;}
+    .asp-theme-ecg .asp-wave-word .ltr,
+    .asp-theme-ecg .asp-wave-word .rtl{display:inline-block;animation:asp-ec-letter 2s infinite ease-in-out!important;animation-delay:calc(var(--w) * 0.08s)!important;will-change:transform,opacity;transform-origin:center;}
+    .asp-theme-ecg .asp-wave-word .rtl{white-space:nowrap;animation-delay:calc(var(--w) * 0.18s)!important;}
+    .asp-theme-ecg .asp-wave-word .sp{width:.4em;display:inline-block;flex-shrink:0;}
+    .asp-theme-ecg .asp-ecg-mon{position:relative;width:140px;height:50px;}
+.asp-theme-ecg .asp-ecg-line{position:absolute;top:50%;left:0;width:100%;height:2px;background:rgba(255,255,255,0.25);}
+.asp-theme-ecg .asp-ecg-blip2{position:absolute;top:50%;left:0;width:10px;height:10px;background:var(--asp-accent,#00c3ff);border-radius:50%;transform:translateY(-50%);box-shadow:0 0 16px var(--asp-accent,#00c3ff);animation:asp-ecg-sw 2s infinite linear,asp-ecg-bb 2s infinite ease-in-out!important;}
+@keyframes asp-ecg-sw{0%{left:0;opacity:0;}10%{opacity:1;}90%{opacity:1;}100%{left:100%;opacity:0;}}
+@keyframes asp-ecg-bb{0%,40%,60%,100%{transform:translateY(-50%);}45%{transform:translateY(calc(-50% - 20px));}50%{transform:translateY(calc(-50% + 15px));}55%{transform:translateY(calc(-50% - 5px));}}
+    @keyframes asp-ec-letter{
+      0%,100%{transform:translateY(0) scale(1);opacity:.85;}
+      50%{transform:translateY(-6px) scale(1.05);opacity:1;text-shadow:0 6px 14px rgba(0,0,0,.4),0 0 14px rgba(255,255,255,.3);}
+    }
+    .asp-theme-ecg .asp-maint{margin-top:6px;text-align:center;color:rgba(255,255,255,0.85)!important;max-width:560px;padding:0 20px;}
+    .asp-theme-ecg .asp-maint-timer{font-family:ui-monospace,SF Mono,Menlo,Consolas,monospace!important;font-size:clamp(1.1rem,3vw,1.7rem);font-weight:700;letter-spacing:.08em;color:#fff!important;-webkit-text-fill-color:#fff!important;text-shadow:0 0 20px rgba(255,255,255,0.4);direction:ltr!important;unicode-bidi:isolate;display:inline-block;}
+    .asp-theme-ecg .asp-maint-timer .asp-sep{opacity:.6;display:inline-block;animation:asp-blink 1s steps(2) infinite;margin:0 2px;}
+    @keyframes asp-blink{50%{opacity:.15;}}
+    .asp-theme-ecg .asp-maint-msg{margin-top:12px;font-size:clamp(.85rem,1.8vw,1rem);line-height:1.7;opacity:.8;}
+    .asp-theme-ecg .asp-maint-lbl{margin-bottom:6px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;opacity:.55;}
+    @media (prefers-reduced-motion: reduce){
+      .asp-theme-ecg .asp-wave-word .ltr,
+      .asp-theme-ecg .asp-wave-word .rtl,
+      .asp-theme-ecg .asp-pulse-dot,
+      .asp-theme-ecg .asp-freq-bars span,
+      .asp-theme-ecg .asp-sine div,
+      .asp-theme-ecg .asp-ecg-blip2,
+      .asp-theme-ecg .asp-siri div,
+      .asp-theme-ecg .asp-radar div,
+      .asp-theme-ecg .asp-breath,
+      .asp-theme-ecg .asp-q,
+      .asp-theme-ecg .asp-morph div,
+      .asp-theme-ecg .asp-dots div{animation:none!important;}
+    }
+    @media (max-width:480px){
+      .asp-theme-ecg .asp-wave-word{letter-spacing:.06em;}
+      .asp-theme-ecg .asp-wave-word .sp{width:.3em;}
+    }
+  </style>
+</div>
