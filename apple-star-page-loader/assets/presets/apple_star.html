@@ -1,132 +1,44 @@
 <!--
-  Preset: Apple Star (Heartbeat / ECG Glass) — v2.0.1
-  حس نوار قلب: یک خط نازک ECG که با یک دات نورانی روی حروف عبور می‌کند،
-  هر حرف با رسیدن دات یک‌بار pulse می‌خورد (scale + glow) و بعد آرام می‌نشیند.
-  حروف APPLE STAR به صورت ثابت با هم نمایش داده می‌شوند.
+  Apple Star Page Loader — Wave Letter
+  A clean wave-animated wordmark. Each letter rises & falls in a smooth
+  cascading wave. No progress bar, no percentage, no noise — just letters.
+  Works with Latin (letter-level wave) AND Persian/Arabic (word-level wave)
+  so RTL glyphs never appear mirrored or disconnected.
 -->
-<div class="asp-loader asp-theme-apple-star">
+<div class="asp-loader asp-theme-wave">
   <div class="asp-backdrop"></div>
-
-  <!-- SVG heartbeat line -->
-  <svg class="asp-ecg-svg" viewBox="0 0 1200 120" preserveAspectRatio="none" aria-hidden="true">
-    <polyline class="asp-ecg-trace" points="0,60 200,60 260,60 290,20 320,100 350,60 600,60 660,60 690,20 720,100 750,60 1200,60" />
-  </svg>
-  <div class="asp-ecg-dot"></div>
-
   <div class="asp-stage">
-    <div class="asp-wordmark">
-      <span class="asp-letter" style="--i:0">A</span>
-      <span class="asp-letter" style="--i:1">P</span>
-      <span class="asp-letter" style="--i:2">P</span>
-      <span class="asp-letter" style="--i:3">L</span>
-      <span class="asp-letter" style="--i:4">E</span>
-      <span class="asp-letter asp-gap"></span>
-      <span class="asp-letter" style="--i:5">S</span>
-      <span class="asp-letter" style="--i:6">T</span>
-      <span class="asp-letter" style="--i:7">A</span>
-      <span class="asp-letter" style="--i:8">R</span>
-    </div>
-
-    <div class="asp-sub-text asp-wave-text"></div>
-
-    <div class="asp-progress">
-      <div class="asp-percent-wrap">
-        <span class="asp-percent" data-value="0">0</span><span class="asp-percent-sign">%</span>
-      </div>
-      <div class="asp-bar">
-        <div class="asp-bar-fill"></div>
-        <div class="asp-bar-shine"></div>
-      </div>
-    </div>
-
-    <div class="asp-tip"></div>
+    <!-- logo slot (filled by JS if user uploaded one) -->
+    <div class="asp-wave-word" id="asp-word"></div>
   </div>
-
   <style>
-    .asp-theme-apple-star{position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Vazirmatn",Tahoma,sans-serif;}
-    .asp-theme-apple-star .asp-backdrop{position:absolute;inset:0;background:var(--asp-bg,rgba(5,5,10,0.94));backdrop-filter:blur(var(--asp-blur,0px));-webkit-backdrop-filter:blur(var(--asp-blur,0px));}
-
-    /* ECG line (behind wordmark) */
-    .asp-theme-apple-star .asp-ecg-svg{position:absolute;top:50%;left:0;width:100%;height:120px;transform:translateY(-50%);pointer-events:none;opacity:.35;}
-    .asp-theme-apple-star .asp-ecg-trace{fill:none;stroke:var(--asp-accent,#4aa3ff);stroke-width:1.5;stroke-linejoin:round;stroke-linecap:round;
-      stroke-dasharray:2400;stroke-dashoffset:0;animation:aspEcg 2.8s linear infinite;filter:drop-shadow(0 0 6px var(--asp-accent,#4aa3ff));}
-    .asp-theme-apple-star .asp-ecg-dot{position:absolute;top:50%;left:0;width:8px;height:8px;background:#fff;border-radius:50%;
-      box-shadow:0 0 18px 6px var(--asp-accent,#4aa3ff);transform:translate(-50%,-50%);
-      animation:aspEcgDot 2.8s cubic-bezier(.6,.1,.4,1) infinite;}
-
-    /* Stage card */
-    .asp-theme-apple-star .asp-stage{position:relative;display:flex;flex-direction:column;align-items:center;gap:18px;
-      max-width:92vw;padding:34px 44px;border-radius:22px;background:rgba(255,255,255,0.04);
-      border:1px solid rgba(255,255,255,0.08);box-shadow:0 25px 90px rgba(0,0,0,0.55);
-      backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);}
-
-    /* Wordmark — letters are static; each beats with a staggered delay as ECG dot sweeps */
-    .asp-theme-apple-star .asp-wordmark{display:flex;align-items:center;gap:4px;
-      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
-      font-weight:800;letter-spacing:0.14em;font-size:clamp(1.4rem,5.5vw,2.6rem);text-transform:uppercase;direction:ltr;unicode-bidi:bidi-override;}
-    .asp-theme-apple-star .asp-letter{display:inline-block;color:rgba(255,255,255,0.35);
-      animation:aspHeartbeat 2.8s infinite ease-in-out;animation-delay:calc(var(--i)*0.12s);text-shadow:0 0 0 transparent;}
-    .asp-theme-apple-star .asp-letter.asp-gap{width:0.55em;animation:none;color:transparent;}
-
-    /* Sub text — supports Persian: word-level wave, no letter split */
-    .asp-theme-apple-star .asp-sub-text{font-family:inherit;font-size:clamp(0.75rem,1.5vw,0.9rem);
-      letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.7);font-weight:500;direction:rtl;unicode-bidi:plaintext;}
-    html[dir="ltr"] .asp-theme-apple-star .asp-sub-text{direction:ltr;text-transform:uppercase;letter-spacing:0.4em;}
-    .asp-theme-apple-star .asp-sub-text .asp-wave-letter,
-    .asp-theme-apple-star .asp-sub-text .asp-wave-word{display:inline-block;animation:aspSubWave 2.4s infinite ease-in-out;animation-delay:calc(var(--w)*0.08s);}
-
-    /* Percent + bar */
-    .asp-theme-apple-star .asp-progress{display:flex;flex-direction:column;align-items:center;gap:10px;min-width:min(420px,80vw);}
-    .asp-theme-apple-star .asp-percent-wrap{font-family:-apple-system,SF Mono,ui-monospace,monospace;font-weight:700;
-      font-size:clamp(1.8rem,6vw,2.6rem);color:var(--asp-text,#fff);letter-spacing:0.02em;display:flex;align-items:baseline;
-      font-variant-numeric:tabular-nums;direction:ltr;}
-    .asp-theme-apple-star .asp-percent{display:inline-block;min-width:1.6em;text-align:right;}
-    .asp-theme-apple-star .asp-percent.asp-digit-bounce{animation:aspDigitBounce .45s ease-out;}
-    .asp-theme-apple-star .asp-percent-sign{font-size:0.5em;opacity:0.6;margin-left:4px;}
-    .asp-theme-apple-star .asp-bar{position:relative;width:100%;height:4px;background:var(--asp-bar-bg,rgba(255,255,255,0.12));border-radius:999px;overflow:hidden;}
-    .asp-theme-apple-star .asp-bar-fill{position:absolute;inset:0;width:0%;background:linear-gradient(90deg,var(--asp-accent,#4aa3ff),#fff);
-      border-radius:999px;transition:width .35s cubic-bezier(.22,1,.36,1);box-shadow:0 0 10px var(--asp-accent,#4aa3ff);}
-    .asp-theme-apple-star .asp-bar-shine{position:absolute;top:0;left:-40%;width:40%;height:100%;
-      background:linear-gradient(90deg,transparent,rgba(255,255,255,0.5),transparent);animation:aspBarShine 2s infinite;}
-    .asp-theme-apple-star .asp-tip{font-family:inherit;font-size:12px;color:rgba(255,255,255,0.5);letter-spacing:0.08em;
-      text-align:center;min-height:16px;direction:rtl;unicode-bidi:plaintext;}
-    html[dir="ltr"] .asp-theme-apple-star .asp-tip{direction:ltr;}
-
-    .asp-theme-apple-star .asp-logo-wrap{max-height:60px;margin-bottom:4px;}
-    .asp-theme-apple-star .asp-logo-wrap img{max-height:60px;max-width:200px;object-fit:contain;filter:drop-shadow(0 4px 18px rgba(0,0,0,0.5));}
-
-    /* --- Animations --- */
-    /* The ECG dot moves in a long sweep and spikes at each letter column */
-    @keyframes aspEcgDot{
-      0%{left:20%;}
-      40%{left:50%;box-shadow:0 0 18px 6px var(--asp-accent,#4aa3ff);}
-      50%{left:50%;box-shadow:0 0 40px 14px #fff;}
-      60%{left:50%;box-shadow:0 0 18px 6px var(--asp-accent,#4aa3ff);}
-      100%{left:80%;}
+    .asp-theme-wave{position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Vazirmatn",Tahoma,sans-serif;}
+    .asp-theme-wave .asp-backdrop{position:absolute;inset:0;background:var(--asp-bg,#0a0a0f);backdrop-filter:blur(var(--asp-blur,0px));-webkit-backdrop-filter:blur(var(--asp-blur,0px));}
+    .asp-theme-wave .asp-stage{position:relative;display:flex;flex-direction:column;align-items:center;gap:0;}
+    .asp-theme-wave .asp-wave-word{display:flex;align-items:baseline;gap:0.08em;justify-content:center;flex-wrap:wrap;max-width:94vw;font-weight:800;letter-spacing:0.08em;font-size:clamp(1.8rem,9vw,5rem);color:var(--asp-text,#fff);text-transform:uppercase;line-height:1;direction:ltr;}
+    html[dir="rtl"] .asp-theme-wave .asp-wave-word{direction:rtl;text-transform:none;font-weight:700;letter-spacing:0;}
+    .asp-theme-wave .asp-wave-word .ltr{display:inline-block;animation:aspLet 1.8s infinite ease-in-out;animation-delay:calc(var(--w)*0.12s);will-change:transform;}
+    .asp-theme-wave .asp-wave-word .rtl{display:inline-block;animation:aspWord 2.2s infinite ease-in-out;animation-delay:calc(var(--w)*0.18s);will-change:transform,opacity;}
+    .asp-theme-wave .asp-wave-word .sp{width:0.45em;display:inline-block;}
+    .asp-theme-wave .asp-logo-wrap{margin-bottom:28px;}
+    .asp-theme-wave .asp-logo-wrap img{max-height:90px;max-width:280px;object-fit:contain;filter:drop-shadow(0 6px 24px rgba(0,0,0,0.5));}
+    @keyframes aspLet{
+      0%,70%,100%{transform:translateY(0) scale(1);text-shadow:0 0 0 transparent;opacity:0.85;}
+      35%{transform:translateY(-22px) scale(1.08);color:var(--asp-accent,#4aa3ff);text-shadow:0 10px 30px rgba(74,163,255,.55),0 0 24px var(--asp-accent,#4aa3ff);opacity:1;}
+      50%{transform:translateY(4px) scale(0.95);}
     }
-    @keyframes aspEcg{
-      0%{stroke-dashoffset:2400;}
-      100%{stroke-dashoffset:0;}
+    @keyframes aspWord{
+      0%,70%,100%{transform:translateY(0);opacity:0.7;}
+      35%{transform:translateY(-14px);opacity:1;color:var(--asp-accent,#4aa3ff);text-shadow:0 8px 22px rgba(74,163,255,.45);}
+      50%{transform:translateY(3px) scale(.97);opacity:.9;}
     }
-    @keyframes aspHeartbeat{
-      0%,40%,100%{transform:scale(1);color:rgba(255,255,255,0.35);text-shadow:0 0 0 transparent;}
-      50%{transform:scale(1.25);color:#fff;text-shadow:0 0 24px var(--asp-accent,#4aa3ff),0 0 40px var(--asp-accent,#4aa3ff);}
-      60%{transform:scale(0.92);}
-      75%{transform:scale(1.08);color:#fff;}
-    }
-    @keyframes aspSubWave{0%,100%{transform:translateY(0);opacity:.7;}50%{transform:translateY(-3px);opacity:1;}}
-    @keyframes aspBarShine{0%{left:-40%;}100%{left:120%;}}
-    @keyframes aspDigitBounce{0%{transform:translateY(0);}30%{transform:translateY(-8px) scale(1.05);}60%{transform:translateY(2px);}100%{transform:translateY(0);}}
-
     @media (prefers-reduced-motion: reduce){
-      .asp-theme-apple-star .asp-letter,.asp-theme-apple-star .asp-ecg-trace,.asp-theme-apple-star .asp-ecg-dot,
-      .asp-theme-apple-star .asp-sub-text .asp-wave-letter,.asp-theme-apple-star .asp-sub-text .asp-wave-word,
-      .asp-theme-apple-star .asp-bar-shine{animation:none!important;}
-      .asp-theme-apple-star .asp-letter{color:#fff;opacity:1;}
+      .asp-theme-wave .asp-wave-word .ltr,
+      .asp-theme-wave .asp-wave-word .rtl{animation:none!important;color:var(--asp-text,#fff);opacity:1;}
     }
     @media (max-width:480px){
-      .asp-theme-apple-star .asp-stage{padding:26px 22px;gap:16px;}
-      .asp-theme-apple-star .asp-wordmark{letter-spacing:0.08em;gap:3px;}
+      .asp-theme-wave .asp-wave-word{letter-spacing:0.04em;}
+      .asp-theme-wave .asp-wave-word .sp{width:0.3em;}
     }
   </style>
 </div>

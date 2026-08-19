@@ -1,7 +1,10 @@
 <?php
 /**
- * Frontend v2.0.0 — preset loader, live progress %, animated wave letters,
- * progress bar, color injection, logo support, loading tips, min-time, etc.
+ * Frontend v2.1 — Simple wave-letter preloader.
+ *
+ * Core goal: show the wave-letter wordmark until EVERYTHING on the page is
+ * fully loaded (DOM, images, fonts, last image) so the visitor never sees a
+ * half-rendered / broken layout. Then fade out cleanly and remove itself.
  *
  * @package Apple_Star_Loader
  */
@@ -10,30 +13,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-/**
- * Handles output of the loader on the frontend.
- *
- * @package Apple_Star_Loader
- */
 class ASPL_Frontend {
 
-	/**
-	 * Whether already rendered.
-	 *
-	 * @var bool
-	 */
+	/** @var bool */
 	private $rendered = false;
 
-	/**
-	 * Hook registration.
-	 */
 	public function __construct() {
 		add_action( 'wp_body_open', array( $this, 'render' ), 1 );
 		add_action( 'wp_footer', array( $this, 'render_fallback' ), 999 );
 	}
 
 	/**
-	 * Whether the loader should be output on the current request.
+	 * Whether the loader should render on this request.
 	 *
 	 * @return bool
 	 */
@@ -48,24 +39,15 @@ class ASPL_Frontend {
 			return false;
 		}
 
-		// Hide for logged-in users if desired.
 		if ( ! empty( $options['hide_for_logged_in'] ) && is_user_logged_in() ) {
 			return false;
 		}
 
-		// Hide on mobile if desired.
 		if ( empty( $options['show_on_mobile'] ) && wp_is_mobile() ) {
 			return false;
 		}
 
-		// Resolve preset/custom code.
-		$code = $this->resolve_code( $options );
-		if ( '' === trim( (string) $code ) ) {
-			return false;
-		}
-
-		// Display target.
-		$target = isset( $options['target'] ) ? $options['target'] : 'all_pages';
+		$target = isset( $options['target'] ) ? $options['target'] : 'front_page';
 		if ( 'front_page' === $target && ! is_front_page() ) {
 			return false;
 		}
@@ -79,20 +61,28 @@ class ASPL_Frontend {
 			return false;
 		}
 		if ( 'woocommerce' === $target ) {
-			if ( ! function_exists( 'is_woocommerce' ) || ! is_woocommerce() && ! is_cart() && ! is_checkout() && ! is_account_page() ) {
+			if ( ! function_exists( 'is_woocommerce' ) ) {
+				return false;
+			}
+			if ( ! is_woocommerce() && ! is_cart() && ! is_checkout() && ! is_account_page() ) {
 				if ( ! ( function_exists( 'is_shop' ) && is_shop() ) && ! ( function_exists( 'is_product' ) && is_product() ) ) {
 					return false;
 				}
 			}
 		}
 
+		$code = $this->resolve_code( $options );
+		if ( '' === trim( (string) $code ) ) {
+			return false;
+		}
+
 		return true;
 	}
 
 	/**
-	 * Resolve the HTML code (from preset or custom).
+	 * Resolve preset HTML code.
 	 *
-	 * @param array $options Options array.
+	 * @param array $options
 	 * @return string
 	 */
 	private function resolve_code( $options ) {
@@ -107,35 +97,6 @@ class ASPL_Frontend {
 		return $code;
 	}
 
-	/**
-	 * Render at wp_body_open.
-	 */
-	public function render() {
-		if ( ! $this->should_render() ) {
-			return;
-		}
-		$this->rendered = true;
-		$this->output_loader();
-	}
-
-	/**
-	 * Fallback render at wp_footer.
-	 */
-	public function render_fallback() {
-		if ( $this->rendered || ! $this->should_render() ) {
-			return;
-		}
-		$this->rendered = true;
-		$this->output_loader();
-	}
-
-	/**
-	 * Convert a hex color to rgba.
-	 *
-	 * @param string $hex Hex color.
-	 * @param float  $alpha Alpha 0-100.
-	 * @return string
-	 */
 	private function hex_to_rgba( $hex, $alpha = 100 ) {
 		$hex = ltrim( (string) $hex, '#' );
 		if ( 3 === strlen( $hex ) ) {
@@ -150,59 +111,56 @@ class ASPL_Frontend {
 		return 'rgba(' . $r . ',' . $g . ',' . $b . ',' . ( $alpha / 100 ) . ')';
 	}
 
-	/**
-	 * Build and output the loader.
-	 *
-	 * @return void
-	 */
+	public function render() {
+		if ( ! $this->should_render() ) {
+			return;
+		}
+		$this->rendered = true;
+		$this->output_loader();
+	}
+
+	public function render_fallback() {
+		if ( $this->rendered || ! $this->should_render() ) {
+			return;
+		}
+		$this->rendered = true;
+		$this->output_loader();
+	}
+
 	private function output_loader() {
 		$options       = ASPL_Settings::get_options();
 		$code          = $this->resolve_code( $options );
 		$timeout       = max( 1, (int) ( isset( $options['timeout'] ) ? $options['timeout'] : 15 ) );
-		$min_time      = max( 0, (int) ( isset( $options['min_time'] ) ? $options['min_time'] : 600 ) );
-		$fade_duration = max( 100, (int) ( isset( $options['fade_duration'] ) ? $options['fade_duration'] : 600 ) );
+		$min_time      = max( 0, (int) ( isset( $options['min_time'] ) ? $options['min_time'] : 800 ) );
+		$fade_duration = max( 100, (int) ( isset( $options['fade_duration'] ) ? $options['fade_duration'] : 700 ) );
 		$z_index       = max( 1000, (int) ( isset( $options['z_index'] ) ? $options['z_index'] : 99999999 ) );
 		$blur          = max( 0, (int) ( isset( $options['blur_amount'] ) ? $options['blur_amount'] : 0 ) );
 		$bg_opacity    = max( 0, min( 100, (int) ( isset( $options['bg_opacity'] ) ? $options['bg_opacity'] : 100 ) ) );
 
-		$bg_color      = isset( $options['bg_color'] ) ? $options['bg_color'] : '#0b0b0f';
-		$primary_color = isset( $options['primary_color'] ) ? $options['primary_color'] : '#ffffff';
-		$accent_color  = isset( $options['accent_color'] ) ? $options['accent_color'] : '#0071e3';
+		$bg_color      = isset( $options['bg_color'] ) ? $options['bg_color'] : '#0a0a0f';
 		$text_color    = isset( $options['text_color'] ) ? $options['text_color'] : '#ffffff';
-		$bar_bg_color  = isset( $options['bar_bg_color'] ) ? $options['bar_bg_color'] : 'rgba(255,255,255,0.15)';
-		$bar_fg_color  = isset( $options['bar_fg_color'] ) ? $options['bar_fg_color'] : '#ffffff';
+		$accent_color  = isset( $options['accent_color'] ) ? $options['accent_color'] : '#0071e3';
+		$wait_images   = ! empty( $options['wait_images'] );
 
-		// Compute bg as RGBA so opacity slider works.
-		if ( preg_match( '/^#([0-9a-f]{3,6})$/i', $bg_color ) ) {
-			$bg_rgba = $this->hex_to_rgba( $bg_color, $bg_opacity );
-		} else {
-			$bg_rgba = $bg_color;
+		// Resolve text: prefer site title if use_site_title is on.
+		$text = isset( $options['text'] ) ? (string) $options['text'] : 'APPLE STAR';
+		if ( ! empty( $options['use_site_title'] ) ) {
+			$blogname = get_bloginfo( 'name' );
+			if ( ! empty( $blogname ) ) {
+				$text = $blogname;
+			}
 		}
 
-		$text = isset( $options['text'] ) ? $options['text'] : 'LOADING';
 		$logo = isset( $options['logo'] ) ? (string) $options['logo'] : '';
-
-		$show_percentage   = ! empty( $options['show_percentage'] );
-		$show_progress_bar = ! empty( $options['show_progress_bar'] );
-		$show_tips         = ! empty( $options['show_tips'] );
-
 		$custom_css = isset( $options['custom_css'] ) ? (string) $options['custom_css'] : '';
 
-		$tips = array(
-			__( 'Almost there…', 'apple-star-loader' ),
-			__( 'Preparing your experience…', 'apple-star-loader' ),
-			__( 'Loading assets…', 'apple-star-loader' ),
-			__( 'Just a moment…', 'apple-star-loader' ),
-			__( 'Hang tight!', 'apple-star-loader' ),
-			__( 'Waking up the servers…', 'apple-star-loader' ),
-			__( 'Assembling the pieces…', 'apple-star-loader' ),
-			__( 'Polishing pixels…', 'apple-star-loader' ),
-		);
+		// Compute bg RGBA so opacity slider works.
+		$bg_rgba = $this->hex_to_rgba( $bg_color, $bg_opacity );
 
 		ob_start();
 		?>
 <div id="asp-loader-root" role="status" aria-live="polite" aria-label="<?php esc_attr_e( 'Page is loading', 'apple-star-loader' ); ?>">
-	<?php echo $code; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Intentional raw HTML/CSS preset/custom. ?>
+	<?php echo $code; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 </div>
 <style id="asp-vars">
 	#asp-loader-root{position:fixed;inset:0;z-index:<?php echo (int) $z_index; ?>;}
@@ -210,15 +168,12 @@ class ASPL_Frontend {
 		--asp-bg:<?php echo wp_strip_all_tags( $bg_rgba ); ?>;
 		--asp-text:<?php echo esc_attr( $text_color ); ?>;
 		--asp-accent:<?php echo esc_attr( $accent_color ); ?>;
-		--asp-primary:<?php echo esc_attr( $primary_color ); ?>;
-		--asp-bar-bg:<?php echo esc_attr( $bar_bg_color ); ?>;
-		--asp-bar-fg:<?php echo esc_attr( $bar_fg_color ); ?>;
 		--asp-blur:<?php echo (int) $blur; ?>px;
 	}
-	#asp-loader-root.asp-fade-out{opacity:0!important;}
+	#asp-loader-root.asp-fade-out{opacity:0!important;pointer-events:none!important;}
 	#asp-loader-root{transition:opacity <?php echo (int) $fade_duration; ?>ms ease;}
 	html.asp-scroll-lock,html.asp-scroll-lock body{overflow:hidden!important;height:100%!important;}
-	<?php echo $custom_css; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Admin-supplied custom CSS. ?>
+	<?php echo $custom_css; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 </style>
 <script>
 ( function () {
@@ -226,310 +181,167 @@ class ASPL_Frontend {
 	if ( window.__aspLoaderActive ) { return; }
 	window.__aspLoaderActive = true;
 
-	var root        = document.getElementById( 'asp-loader-root' );
+	var root       = document.getElementById( 'asp-loader-root' );
 	if ( ! root ) { return; }
 
-	var startedAt   = Date.now();
-	var minTime     = <?php echo (int) $min_time; ?>;
-	var fadeMs      = <?php echo (int) $fade_duration; ?>;
-	var timeoutMs   = <?php echo (int) $timeout; ?> * 1000;
-	var finished    = false;
-	var fallbackTimer = null;
-	var progress    = 0;
-	var targetProg  = 0;
-	var rafId       = null;
+	var startedAt  = Date.now();
+	var minTime    = <?php echo (int) $min_time; ?>;
+	var fadeMs     = <?php echo (int) $fade_duration; ?>;
+	var timeoutMs  = <?php echo (int) $timeout; ?> * 1000;
+	var waitImages = <?php echo $wait_images ? 'true' : 'false'; ?>;
+	var finished   = false;
+	var fallbackT  = null;
 
-	var percentEl   = root.querySelector( '.asp-percent' );
-	var percentIn   = root.querySelector( '.asp-bar-percent-inline' );
-	var barFill     = root.querySelector( '.asp-bar-fill' );
-	var barDot      = root.querySelector( '.asp-bar-dot' );
-	var bar         = root.querySelector( '.asp-bar' );
+	var text       = <?php echo wp_json_encode( $text ); ?>;
+	var logoUrl    = <?php echo wp_json_encode( $logo ); ?>;
 
-	var showPercent = <?php echo $show_percentage ? 'true' : 'false'; ?>;
-	var showBar     = <?php echo $show_progress_bar ? 'true' : 'false'; ?>;
-	var showTips    = <?php echo $show_tips ? 'true' : 'false'; ?>;
-	var tips        = <?php echo wp_json_encode( $tips ); ?>;
-	var loadingText = <?php echo wp_json_encode( $text ); ?>;
-	var logoUrl     = <?php echo wp_json_encode( $logo ); ?>;
-
-	// Inject logo (if set and a logo slot exists) before the stage.
-	if ( logoUrl ) {
-		var stage = root.querySelector( '.asp-stage' );
-		if ( stage ) {
-			var wrap = document.createElement( 'div' );
-			wrap.className = 'asp-logo-wrap';
-			var img = document.createElement( 'img' );
-			img.src = logoUrl;
-			img.alt = '';
-			img.draggable = false;
-			wrap.appendChild( img );
-			stage.insertBefore( wrap, stage.firstChild );
-		}
-	}
-
-	// ==== RTL detection ==============================================
-	// If text contains Arabic/Persian/Hebrew letters we treat it as RTL
-	// and wave at WORD level (letter-level split breaks the connected
-	// glyphs and makes Persian look mirrored).
+	/** RTL detection (Persian/Arabic/Hebrew) */
 	function isRTLText( s ) {
 		return /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF\u0590-\u05FF]/.test( s );
 	}
 
 	/**
-	 * Fill an element with animated text.
-	 * - For LTR text: one <span class="asp-wave-letter"> per CHARACTER
-	 * - For RTL/Arabic/Persian: one <span class="asp-wave-word"> per WORD
-	 *   (preserves letter joining, bidi, and prevents mirroring).
+	 * Fill the word element. For Latin: one <span> per letter (classic wave).
+	 * For RTL/Arabic-script: one <span> per WORD (preserves connected glyphs
+	 * and bidi; avoids the "mirrored letters" bug).
 	 */
-	function waveify( el, text ) {
-		if ( ! el ) { return; }
-		// Skip elements whose content was pre-rendered by the preset (e.g. the
-		// APPLE STAR wordmark) unless they are explicitly marked for text fill.
-		var forced = el.getAttribute( 'data-text-attr' ) === 'text';
-		var brand  = el.getAttribute( 'data-text-attr' ) === 'brand';
-		if ( brand ) return; // leave brand wordmark alone (handled by preset)
-		if ( ! forced && el.childElementCount > 0 ) return;
-		if ( ! forced && el.textContent.trim() !== '' ) return;
+	function fillWord( el, txt ) {
+		if ( ! el ) return;
+		if ( el.dataset.filled ) return;
+		el.dataset.filled = '1';
+		el.innerHTML = '';
+		var rtl = isRTLText( txt );
+		el.setAttribute( 'dir', rtl ? 'rtl' : 'ltr' );
 
-		el.textContent = '';
-		var isRTL = isRTLText( text );
-
-		if ( isRTL ) {
-			// Word-level split for Persian/Arabic — preserves connected letters.
-			var words = String( text || '' ).split( /(\s+)/ );
+		if ( rtl ) {
+			var words = String( txt || '' ).split( /(\s+)/ );
 			var idx = 0;
-			words.forEach( function ( chunk ) {
+			for ( var i = 0; i < words.length; i++ ) {
+				var chunk = words[ i ];
 				if ( /^\s+$/.test( chunk ) ) {
 					var sp = document.createElement( 'span' );
-					sp.style.whiteSpace = 'pre';
+					sp.className = 'sp';
 					sp.textContent = chunk;
 					el.appendChild( sp );
-					return;
+					continue;
 				}
-				if ( chunk === '' ) return;
+				if ( ! chunk ) continue;
 				var w = document.createElement( 'span' );
-				w.className = 'asp-wave-word';
+				w.className = 'rtl';
 				w.textContent = chunk;
 				w.style.setProperty( '--w', idx );
 				el.appendChild( w );
 				idx++;
-			} );
-			el.setAttribute( 'dir', 'rtl' );
+			}
 		} else {
-			// Letter-level for LTR (Latin) — original wave behavior.
-			var chars = String( text || '' ).split( '' );
-			var idx2 = 0;
-			chars.forEach( function ( ch ) {
+			var chars = String( txt || '' ).split( '' );
+			for ( var k = 0; k < chars.length; k++ ) {
+				var ch = chars[ k ];
 				if ( ch === ' ' ) {
-					var sp2 = document.createElement( 'span' );
-					sp2.className = 'asp-wave-letter asp-space';
-					sp2.innerHTML = '&nbsp;';
-					sp2.style.setProperty( '--w', idx2 );
-					el.appendChild( sp2 );
-					idx2++;
-					return;
+					var s2 = document.createElement( 'span' );
+					s2.className = 'sp';
+					s2.innerHTML = '&nbsp;';
+					s2.style.setProperty( '--w', k );
+					el.appendChild( s2 );
+				} else {
+					var s1 = document.createElement( 'span' );
+					s1.className = 'ltr';
+					s1.textContent = ch;
+					s1.style.setProperty( '--w', k );
+					el.appendChild( s1 );
 				}
-				var s = document.createElement( 'span' );
-				s.className = 'asp-wave-letter';
-				s.textContent = ch;
-				s.style.setProperty( '--w', idx2 );
-				el.appendChild( s );
-				idx2++;
-			} );
-			el.setAttribute( 'dir', 'ltr' );
-		}
-	}
-	// Apply to all .asp-wave-text nodes and known sub text classes.
-	root.querySelectorAll( '.asp-wave-text, .asp-sub, .asp-sub-text' ).forEach( function ( el ) {
-		waveify( el, loadingText );
-	} );
-	// Dedicated wave word target (used by wave_letters preset).
-	var waveWord = root.querySelector( '.asp-wave-word' );
-	// Note: .asp-wave-word is also the class we add for RTL chunks; only the
-	// container that's a direct child of the stage (the preset's big word
-	// container) should be waveified here.
-	var waveContainer = root.querySelector( '.asp-stage .asp-wave-word' );
-	if ( waveContainer ) { waveify( waveContainer, loadingText ); }
-
-	// Hide percentage / bar when disabled.
-	if ( ! showPercent ) {
-		root.querySelectorAll( '.asp-percent, .asp-percent-sign, .asp-percent-row, .asp-percent-big, .asp-percent-wrap, .asp-ring-core' ).forEach( function( el ){
-			// For ring core keep the ring visual but hide text.
-			if ( el.classList.contains( 'asp-ring-core' ) ) { el.style.display = 'none'; }
-			else { el.style.display = 'none'; }
-		});
-	}
-	if ( ! showBar ) {
-		root.querySelectorAll( '.asp-bar, .asp-bar-wrap' ).forEach( function( el ){ el.style.display = 'none'; });
-	}
-
-	// Rotating tips.
-	var tipEl = root.querySelector( '.asp-tip' );
-	var tipIndex = 0;
-	var tipTimer = null;
-	function showNextTip() {
-		if ( ! tipEl || ! showTips ) { return; }
-		tipEl.style.opacity = 0;
-		setTimeout( function () {
-			tipEl.textContent = tips[ tipIndex % tips.length ];
-			tipIndex++;
-			tipEl.style.transition = 'opacity 0.5s ease';
-			tipEl.style.opacity = 1;
-		}, 400 );
-	}
-	if ( tipEl && showTips ) {
-		showNextTip();
-		tipTimer = setInterval( showNextTip, 2500 );
-	}
-
-	// --- Progress estimation -----------------------------------------
-	// We observe image elements and performance entries to approximate
-	// real loading progress. 0..90 during loading, jumps to 100 on "load".
-	function setTarget( p ) {
-		targetProg = Math.max( targetProg, Math.min( 100, p ) );
-		if ( ! rafId ) { rafId = requestAnimationFrame( tickProgress ); }
-	}
-	function applyProgress( p ) {
-		p = Math.max( 0, Math.min( 100, Math.round( p ) ) );
-		if ( percentEl ) {
-			var old = parseInt( percentEl.textContent, 10 ) || 0;
-			percentEl.textContent = p;
-			if ( p !== old ) {
-				percentEl.classList.remove( 'asp-digit-bounce' );
-				// Force reflow to restart animation.
-				void percentEl.offsetWidth;
-				percentEl.classList.add( 'asp-digit-bounce' );
 			}
 		}
-		if ( percentIn ) {
-			percentIn.textContent = p;
-		}
-		if ( barFill ) {
-			barFill.style.width = p + '%';
-		}
-		if ( barDot && bar ) {
-			barDot.style.left = p + '%';
-		}
-		progress = p;
-	}
-	function tickProgress() {
-		rafId = null;
-		if ( progress < targetProg ) {
-			// Ease toward target.
-			var diff = targetProg - progress;
-			var step = Math.max( 0.6, diff * 0.12 );
-			var next = progress + Math.min( diff, step );
-			applyProgress( next );
-			if ( Math.abs( 100 - progress ) > 0.1 ) {
-				rafId = requestAnimationFrame( tickProgress );
-			}
-		} else if ( progress > targetProg ) {
-			applyProgress( targetProg );
-		}
 	}
 
-	// Kick off a little artificial progress immediately for feedback.
-	setTarget( 8 );
-	setTimeout( function () { setTarget( 18 ); }, 250 );
-	setTimeout( function () { setTarget( 30 ); }, 700 );
-
-	// Count images and listen for their load/error events.
-	function hookResources() {
-		var imgs = document.querySelectorAll( 'img' );
-		var total = imgs.length;
-		var loaded = 0;
-		if ( total === 0 ) {
-			setTarget( 65 );
-			return;
-		}
-		function oneDone() {
-			loaded++;
-			var pct = 30 + ( loaded / total ) * 55; // up to ~85
-			setTarget( pct );
-		}
-		imgs.forEach( function ( img ) {
-			if ( img.complete ) { oneDone(); return; }
-			img.addEventListener( 'load', oneDone );
-			img.addEventListener( 'error', oneDone );
-		} );
-	}
-	if ( document.readyState === 'loading' ) {
-		document.addEventListener( 'DOMContentLoaded', hookResources );
-	} else {
-		hookResources();
+	// Inject logo above the wordmark if provided.
+	var stage = root.querySelector( '.asp-stage' );
+	if ( logoUrl && stage ) {
+		var wrap = document.createElement( 'div' );
+		wrap.className = 'asp-logo-wrap';
+		var img  = document.createElement( 'img' );
+		img.src  = logoUrl;
+		img.alt  = '';
+		img.draggable = false;
+		wrap.appendChild( img );
+		stage.insertBefore( wrap, stage.firstChild );
 	}
 
-	// PerformanceNavigation / Resource timing — grow progress over time.
-	var navStart = performance.timing && performance.timing.navigationStart ? performance.timing.navigationStart : Date.now();
-	function timeBasedProgress() {
-		var elapsed = Date.now() - navStart;
-		// 8s of smooth artificial ramp up to ~92%.
-		var t = Math.min( 1, elapsed / 8000 );
-		var base = 30 + t * 62;
-		setTarget( base );
-		if ( ! finished && t < 1 ) {
-			setTimeout( timeBasedProgress, 200 );
-		}
-	}
-	setTimeout( timeBasedProgress, 300 );
-
-	// --- Fade out / removal ------------------------------------------
-	function removeLoader() {
-		if ( root && root.parentNode ) {
-			if ( 'function' === typeof root.remove ) { root.remove(); }
-			else { root.parentNode.removeChild( root ); }
-		}
-	}
-	function finish() {
-		if ( finished ) { return; }
-		var elapsed = Date.now() - startedAt;
-		var wait = Math.max( 0, minTime - elapsed );
-		setTimeout( doFinish, wait );
-	}
-	function doFinish() {
-		if ( finished ) { return; }
-		finished = true;
-		if ( rafId ) { cancelAnimationFrame( rafId ); rafId = null; }
-		if ( tipTimer ) { clearInterval( tipTimer ); tipTimer = null; }
-		window.removeEventListener( 'load', onWindowLoad );
-		if ( fallbackTimer ) { clearTimeout( fallbackTimer ); }
-
-		// Snap percentage to 100% then fade.
-		setTarget( 100 );
-		applyProgress( 100 );
-
-		setTimeout( function () {
-			document.documentElement.classList.remove( 'asp-scroll-lock' );
-			document.body && document.body.classList.remove( 'asp-scroll-lock' );
-			root.classList.add( 'asp-fade-out' );
-
-			var removed = false;
-			function doRemove() {
-				if ( removed ) { return; }
-				removed = true;
-				removeLoader();
-			}
-			root.addEventListener( 'transitionend', function ( ev ) {
-				if ( ev.target === root && ( 'opacity' === ev.propertyName || 'opacity' === ( ev.propertyName + '' ) ) ) {
-					doRemove();
-				}
-			} );
-			setTimeout( doRemove, fadeMs + 200 );
-		}, 200 );
-	}
-
-	function onWindowLoad() { finish(); }
+	// Fill the word element with wave spans.
+	var word = root.querySelector( '#asp-word' ) || root.querySelector( '.asp-wave-word' );
+	fillWord( word, text );
 
 	// Lock scroll.
 	document.documentElement.classList.add( 'asp-scroll-lock' );
-	if ( document.body ) { document.body.classList.add( 'asp-scroll-lock' ); }
+	if ( document.body ) document.body.classList.add( 'asp-scroll-lock' );
 
+	/* --- Fade-out / removal -------------------------------------------- */
+	function removeLoader() {
+		if ( root && root.parentNode ) {
+			if ( 'function' === typeof root.remove ) root.remove();
+			else if ( root.parentNode ) root.parentNode.removeChild( root );
+		}
+	}
+
+	function finish() {
+		if ( finished ) return;
+		var elapsed = Date.now() - startedAt;
+		var wait    = Math.max( 0, minTime - elapsed );
+		setTimeout( doFinish, wait );
+	}
+
+	function doFinish() {
+		if ( finished ) return;
+		finished = true;
+		window.removeEventListener( 'load', onWindowLoad );
+		if ( fallbackT ) clearTimeout( fallbackT );
+
+		document.documentElement.classList.remove( 'asp-scroll-lock' );
+		if ( document.body ) document.body.classList.remove( 'asp-scroll-lock' );
+
+		root.classList.add( 'asp-fade-out' );
+
+		var removed = false;
+		function doRemove() {
+			if ( removed ) return;
+			removed = true;
+			removeLoader();
+		}
+		root.addEventListener( 'transitionend', function ( ev ) {
+			if ( ev.target === root && ev.propertyName === 'opacity' ) doRemove();
+		} );
+		// Safety net.
+		setTimeout( doRemove, fadeMs + 300 );
+	}
+
+	function onWindowLoad() {
+		if ( ! waitImages ) { finish(); return; }
+		// Wait for every image on the page to finish loading (or error out),
+		// so the "last image" the user waits for is actually there.
+		var imgs = Array.prototype.slice.call( document.images || [] );
+		var remaining = imgs.length;
+		if ( remaining === 0 ) { finish(); return; }
+		function oneDone() {
+			remaining--;
+			if ( remaining <= 0 ) finish();
+		}
+		imgs.forEach( function ( im ) {
+			if ( im.complete ) { oneDone(); return; }
+			im.addEventListener( 'load', oneDone );
+			im.addEventListener( 'error', oneDone );
+		} );
+		// But don't wait forever for images beyond the timeout.
+		setTimeout( finish, Math.max( 0, timeoutMs - ( Date.now() - startedAt ) ) );
+	}
+
+	// Wait for the real window load event (fonts, images, heavy assets).
 	window.addEventListener( 'load', onWindowLoad );
-	fallbackTimer = setTimeout( finish, timeoutMs );
 
-	// Edge case: page already complete.
+	// Hard fallback: if the load event never fires, release the page anyway.
+	fallbackT = setTimeout( finish, timeoutMs );
+
+	// Edge case: script injected after load.
 	if ( document.readyState === 'complete' ) {
-		// Even if loaded, respect min-time so users see the animation briefly.
 		setTimeout( finish, Math.max( 0, minTime - ( Date.now() - startedAt ) ) );
 	}
 }() );
