@@ -4,7 +4,7 @@ Tags: loader, preloader, loading, loading screen, apple star, page loader, maint
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.3.0
+Stable tag: 1.3.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
@@ -74,6 +74,10 @@ The field is a raw HTML/CSS area by design (your own loader markup), only visibl
 
 == Changelog ==
 
+= 1.3.1 =
+* Fix: پیش‌نمایش زنده (هم گرید و هم قاب بزرگ) کاملاً زنده شد — هر مدل مربع خودش را با انیمیشن واقعی نشان می‌دهد، قاب بزرگ دیگر سیاه نمی‌ماند و با تغییر مدل/تایپ زنده آپدیت می‌شود.
+* پنل مدیریت پولیش حرفه‌ای: کارت‌ها، گرید، فاصله‌ها و استایل‌ها مرتب و مدرن شد.
+
 = 1.3.0 =
 * Instant first-paint: critical CSS + scroll-lock in wp_head priority 0 so loader appears before any Elementor/Woo content and stays above all.
 * Polished all 10 loaders with distinct attractive motions + visual 4-column grid with live mini-previews in settings.
@@ -92,6 +96,10 @@ The field is a raw HTML/CSS area by design (your own loader markup), only visibl
 * Initial release: enable/disable, front-page/all-pages target, editable HTML+CSS loader code with live preview and reset button, fallback timeout, scroll lock, window "load" detection, smooth fade-out + full DOM removal, responsive default "Apple Star" design.
 
 == Upgrade Notice ==
+
+= 1.3.1 =
+* Fix: پیش‌نمایش زنده (هم گرید و هم قاب بزرگ) کاملاً زنده شد — هر مدل مربع خودش را با انیمیشن واقعی نشان می‌دهد، قاب بزرگ دیگر سیاه نمی‌ماند و با تغییر مدل/تایپ زنده آپدیت می‌شود.
+* پنل مدیریت پولیش حرفه‌ای: کارت‌ها، گرید، فاصله‌ها و استایل‌ها مرتب و مدرن شد.
 
 = 1.3.0 =
 * Instant first-paint: critical CSS + scroll-lock in wp_head priority 0 so loader appears before any Elementor/Woo content and stays above all.

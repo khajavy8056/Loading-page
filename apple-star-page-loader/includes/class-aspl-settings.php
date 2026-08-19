@@ -249,17 +249,23 @@ class ASPL_Settings {
 					var reset = document.getElementById( 'aspl-reset-code' );
 					if ( ! ta || ! frame ) { return; }
 					function updatePreview() {
-						var doc = '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><style>html,body{margin:0;padding:0;min-height:100vh;background:#0b0b0c;}</style></head><body dir="ltr">' + ta.value + '</body></html>';
+						var override='<style>.asld{position:absolute!important;}</style>';
+						var doc = '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><style>html,body{margin:0;padding:0;min-height:100vh;background:#0b0b0c;overflow:hidden;} body{position:relative;}</style></head><body dir="ltr">' + ta.value + override + '</body></html>';
 						frame.srcdoc = doc;
+						// fallback for browsers without srcdoc (rare)
+						try{ frame.contentDocument && (frame.contentDocument.documentElement.innerHTML=doc);}catch(e){}
 					}
-					// mini thumbs
+					// mini thumbs — live scaled previews
 					function initThumbs(){
 						document.querySelectorAll( '.aspl-model-thumb iframe[data-thumb]' ).forEach(function(f){
 							var key=f.getAttribute('data-thumb');
 							var code=window.ASPL.designs[key];
-							if(!code) return;
-							var doc='<!DOCTYPE html><html><head><meta charset="utf-8"><style>html,body{margin:0;padding:0;overflow:hidden;background:#0b0b0c;}</style></head><body dir="ltr">'+code+'</body></html>';
+							if(!code || !code.trim()){ f.style.background='#111'; return; }
+							var override='<style>.asld{position:absolute!important;}</style>';
+							var doc='<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body{margin:0;padding:0;overflow:hidden;background:#0b0b0c;} body{position:relative;min-height:200px;}</style></head><body dir="ltr">'+code+override+'</body></html>';
 							f.srcdoc=doc;
+							// retry once if still blank (some Android WebView needs delay)
+							setTimeout(function(){ try{ if(!f.contentDocument || !f.contentDocument.body || !f.contentDocument.body.innerHTML.trim()) f.srcdoc=doc; }catch(e){}}, 400);
 						});
 					}
 					initThumbs();
@@ -341,29 +347,36 @@ class ASPL_Settings {
 			</script>
 
 			<style>
-				.aspl-header { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin: 24px 0 0; }
-				.aspl-header .dashicons { font-size: 26px; width: 36px; height: 36px; color: #f5f5f7; background: #1d1d1f; border-radius: 9px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.28); }
-				.aspl-version { color: #787c82; font-size: 13px; font-weight: 400; }
-				.aspl-pill { font-size: 11px; font-weight: 600; letter-spacing: 0.4px; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; }
-				.aspl-pill--on { background: #e3f7e9; color: #1e7a3d; }
-				.aspl-pill--off { background: #f0f0f1; color: #666666; }
-				.aspl-pill--maint { background: #fde8e8; color: #b91c1c; }
-				.aspl-card { background: #fff; border: 1px solid #dcdcde; border-radius: 8px; padding: 18px 20px; margin-top: 18px; max-width: 960px; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04); }
-				.aspl-card h2 { margin-top: 0; }
-				.aspl-card--intro ul { margin: 10px 0 0; line-height: 1.9; }
-				.aspl-code { font-family: Consolas, Monaco, 'Courier New', monospace; font-size: 12px; line-height: 1.5; min-height: 340px; direction: ltr; text-align: left; }
+				.aspl-wrap{max-width:1020px}
+				.aspl-header { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin: 24px 0 12px; }
+				.aspl-header .dashicons { font-size: 26px; width: 36px; height: 36px; color: #f5f5f7; background: linear-gradient(135deg,#1d1d1f 0%,#2c2c2e 100%); border-radius: 9px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.28); display:flex; align-items:center; justify-content:center; }
+				.aspl-header .aspl-title{font-size:20px; font-weight:700; letter-spacing:-0.02em}
+				.aspl-version { color: #787c82; font-size: 13px; font-weight: 400; background:#f6f7f7; padding:2px 8px; border-radius:999px; border:1px solid #dcdcde }
+				.aspl-pill { font-size: 11px; font-weight: 700; letter-spacing: 0.4px; text-transform: uppercase; padding: 4px 11px; border-radius: 999px; border:1px solid transparent }
+				.aspl-pill--on { background: #e3f7e9; color: #1e7a3d; border-color:#b7e8c4 }
+				.aspl-pill--off { background: #f0f0f1; color: #666666; border-color:#dcdcde }
+				.aspl-pill--maint { background: #fde8e8; color: #b91c1c; border-color:#f0a0a0 }
+				.aspl-card { background: #fff; border: 1px solid #dcdcde; border-radius: 12px; padding: 20px 22px; margin-top: 16px; max-width: 960px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+				.aspl-card h2 { margin: 0 0 8px; font-size:15px; font-weight:700; letter-spacing:-0.01em }
+				.aspl-card--intro{ background: linear-gradient(180deg,#fff 0%,#fafafa 100%); }
+				.aspl-card--intro ul { margin: 10px 0 0; line-height: 1.9; padding-left:18px }
+				.aspl-card--intro li::marker{color:#2271b1}
+				.form-table th{font-weight:600; color:#1d1d1f}
+				.aspl-code { font-family: Consolas, Monaco, 'Courier New', monospace; font-size: 12px; line-height: 1.6; min-height: 360px; direction: ltr; text-align: left; background:#0b0b0c; color:#e8e8ed; border-radius:8px; border:1px solid #2c2c2e; padding:12px }
 				.aspl-unit { margin: 0 6px; color: #50575e; }
-				.aspl-preview-frame { width: 375px; max-width: 100%; height: 340px; border: 1px solid #dcdcde; border-radius: 8px; background: #0b0b0c; display: block; }
-				.aspl-preview-stage { background: #f6f7f7; border: 1px dashed #c3c4c7; border-radius: 8px; padding: 12px; display: flex; justify-content: center; }
-				.aspl-preview-actions { margin: 10px 0; }
-				.aspl-models-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin:12px 0}
-				.aspl-model-card{border:2px solid #dcdcde;border-radius:10px;overflow:hidden;cursor:pointer;background:#fff;transition:border-color .2s,box-shadow .2s;display:flex;flex-direction:column;align-items:center;padding:0 0 8px}
-				.aspl-model-card.is-selected{border-color:#2271b1;box-shadow:0 0 0 2px rgba(34,113,177,.15)}
-				.aspl-model-thumb{width:100%;height:90px;background:#0b0b0c;overflow:hidden;position:relative}
-				.aspl-model-thumb iframe{width:320px;height:200px;border:0;transform:scale(0.47);transform-origin:top left;pointer-events:none;background:#0b0b0c}
-				.aspl-model-thumb--custom{display:flex;align-items:center;justify-content:center;font-size:28px;background:#f6f7f7}
-				.aspl-model-name{font-weight:600;font-size:12px;margin-top:6px}
-				.aspl-model-key{font-size:10px;color:#787c82}
+				.aspl-preview-frame { width: 375px; max-width: 100%; height: 420px; border: 1px solid #dcdcde; border-radius: 12px; background: #0b0b0c; display: block; box-shadow: inset 0 2px 10px rgba(0,0,0,0.12)}
+				.aspl-preview-stage { background: #f6f7f7; border: 1px dashed #c3c4c7; border-radius: 12px; padding: 14px; display: flex; justify-content: center; }
+				.aspl-preview-actions { margin: 12px 0; display:flex; gap:8px; flex-wrap:wrap }
+				.aspl-preview-actions .button{border-radius:999px; padding:0 16px; height:32px}
+				.aspl-models-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(152px,1fr));gap:14px;margin:14px 0}
+				.aspl-model-card{border:2px solid #e5e5e7;border-radius:14px;overflow:hidden;cursor:pointer;background:#fff;transition:all .2s;display:flex;flex-direction:column;align-items:center;padding:0 0 10px; box-shadow:0 1px 2px rgba(0,0,0,0.04)}
+				.aspl-model-card:hover{border-color:#a7c7e7; transform:translateY(-1px); box-shadow:0 4px 12px rgba(0,0,0,0.08)}
+				.aspl-model-card.is-selected{border-color:#2271b1;box-shadow:0 0 0 3px rgba(34,113,177,.18); background:#f0f6ff}
+				.aspl-model-thumb{width:100%;height:96px;background:#0b0b0c;overflow:hidden;position:relative; border-bottom:1px solid #e5e5e7}
+				.aspl-model-thumb iframe{width:320px;height:205px;border:0;transform:scale(0.475);transform-origin:top left;pointer-events:none;background:#0b0b0c; display:block}
+				.aspl-model-thumb--custom{display:flex;align-items:center;justify-content:center;font-size:28px;background:linear-gradient(135deg,#f6f7f7 0%,#eef2f7 100%)}
+				.aspl-model-name{font-weight:700;font-size:12px;margin-top:8px; color:#1d1d1f}
+				.aspl-model-key{font-size:10px;color:#787c82; background:#f6f7f7; padding:1px 6px; border-radius:999px; margin-top:3px; font-family:monospace}
 				.aspl-switch { position: relative; display: inline-block; width: 44px; height: 24px; vertical-align: middle; }
 				.aspl-switch input { opacity: 0; width: 0; height: 0; }
 				.aspl-switch .aspl-track { position: absolute; inset: 0; background: #dcdcde; border-radius: 999px; transition: background 0.2s; }
