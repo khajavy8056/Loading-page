@@ -130,8 +130,8 @@ class ASPL_Frontend {
 			<?php echo $code; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Intentional raw HTML/CSS field. ?>
 		</div>
 		<style>
-			#asp-loader-root { transition: opacity 0.6s ease; }
-			#asp-loader-root.asp-fade-out { opacity: 0 !important; }
+			#asp-loader-root { transition: opacity 0.6s ease, transform 0.6s ease, filter 0.6s ease; }
+			#asp-loader-root.asp-fade-out { opacity: 0 !important; transform: scale(1.04); filter: blur(6px); pointer-events:none; }
 			html.asp-scroll-lock, html.asp-scroll-lock body { overflow: hidden !important; }
 		</style>
 		<script>

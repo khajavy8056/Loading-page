@@ -249,9 +249,20 @@ class ASPL_Settings {
 					var reset = document.getElementById( 'aspl-reset-code' );
 					if ( ! ta || ! frame ) { return; }
 					function updatePreview() {
-						var doc = '<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><style>html,body{margin:0;padding:0;min-height:100vh;background:#0b0b0c;}</style></head><body dir="ltr">' + ta.value + '</body></html>';
+						var doc = '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><style>html,body{margin:0;padding:0;min-height:100vh;background:#0b0b0c;}</style></head><body dir="ltr">' + ta.value + '</body></html>';
 						frame.srcdoc = doc;
 					}
+					// mini thumbs
+					function initThumbs(){
+						document.querySelectorAll( '.aspl-model-thumb iframe[data-thumb]' ).forEach(function(f){
+							var key=f.getAttribute('data-thumb');
+							var code=window.ASPL.designs[key];
+							if(!code) return;
+							var doc='<!DOCTYPE html><html><head><meta charset="utf-8"><style>html,body{margin:0;padding:0;overflow:hidden;background:#0b0b0c;}</style></head><body dir="ltr">'+code+'</body></html>';
+							f.srcdoc=doc;
+						});
+					}
+					initThumbs();
 					var timer = null;
 					ta.addEventListener( 'input', function () {
 						clearTimeout( timer );
@@ -261,14 +272,24 @@ class ASPL_Settings {
 						reset.addEventListener( 'click', function () {
 							ta.value = window.ASPL.defaultCode;
 							var r = document.querySelector( 'input[name="aspl_settings[model]"][value="apple-star"]' );
-							if ( r ) r.checked = true;
+							if ( r ) { r.checked = true; document.querySelectorAll('.aspl-model-card').forEach(function(c){c.classList.remove('is-selected')}); var card=document.querySelector('.aspl-model-card[data-model="apple-star"]'); if(card) card.classList.add('is-selected'); }
 							updatePreview();
 						} );
 					}
-					// Model switching
+					// Model switching — cards + radios
+					document.querySelectorAll( '.aspl-model-card' ).forEach(function(card){
+						card.addEventListener('click', function(){
+							var radio=card.querySelector('input[type=radio]');
+							if(!radio) return;
+							radio.checked=true;
+							radio.dispatchEvent(new Event('change',{bubbles:true}));
+							document.querySelectorAll('.aspl-model-card').forEach(function(c){c.classList.remove('is-selected')});
+							card.classList.add('is-selected');
+						});
+					});
 					document.querySelectorAll( 'input[name="aspl_settings[model]"]' ).forEach( function ( radio ) {
 						radio.addEventListener( 'change', function () {
-							if ( radio.value === 'custom' ) { return; }
+							if ( radio.value === 'custom' ) { updatePreview(); return; }
 							var code = window.ASPL.designs[ radio.value ];
 							if ( typeof code !== 'undefined' ) { ta.value = code; updatePreview(); }
 						} );
@@ -332,9 +353,17 @@ class ASPL_Settings {
 				.aspl-card--intro ul { margin: 10px 0 0; line-height: 1.9; }
 				.aspl-code { font-family: Consolas, Monaco, 'Courier New', monospace; font-size: 12px; line-height: 1.5; min-height: 340px; direction: ltr; text-align: left; }
 				.aspl-unit { margin: 0 6px; color: #50575e; }
-				.aspl-preview-frame { width: 375px; max-width: 100%; height: 300px; border: 1px solid #dcdcde; border-radius: 8px; background: #0b0b0c; display: block; }
+				.aspl-preview-frame { width: 375px; max-width: 100%; height: 340px; border: 1px solid #dcdcde; border-radius: 8px; background: #0b0b0c; display: block; }
 				.aspl-preview-stage { background: #f6f7f7; border: 1px dashed #c3c4c7; border-radius: 8px; padding: 12px; display: flex; justify-content: center; }
 				.aspl-preview-actions { margin: 10px 0; }
+				.aspl-models-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin:12px 0}
+				.aspl-model-card{border:2px solid #dcdcde;border-radius:10px;overflow:hidden;cursor:pointer;background:#fff;transition:border-color .2s,box-shadow .2s;display:flex;flex-direction:column;align-items:center;padding:0 0 8px}
+				.aspl-model-card.is-selected{border-color:#2271b1;box-shadow:0 0 0 2px rgba(34,113,177,.15)}
+				.aspl-model-thumb{width:100%;height:90px;background:#0b0b0c;overflow:hidden;position:relative}
+				.aspl-model-thumb iframe{width:320px;height:200px;border:0;transform:scale(0.47);transform-origin:top left;pointer-events:none;background:#0b0b0c}
+				.aspl-model-thumb--custom{display:flex;align-items:center;justify-content:center;font-size:28px;background:#f6f7f7}
+				.aspl-model-name{font-weight:600;font-size:12px;margin-top:6px}
+				.aspl-model-key{font-size:10px;color:#787c82}
 				.aspl-switch { position: relative; display: inline-block; width: 44px; height: 24px; vertical-align: middle; }
 				.aspl-switch input { opacity: 0; width: 0; height: 0; }
 				.aspl-switch .aspl-track { position: absolute; inset: 0; background: #dcdcde; border-radius: 999px; transition: background 0.2s; }
@@ -385,17 +414,24 @@ class ASPL_Settings {
 		$options = self::get_options();
 		$current = isset( $options['model'] ) ? $options['model'] : ASPL_Defaults::DEFAULT_DESIGN;
 		$designs = ASPL_Designs::get_designs();
-		foreach ( $designs as $key => $info ) : ?>
-			<label style="display:block;margin-bottom:4px;">
-				<input type="radio" name="<?php echo esc_attr( $args['option_name'] ); ?>[model]" value="<?php echo esc_attr( $key ); ?>" <?php checked( $current, $key ); ?> />
-				<?php echo esc_html( $info['name'] . ' — ' . $key ); ?>
+		?>
+		<div class="aspl-models-grid">
+		<?php foreach ( $designs as $key => $info ) : ?>
+			<label class="aspl-model-card <?php echo $current === $key ? 'is-selected' : ''; ?>" data-model="<?php echo esc_attr( $key ); ?>">
+				<input type="radio" name="<?php echo esc_attr( $args['option_name'] ); ?>[model]" value="<?php echo esc_attr( $key ); ?>" <?php checked( $current, $key ); ?> hidden />
+				<div class="aspl-model-thumb"><iframe sandbox="" title="<?php echo esc_attr( $info['name'] ); ?>" data-thumb="<?php echo esc_attr( $key ); ?>"></iframe></div>
+				<span class="aspl-model-name"><?php echo esc_html( $info['name'] ); ?></span>
+				<span class="aspl-model-key"><?php echo esc_html( $key ); ?></span>
 			</label>
 		<?php endforeach; ?>
-		<label style="display:block;margin-bottom:4px;font-weight:600;">
-			<input type="radio" name="<?php echo esc_attr( $args['option_name'] ); ?>[model]" value="custom" <?php checked( $current, 'custom' ); ?> />
-			<?php esc_html_e( 'Custom', 'apple-star-loader' ); ?>
-		</label>
-		<p class="description"><?php esc_html_e( 'Selecting a design will load its code into the textarea. Custom leaves your code untouched.', 'apple-star-loader' ); ?></p>
+			<label class="aspl-model-card aspl-model-card--custom <?php echo 'custom' === $current ? 'is-selected' : ''; ?>" data-model="custom">
+				<input type="radio" name="<?php echo esc_attr( $args['option_name'] ); ?>[model]" value="custom" <?php checked( $current, 'custom' ); ?> hidden />
+				<div class="aspl-model-thumb aspl-model-thumb--custom"><span>✏️</span></div>
+				<span class="aspl-model-name"><?php esc_html_e( 'Custom', 'apple-star-loader' ); ?></span>
+				<span class="aspl-model-key">custom</span>
+			</label>
+		</div>
+		<p class="description"><?php esc_html_e( 'Click a design to preview it instantly below and load its code into the textarea. Custom leaves your code untouched.', 'apple-star-loader' ); ?></p>
 		<?php
 	}
 
