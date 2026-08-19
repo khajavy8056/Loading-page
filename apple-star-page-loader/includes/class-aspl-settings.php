@@ -649,73 +649,89 @@ CSS;
 		var textCol = val('text_color')||'#ffffff';
 		var accent = val('accent_color')||'#00c3ff';
 		var blur = num('blur_amount',16);
-		var vars = '--asp-bg:'+bg+';--asp-text:'+textCol+';--asp-accent:'+accent+';--asp-blur:'+blur+'px;';
-		var cssVars = 'html,body{margin:0;padding:0;height:100%;background:#0a0a0f;overflow:hidden;}#asp-loader-root{position:fixed;inset:0;'+vars+'z-index:1;}';
 
-		// Logo
-		var logoUrl = val('logo')||'';
-		var logoHtml = '';
-		if(logoUrl){
-			logoHtml = '<style>.asp-logo-wrap img{max-height:70px;max-width:220px;object-fit:contain;filter:drop-shadow(0 6px 18px rgba(0,0,0,.5));}</style><div class="asp-logo-wrap" id="asp-logo-slot"><img src="'+logoUrl.replace(/"/g,'&quot;')+'"></div>';
-		}
+		// Split preset into structural HTML and CSS (presets ship with a <style> block)
+		var presetCss = '';
+		var presetHtml = code.replace(/<style[^>]*>([\s\S]*?)<\/style>/gi, function(m, css){
+			presetCss += '\n' + css;
+			return '';
+		}).replace(/\n\s*\n\s*\n/g, '\n\n').trim();
 
-		// Spans for word
+		var rootCss = 'html,body{margin:0;padding:0;height:100%;background:#0a0a0f;overflow:hidden;}'
+			+ '#asp-loader-root{position:fixed;inset:0;z-index:1;'
+			+ '--asp-bg:'+bg+';--asp-text:'+textCol+';--asp-accent:'+accent+';--asp-blur:'+blur+'px;}';
+
+		// Build word spans (mirrors server-side builder in class-aspl-frontend.php)
 		var sp = buildSpans(text);
 		var dirAttr = sp.rtl?'dir="rtl"':'dir="ltr"';
 
-		// Inject logo + spans into preset markup
-		var presetHtml = code;
-		// Replace #asp-word contents with our built spans
-		presetHtml = presetHtml.replace(/(<[^>]*id=["']asp-word["'][^>]*>)[\s\S]*?(<\/[^>]+>)/, '$1'+sp.html+'$2');
-		// Also handle generic .asp-wave-word if present without id
-		if(presetHtml.indexOf('id="asp-word"')===-1){
-			presetHtml = presetHtml.replace(/(<[^>]*class=["'][^"']*asp-wave-word[^"']*["'][^>]*>)[\s\S]*?(<\/[^>]+>)/, '$1'+sp.html+'$2');
+		// Logo
+		var logoUrl = val('logo')||'';
+		var logoCss = '';
+		var logoHtml = '';
+		if(logoUrl){
+			logoCss = '.asp-logo-wrap img{max-height:70px;max-width:220px;object-fit:contain;filter:drop-shadow(0 6px 18px rgba(0,0,0,.5));}';
+			logoHtml = '<div class="asp-logo-wrap" id="asp-logo-slot"><img src="'+logoUrl.replace(/"/g,'&quot;')+'"></div>';
 		}
-		// Set dir on word element
-		presetHtml = presetHtml.replace(/id=["']asp-word["']/, 'id="asp-word" '+dirAttr);
 
-		// Inject logo into stage
-		if(logoHtml){
-			// If there's a logo slot placeholder
-			if(presetHtml.indexOf('id="asp-logo-slot"')!==-1){
-				presetHtml = presetHtml.replace(/<div class="asp-logo-wrap" id="asp-logo-slot"><\/div>/, logoHtml);
-			} else {
-				presetHtml = presetHtml.replace(/(<div class="asp-stage">)/, '$1'+logoHtml);
-			}
+		// Inject logo into stage (replace placeholder slot, or prepend to .asp-stage)
+		if(presetHtml.indexOf('id="asp-logo-slot"')!==-1){
+			presetHtml = presetHtml.replace(/<div class="asp-logo-wrap" id="asp-logo-slot"><\/div>/, logoHtml);
+		} else if(logoHtml) {
+			presetHtml = presetHtml.replace(/(<div class="asp-stage">)/, '$1'+logoHtml);
 		} else {
-			// Remove empty logo slot
 			presetHtml = presetHtml.replace(/<div class="asp-logo-wrap" id="asp-logo-slot"><\/div>/g, '');
 		}
 
-		// Maintenance block (preview shows a 30-second fake countdown so the user sees what it looks like)
+		// Inject word spans into #asp-word
+		presetHtml = presetHtml.replace(/(<[^>]*id=["']asp-word["'][^>]*>)[\s\S]*?(<\/[^>]+>)/, '$1'+sp.html+'$2');
+		if(presetHtml.indexOf('id="asp-word"')===-1){
+			presetHtml = presetHtml.replace(/(<[^>]*class=["'][^"']*asp-wave-word[^"']*["'][^>]*>)[\s\S]*?(<\/[^>]+>)/, '$1'+sp.html+'$2');
+		}
+		presetHtml = presetHtml.replace(/id=["']asp-word["']/, 'id="asp-word" '+dirAttr);
+
+		// Maintenance preview (30 second default if 0)
 		var maintOn = $form.find('[name$="[maintenance_mode]"]').is(':checked');
 		var maintMsg = val('maintenance_msg')||'ما در حال بروز رسانی هستیم.';
 		var maintH = num('maintenance_hours',0), maintM = num('maintenance_minutes',30), maintS = num('maintenance_seconds',0);
 		var maintHtml = '';
+		var maintScript = '';
 		if(maintOn){
 			var totalSec = (maintH*3600)+(maintM*60)+maintS;
-			if(totalSec<=0) totalSec = 30; // preview default
-			// Cap preview at 59:59 for nicer display when user sets huge hours
+			if(totalSec<=0) totalSec = 30;
 			var previewSec = Math.min(totalSec, 99*3600+59*60+59);
-			maintHtml = '<div class="asp-maint" dir="rtl" style="margin-top:24px;text-align:center;color:rgba(255,255,255,.9);max-width:560px;padding:0 20px;">'
-				+ '<div class="asp-maint-lbl" style="margin-bottom:6px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;opacity:.55;">در حال بروز رسانی</div>'
-				+ '<div class="asp-maint-timer" id="asp-maint-timer" style="font-family:ui-monospace,SF Mono,Menlo,Consolas,monospace;font-size:clamp(1.1rem,3vw,1.8rem);font-weight:700;letter-spacing:.08em;color:#fff;text-shadow:0 0 20px rgba(255,255,255,.4);direction:ltr;unicode-bidi:embed;">'
-				+ pad(maintH)+':<span class="asp-sep" style="opacity:.6;animation:asp-blink 1s steps(2) infinite;margin:0 2px;">:</span>'+pad(maintM)+':<span class="asp-sep" style="opacity:.6;animation:asp-blink 1s steps(2) infinite;margin:0 2px;">:</span>'+pad(maintS)
+			maintHtml = '<div class="asp-maint" dir="rtl">'
+				+ '<div class="asp-maint-lbl">در حال بروز رسانی</div>'
+				+ '<div class="asp-maint-timer" id="asp-maint-timer">'
+				+ '<span class="asp-hh">'+pad(maintH)+'</span><span class="asp-sep">:</span>'
+				+ '<span class="asp-mm">'+pad(maintM)+'</span><span class="asp-sep">:</span>'
+				+ '<span class="asp-ss">'+pad(maintS)+'</span>'
 				+ '</div>'
-				+ '<div class="asp-maint-msg" style="margin-top:12px;font-size:clamp(.85rem,1.8vw,1rem);line-height:1.7;opacity:.8;">'+maintMsg.replace(/</g,'&lt;')+'</div>'
+				+ '<div class="asp-maint-msg">'+maintMsg.replace(/</g,'&lt;').replace(/\n/g,'<br>')+'</div>'
 				+ '</div>';
-			// Inject small countdown script for preview only
-			maintHtml += '<script>(function(){var r='+previewSec+';var e=document.getElementById("asp-maint-timer");if(!e)return;function p(n){n=n|0;return n<10?"0"+n:""+n;}setInterval(function(){if(r<=0){r='+previewSec+';}r--;var h=Math.floor(r/3600),m=Math.floor((r%3600)/60),s=r%60;e.innerHTML=p(h)+":<span class=\"asp-sep\" style=\"opacity:.6;animation:asp-blink 1s steps(2) infinite;margin:0 2px;\">:</span>"+p(m)+":<span class=\"asp-sep\" style=\"opacity:.6;animation:asp-blink 1s steps(2) infinite;margin:0 2px;\">:</span>"+p(s);},1000);})();<\/script>';
-		}
-		if(maintHtml){
-			// Insert maintenance block at end of .asp-stage (just before the
-			// </div> that closes .asp-stage, which is always the </div>
-			// immediately preceding the <style> tag in our presets).
-			presetHtml = presetHtml.replace(/(<\/div>\s*<style>)/, maintHtml+'$1');
+			// Append to .asp-stage (safe: all presets end .asp-stage with a </div> right before </div><style>)
+			presetHtml = presetHtml.replace(/(<\/div>\s*)(<\/div>\s*$)/, '$1'+maintHtml+'$2');
+			// Countdown script (runs in iframe after DOM builds)
+			maintScript = '<script>(function(){'
+				+ 'var r='+previewSec+';var e=document.getElementById("asp-maint-timer");'
+				+ 'function p(n){n=n|0;return n<10?"0"+n:""+n;}'
+				+ 'if(!e)return;'
+				+ 'setInterval(function(){'
+				+ 'if(r<=0){r='+previewSec+';}r--;'
+				+ 'var h=Math.floor(r/3600),m=Math.floor((r%3600)/60),s=r%60;'
+				+ 'var hh=e.querySelector(".asp-hh"),mm=e.querySelector(".asp-mm"),ss=e.querySelector(".asp-ss");'
+				+ 'if(hh)hh.textContent=p(h);if(mm)mm.textContent=p(m);if(ss)ss.textContent=p(s);'
+				+ '},1000);'
+				+ '})();<\/script>';
 		}
 
-		var doc = '<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>'+cssVars+'@@keyframes asp-blink{50%{opacity:.15;}}</style></head><body>'+presetHtml+'</body></html>';
-		doc = doc.replace('@@', '@'); // escape trick
+		// Wrap everything inside #asp-loader-root so CSS variables apply
+		var bodyHtml = '<div id="asp-loader-root">' + presetHtml + '</div>';
+		var doc = '<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1">'
+			+ '<style id="asp-loader-styles">' + rootCss + '\n' + presetCss + '\n' + logoCss
+			+ '@keyframes asp-blink{50%{opacity:.15;}}'
+			+ '<\/style><\/head><body>'
+			+ bodyHtml + maintScript + '<\/body><\/html>';
 		return doc;
 	}
 
