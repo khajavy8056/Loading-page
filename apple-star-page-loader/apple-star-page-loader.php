@@ -3,7 +3,7 @@
  * Plugin Name:       Apple Star Page Loader
  * Plugin URI:        https://github.com/khajavy8056/Loading-page
  * Description:       Production-ready, fully responsive "Apple Star" glass preloader for WordPress & WooCommerce. Injects a 100% customizable loading screen at the very top of the page (wp_body_open), locks scrolling, waits for the real window "load" event (heavy Elementor builds, web fonts and images) and then fades out smoothly before removing itself from the DOM. Full control from the admin panel: enable/disable, front-page or all-pages target, 10 one-click loader designs + custom code, Maintenance / Coming Soon mode with editable message, live countdown, auto-shutdown and 503 handling, editable HTML/CSS code with live preview, and a fallback timeout so your site can never stay locked.
- * Version:           1.2.0
+ * Version:           1.3.0
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Author:            Khajavy
@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Current plugin version.
  */
-define( 'ASPL_VERSION', '1.2.0' );
+define( 'ASPL_VERSION', '1.3.0' );
 
 /**
  * Absolute path to the main plugin file.

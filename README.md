@@ -1,4 +1,4 @@
-# Apple Star Page Loader v1.2.0 🌟
+# Apple Star Page Loader v1.3.0 🌟
 
 یک افزونه اختصاصی وردپرس (Production-Ready) برای نمایش **لودینگ صفحه‌ای شیشه‌ای «Apple Star»** + حالت **Maintenance / Coming Soon** — کاملاً ریسپانسیو، سازگار با **WordPress 7.0** و **WooCommerce 11.0**.
 
@@ -46,7 +46,7 @@ A production-ready WordPress plugin — custom **"Apple Star" glass preloader** 
 
 ```
 apple-star-page-loader/
-├── apple-star-page-loader.php        # v1.2.0 — singleton + cron handler
+├── apple-star-page-loader.php        # v1.3.0 — singleton + cron handler
 ├── includes/
 │   ├── class-aspl-defaults.php       # پیش‌فرض‌ها (maintenance خاموش، 48h)
 │   ├── class-aspl-designs.php        # رجیستری ۱۰ مدل
