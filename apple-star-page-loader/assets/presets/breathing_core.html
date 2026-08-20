@@ -1,0 +1,40 @@
+{{LOGO}}
+<svg class="asp-icon-svg" viewBox="0 0 160 130" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="brg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"   stop-color="#ffffff" stop-opacity="1"/>
+      <stop offset="45%"  stop-color="{{ACCENT}}" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="{{ACCENT}}" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="brf"><feGaussianBlur stdDeviation="1.5"/></filter>
+  </defs>
+  <g transform="translate(80,65)">
+    <animate attributeName="opacity" values="0;1" dur=".45s" fill="freeze"/>
+    <!-- Outer halo breathing -->
+    <circle r="14" fill="url(#brg)" filter="url(#brf)">
+      <animate attributeName="r"       values="12;44;12" dur="3.2s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values=".35;1;.35" dur="3.2s" repeatCount="indefinite"/>
+    </circle>
+    <!-- Mid soft ring -->
+    <circle r="10" fill="none" stroke="#fff" stroke-width="1.2" opacity="0.5">
+      <animate attributeName="r"       values="10;24;10" dur="3.2s" begin="-0.8s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.5;0;0.5" dur="3.2s" begin="-0.8s" repeatCount="indefinite"/>
+    </circle>
+    <!-- Accent ring -->
+    <circle r="8" fill="none" stroke="{{ACCENT}}" stroke-width="2" opacity="0.8">
+      <animate attributeName="r"       values="8;28;8" dur="3.2s" begin="-1.6s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.8;0;0.8" dur="3.2s" begin="-1.6s" repeatCount="indefinite"/>
+      <animate attributeName="stroke-width" values="2;0.4;2" dur="3.2s" begin="-1.6s" repeatCount="indefinite"/>
+    </circle>
+    <!-- Core -->
+    <circle r="7" fill="#fff" filter="url(#brf)">
+      <animate attributeName="r"       values="6;11;6" dur="3.2s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values=".85;1;.85" dur="3.2s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="3.5" fill="{{ACCENT}}">
+      <animate attributeName="r" values="2.5;5;2.5" dur="3.2s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+</svg>
+<div class="asp-brand-text" {{DIR}}>{{TEXT}}</div>
+{{MAINT}}

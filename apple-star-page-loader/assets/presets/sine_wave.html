@@ -1,0 +1,33 @@
+{{LOGO}}
+<svg class="asp-icon-svg" viewBox="0 0 180 110" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="swg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="{{ACCENT}}" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="swf"><feGaussianBlur stdDeviation="1.2"/></filter>
+  </defs>
+  <g fill="url(#swg)" filter="url(#swf)">
+    <animate attributeName="opacity" values="0;1" dur=".35s" fill="freeze"/>
+    <circle cx="30"  cy="55" r="6">
+      <animate attributeName="cy" values="75;35;75" dur="1.2s" begin="0s"   repeatCount="indefinite"/>
+      <animate attributeName="r"  values="5;7.5;5"   dur="1.2s" begin="0s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="65"  cy="55" r="6" opacity="0.9">
+      <animate attributeName="cy" values="75;35;75" dur="1.2s" begin="0.15s" repeatCount="indefinite"/>
+      <animate attributeName="r"  values="5;7.5;5"   dur="1.2s" begin="0.15s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="100" cy="55" r="6.5">
+      <animate attributeName="cy" values="75;35;75" dur="1.2s" begin="0.3s" repeatCount="indefinite"/>
+      <animate attributeName="r"  values="5;8;5"     dur="1.2s" begin="0.3s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="135" cy="55" r="6" opacity="0.85">
+      <animate attributeName="cy" values="75;35;75" dur="1.2s" begin="0.45s" repeatCount="indefinite"/>
+      <animate attributeName="r"  values="5;7.5;5"   dur="1.2s" begin="0.45s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+  <!-- connecting soft line -->
+  <path d="M26,75 Q65,60 100,75 T139,75" stroke="{{ACCENT}}" stroke-opacity="0.45" stroke-width="1.2" fill="none"/>
+</svg>
+<div class="asp-brand-text" {{DIR}}>{{TEXT}}</div>
+{{MAINT}}

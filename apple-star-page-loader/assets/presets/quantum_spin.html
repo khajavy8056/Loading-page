@@ -1,0 +1,32 @@
+{{LOGO}}
+<svg class="asp-icon-svg" viewBox="0 0 160 130" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="qgf"><feGaussianBlur stdDeviation="0.5"/></filter>
+  </defs>
+  <g transform="translate(80,65)" fill="none" stroke-linecap="round" filter="url(#qgf)">
+    <animate attributeName="opacity" values="0;1" dur=".4s" fill="freeze"/>
+    <!-- Outer wide ellipse -->
+    <ellipse rx="48" ry="16" stroke="#fff" stroke-width="2" opacity="0.9">
+      <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="1.4s" repeatCount="indefinite"/>
+    </ellipse>
+    <!-- Mid tilted ellipse (accent) -->
+    <ellipse rx="36" ry="12" stroke="{{ACCENT}}" stroke-width="2" opacity="0.85">
+      <animateTransform attributeName="transform" type="rotate" from="60" to="420" dur="2s" repeatCount="indefinite"/>
+    </ellipse>
+    <!-- Inner tight ellipse -->
+    <ellipse rx="24" ry="8" stroke="#fff" stroke-width="2" opacity="0.65">
+      <animateTransform attributeName="transform" type="rotate" from="120" to="480" dur="2.8s" repeatCount="indefinite"/>
+    </ellipse>
+    <!-- Innermost soft ellipse -->
+    <ellipse rx="14" ry="5" stroke="{{ACCENT}}" stroke-width="1.4" opacity="0.5">
+      <animateTransform attributeName="transform" type="rotate" from="0" to="-360" dur="3.4s" repeatCount="indefinite"/>
+    </ellipse>
+    <!-- Core -->
+    <circle r="5" fill="#fff"/>
+    <circle r="3" fill="{{ACCENT}}">
+      <animate attributeName="r" values="2.2;4.4;2.2" dur="1.4s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+</svg>
+<div class="asp-brand-text" {{DIR}}>{{TEXT}}</div>
+{{MAINT}}

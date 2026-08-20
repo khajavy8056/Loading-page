@@ -1,80 +1,99 @@
-# Apple Star Page Loader — Apple Star Page Loader 🌟
+# 🍎 Apple Star Page Loader — WordPress Plugin
 
-یک افزونه اختصاصی وردپرس (Production-Ready) برای نمایش **لودینگ صفحه‌ای شیشه‌ای «Apple Star»** روی سایت — کاملاً ریسپانسیو، سازگار با آخرین نسخه‌های **WordPress 7.0** و **WooCommerce 11.0** و مناسب برای صفحات سنگین المنتور.
+Animated Apple-style page preloader for WordPress & WooCommerce. Version **3.3.0**.
 
-A production-ready WordPress plugin that puts a custom **"Apple Star" glass preloader** in front of your visitors — fully responsive, compatible with the latest WordPress (7.0) and WooCommerce (11.0), built for heavy Elementor pages.
+![Version](https://img.shields.io/badge/version-3.3.0-blue) ![WordPress](https://img.shields.io/badge/WordPress-6.0%2B-blue) ![PHP](https://img.shields.io/badge/PHP-7.4%2B-8892bf) ![License](https://img.shields.io/badge/license-GPLv2-green)
 
----
+## ✨ ویژگی‌ها (Features)
 
-## ✨ امکانات / Features
+- **۱۰۰ مدل لودینگ اپل‌استایل** — همه انیمیشن‌ها با **SMIL SVG** (`<animate>` / `<animateTransform>` داخل اینلاین SVG) و در نتیجه **مقاوم به بهینه‌سازها** (Autoptimize، WP Rocket، LiteSpeed، Cloudflare Rocket Loader و …):
+  - **Apple Star Pulse (ECG)** — مدل اصلی: پس‌زمینه شیشه‌ای، خط ECG، نقطه اسکنر متحرک
+  - ۱۱ مدل اصلی: Classic Pulse, Equalizer Bars, Sine Wave Dots, ECG Heartbeat, Siri Orbit, Concentric Radar, Breathing Core, Quantum Spin, Wave Morph, Dot Rhythm
+  - **۸۹ مدل جدید v3.3**: حلقه‌های متحدالمرکز، هاله‌های نورانی، توپ‌های جهنده، موج‌های سینوسی، اکولایزرها، کمان‌های چرخان، مدارهای اتم، رادار، ستاره‌های چشمک‌زن، خطوط ضربان قلب، سیاره‌های مداری، بی‌نهایت، مورف شکل، ماتریس نقطه‌ای، شارژ باتری، ساعت گردان، دیافراگم دوربین، پروانه چرخان، قطره آب، مثلث مداری و …
+- **شروع آنی انیمیشن (بدون تأخیر)** — لودینگ اولین چیزی است که مرورگر می‌کشد: CSS حیاتی در `<head>` (priority -99999)، HTML لودینگ بلافاصله بعد از تگ `<body>`، و پس‌زمینه `<html>` از قبل رنگ‌آمیزی شده (بدون فلش سفید). انیمیشن SMIL به محض پارس شدن SVG شروع می‌شود — بدون JS، بدون `@keyframes`، بدون انتظار.
+- **نمایش سریع صفحه پشتی (رفع تأخیر v3.3)** — تنظیم جدید «کی لودینگ بسته شود؟»:
+  - **به محض آماده‌شدن DOM (پیش‌فرض، سریع):** لودینگ به محض آماده شدن DOM محو می‌شود و سایت پشتی تقریباً بلافاصله دیده می‌شود — دیگر لازم نیست منتظر دانلود همه عکس‌ها و فونت‌ها بمانید.
+  - **بعد از بارگذاری کامل صفحه:** حالت قبلی برای صفحاتی که می‌خواهند همه چیز حتماً لود شود.
+  - «حداقل زمان نمایش» پیش‌فرض ۳۵۰ms (ضد فلیکر)، محو شدن ۳۵۰ms و Timeout امنیتی ۱۵ ثانیه.
+- **حالت بروزرسانی (Maintenance Mode)** با شمارنده معکوس ساعت/دقیقه/ثانیه و پیام سفارشی (پیش‌فرض خاموش)
+- **پشتیبانی کامل فارسی/RTL** — جهت متن به‌طور خودکار تشخیص داده می‌شود؛ متن برند ثابت است و حروف فارسی هرگز آینه‌ای/جدا نمی‌شوند
+- **پیش‌نمایش زنده** در ادمین با iframe واقعی (جاوااسکریپت اجرا می‌شود) + دکمه تمام‌صفحه
+- **انتخابگر ۱۰۰ مدل** با تصویر بندانگشتی متحرک واقعی + جستجو + فیلتر دسته‌بندی
+- **آپلود لوگو** با کتابخانه رسانه وردپرس
+- **انتخابگر رنگ، بلور، شفافیت، زمان‌بندی**
+- **سوئیچ‌های iOS-style** سبز (روشن) / قرمز (خاموش)
+- **کاملاً ریسپانسیو** (موبایل، تبلت، دسکتاپ) + احترام به `prefers-reduced-motion`
+- **CSS سفارشی** برای کاربران حرفه‌ای
 
-| قابلیت | توضیح |
-|---|---|
-| 🎛️ صفحه تنظیمات | در نوار کناری پیشخوان: **Apple Star Loader** + زیر **Settings → Apple Star Loader** |
-| ✅ Enable / Disable | کلید روشن/خاموش بدون دست زدن به کد |
-| 📍 Display Target | فقط صفحه اصلی (پیشنهادی) یا تمام صفحات سایت |
-|  کد لودینگ کاملاً باز | Textarea بزرگ برای HTML/CSS لودینگ — هر لحظه با طراحی خودتان عوض می‌شود + **پیش‌نمایش زنده** (موبایل/تبلت/دسکتاپ) + دکمه Reset به کد پیش‌فرض |
-| ⏱️ Fallback Timeout | عدد بر حسب ثانیه (پیش‌فرض ۱۰) — اگر عکسی گیر کند لودینگ بسته می‌شود و سایت قفل نمی‌ماند |
-| 📄 تزریق در بالاترین نقطه | از طریق هوک `wp_body_open` (priority 1) + بازگشت‌پذیر روی `wp_footer` برای تم‌های بدون `body_open` |
-| 🔒 قفل اسکرول | `overflow: hidden` در زمان فعال بودن لودینگ (از سمت خود افزونه، حتی اگر کد شما قفل نداشته باشد) |
-| 🖼️ شنود رویداد load | `window.addEventListener('load')` — صبر تا تمام اجزای سنگین المنتور، فونت‌ها و عکس‌ها دانلود شوند |
-| 🌫️ محو شدن نرم | Fade-out با تغییر `opacity` و سپس حذف کامل المان از DOM با `loader.remove()` |
-| 📱 کاملاً ریسپانسیو | کد پیش‌فرض با `clamp()` + media queries از موبایل کوچک تا دسکتاپ + پشتیبانی از `prefers-reduced-motion` |
+## 📦 نصب (Installation)
 
-## 📁 ساختار فایل‌ها / File structure
+1. فایل زیپ پلاگین را از قسمت **Releases** گیتهاب دانلود کنید.
+2. در وردپرس به **افزونه‌ها ← افزودن جدید ← بارگذاری افزونه** بروید و فایل زیپ را آپلود کنید.
+3. افزونه را فعال کنید.
+4. از منوی **Apple Star Loader** در سایدبار ادمین تنظیمات را باز کنید، از بین ۱۰۰ مدل انتخاب کنید و ذخیره کنید.
+
+یا: پوشه `apple-star-page-loader` را درون `wp-content/plugins/` اکستراکت کنید و از بخش افزونه‌ها فعالش کنید.
+
+## 🛠️ حالت بروزرسانی (Maintenance Mode)
+
+- پیش‌فرض **خاموش** است.
+- وقتی روشن شود، سایت برای بازدیدکنندگان تا پایان شمارنده معکوس پشت صفحه لودینگ می‌ماند.
+- در حالت بروزرسانی لودینگ در **همه صفحات** نمایش داده می‌شود (نه فقط صفحه اصلی).
+- یادتان باشد بعد از اتمام کار، دوباره آن را خاموش کنید!
+
+## 🧑‍💻 توسعه (Development)
 
 ```
 apple-star-page-loader/
-├── apple-star-page-loader.php        # فایل اصلی افزونه (هدرهای استاندارد WP)
+├── apple-star-page-loader.php     # فایل اصلی پلاگین
 ├── includes/
-│   ├── class-aspl-defaults.php       # گزینه‌ها و کد پیش‌فرض
-│   ├── class-aspl-settings.php       # صفحه تنظیمات پیشخوان (Settings API)
-│   └── class-aspl-frontend.php       # تزریق لودینگ، قفل اسکرول، fade-out
+│   ├── class-aspl-defaults.php    # تنظیمات پیش‌فرض + لیست ۱۰۰ پریست
+│   ├── class-aspl-frontend.php    # تزریق لودینگ در فرانت‌اند (شروع آنی + نمایش سریع)
+│   └── class-aspl-settings.php    # صفحه ادمین + پیش‌نمایش زنده
 ├── assets/
-│   └── default-loader-code.html      # کد پیش‌فرض «Apple Star» (ریسپانسیو)
-├── uninstall.php                     # پاک‌سازی کامل هنگام حذف افزونه
-└── readme.txt                        # readme استاندارد وردپرس
+│   ├── default-loader-code.html
+│   └── presets/                   # فایل‌های HTML پریست‌ها (۱۰۰ مدل)
+└── readme.txt                     # readme مخزن وردپرس
 ```
 
-##  نصب / Installation
+پریست‌های جدید را می‌توان با اسکریپت تولید کرد:
+```bash
+python3 tools/generate_presets.py   # بازتولید ۸۹ پریست جدید + tools/_registry_snippet.php
+```
 
-**گزینه ۱ — فایل نصبی (پیشنهادی):**
-فایل آماده‌ی نصب در [`dist/apple-star-page-loader.zip`](dist/apple-star-page-loader.zip) موجود است.
-در پیشخوان وردپرس: **Plugins → Add New → Upload Plugin** → فایل zip را آپلود و Active کنید.
+برای ساخت مجدد فایل زیپ نصب:
+```bash
+rm -f dist/apple-star-page-loader.zip
+zip -r dist/apple-star-page-loader.zip apple-star-page-loader -x "*/.DS_Store"
+```
 
-*Option 1 — installable zip:* grab [`dist/apple-star-page-loader.zip`](dist/apple-star-page-loader.zip), then in WP admin: **Plugins → Add New → Upload Plugin** → upload and activate.
+## 📝 تغییرات (Changelog)
 
-**گزینه ۲ — کپی فولدر:**
-فولدر `apple-star-page-loader` را داخل `wp-content/plugins/` کپی و Active کنید.
+### 3.3.0
+- **۱۰۰ مدل لودینگ** (۱۱ مدل قبلی + **۸۹ مدل جدید**) — همه SMIL-only و مقاوم به بهینه‌سازها
+- **رفع تأخیر انیمیشن:** لودینگ و انیمیشن از اولین پیکسل صفحه شروع می‌شود (بدون انتظار)
+- **رفع تأخیر نمایش صفحه پشتی:** حالت جدید «محو شدن به محض آماده‌شدن DOM» (پیش‌فرض) به‌جای انتظار برای بارگذاری کامل همه تصاویر؛ گزینه «صبر تا آخرین عکس» حالا واقعاً قابل خاموش/روشن شدن است (در 3.1 همیشه روشن بود)
+- انتخابگر پریست با **تصویر بندانگشتی متحرک زنده** برای هر ۱۰۰ مدل + **جستجو و فیلتر دسته‌بندی**
+- زمان‌بندی پیش‌فرض سریع‌تر: min 350ms / fade 350ms / timeout 15s
+- احترام به `prefers-reduced-motion` در محو شدن
+- نام فارسی یکتا برای همه مدل‌ها + به‌روزرسانی کامل ادمین و پیش‌نمایش
 
-*Option 2 — copy the `apple-star-page-loader` folder into `wp-content/plugins/` and activate.*
+### 3.1.0
+- همه انیمیشن‌ها به **SMIL SVG** منتقل شدند (در برابر بهینه‌سازهای CSS/JS مقاوم)
+- متن برند **ثابت** شد — دیگر هیچ انیمیشن روی حروف/کلمات نیست
+- فایل‌های پریست با placeholderهای ساده (`{{LOGO}}`, `{{TEXT}}`, `{{DIR}}`, `{{TEXT_COLOR}}`, `{{ACCENT}}`, `{{MAINT}}`) بازنویسی شدند
+- معماری First-paint: CSS حیاتی در `<head>`، تزریق لودینگ به‌عنوان اولین فرزند `<body>`، پیش‌رنگ‌آمیزی `<html>`
+- CSS فرانت‌اند فقط layout/color است؛ `@keyframes` حذف شد
 
-بعد از فعال‌سازی: **Apple Star Loader** در نوار کناری پیشخوان (آیکون ستاره) یا **Settings → Apple Star Loader**.
+### 3.0.x (3.0.0 – 3.0.3)
+- بازطراحی کامل: مدل اصلی **Apple Star Pulse (ECG)** دقیقاً مطابق HTML مرجع کاربر بازگشت
+- اضافه‌شدن ۱۰ مدل لودینگ جدید اپل‌استایل (مجموع ۱۱ مدل)
+- اضافه‌شدن **حالت بروزرسانی** با شمارنده معکوس و پیام سفارشی
+- بازنویسی پنل ادمین با کارت‌های پریست، سوئیچ‌های واضح سبز/قرمز، بخش بروزرسانی
+- رفع مشکل پیش‌نمایش زنده (iframe با `allow-scripts` واقعی اجرا می‌شود)
+- بهبود پشتیبانی فارسی/RTL
+- حذف نوار پیشرفت و درصد مطابق درخواست
 
-## ⚙️ منطق فنی / Technical flow
-
-1. `wp_body_open` (priority 1): کل کد لودینگ داخل یک ریشه‌ی واحد `<div id="asp-loader-root">` تزریق می‌شود.
-2. `html.asp-scroll-lock` روی `<html>` → اسکرول قفل.
-3. `window.addEventListener('load', ...)` → بعد از دانلود کامل همه‌ی داربست‌ها (المنتور، فونت، عکس):
-   - کلاس `asp-fade-out` → `opacity: 0` در ۰.۶ ثانیه،
-   - سپس `loader.remove()` → حذف کامل از DOM (با time-out امنیتی ۱.۵ ثانیه‌ای حتی اگر `transitionend` نیاید).
-4. اگر رویداد `load` تا زمان Timeout نیامد → لودینگ به هر حال بسته می‌شود (سایت قفل نمی‌ماند).
-5. `noscript` fallback: اگر JS خاموش باشد، لودینگ اصلاً نمایش داده نمی‌شود.
-
-## 🧪 سازگاری / Compatibility
-
-- WordPress: Tested up to **7.0** (Requires at least 6.0)
-- WooCommerce: سازگار با **11.0** (بدون تداخل با هوک‌های فروشگاه)
-- Elementor: طراحی‌شده برای صبر روی صفحات سنگین المنتور
-- PHP: 7.4+ (سازگار با PHP 8.2/8.4)
-- Browser: همه‌ی مرورگرهای مدرن (Chrome, Safari, Firefox, Edge — iOS/Android)
-
-## 🔒 امنیت / Security
-
-- دسترسی به صفحه تنظیمات فقط با `manage_options` (ادمین).
-- فیلد «Loader Code» به‌صورت پیش‌فرض یک فیلد کد خام HTML/CSS است (مثل قسمت Footer Code) و فقط در مرورگر بازدیدکنندگان همان سایت اجرا می‌شود؛ محتوای آن عیناً ذخیره و ارسال می‌شود و مسئولیت کد با نویسنده‌ی آن است.
-- با حذف افزونه (`uninstall.php`) تمام optionها پاک می‌شود.
-
-## 📄 لایسنس / License
+## 📄 لایسنس (License)
 
 GPLv2 or later.

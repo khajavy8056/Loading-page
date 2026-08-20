@@ -1,0 +1,45 @@
+{{LOGO}}
+<svg class="asp-icon-svg" viewBox="0 0 140 110" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="pg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="{{ACCENT}}" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="{{ACCENT}}" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="pglow"><feGaussianBlur stdDeviation="2"/></filter>
+  </defs>
+  <g transform="translate(70,55)">
+    <animate attributeName="opacity" values="0;1" dur=".35s" fill="freeze"/>
+    <!-- Outer halo -->
+    <circle r="6" fill="url(#pg)">
+      <animate attributeName="r" values="6;44;6" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values=".3;.9;.3" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <!-- Ring 1 -->
+    <circle r="8" fill="none" stroke="#fff" stroke-width="2.2" opacity="0.9">
+      <animate attributeName="r" values="8;42;8" dur="1.8s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.9;0;0.9" dur="1.8s" repeatCount="indefinite"/>
+      <animate attributeName="stroke-width" values="2.4;0.2;2.4" dur="1.8s" repeatCount="indefinite"/>
+    </circle>
+    <!-- Ring 2 (offset) -->
+    <circle r="8" fill="none" stroke="{{ACCENT}}" stroke-width="2" opacity="0.8">
+      <animate attributeName="r" values="8;42;8" dur="1.8s" begin="0.55s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.9;0;0.9" dur="1.8s" begin="0.55s" repeatCount="indefinite"/>
+      <animate attributeName="stroke-width" values="2.2;0.2;2.2" dur="1.8s" begin="0.55s" repeatCount="indefinite"/>
+    </circle>
+    <!-- Ring 3 (soft) -->
+    <circle r="8" fill="none" stroke="#fff" stroke-width="1.4" opacity="0.4">
+      <animate attributeName="r" values="8;42;8" dur="1.8s" begin="1.1s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.5;0;0.5" dur="1.8s" begin="1.1s" repeatCount="indefinite"/>
+    </circle>
+    <!-- Core -->
+    <circle r="8" fill="#fff" filter="url(#pglow)">
+      <animate attributeName="r" values="7;10;7" dur="0.9s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.85;1;0.85" dur="0.9s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="4" fill="{{ACCENT}}" opacity="0.9">
+      <animate attributeName="r" values="3;5.5;3" dur="0.9s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+</svg>
+<div class="asp-brand-text" {{DIR}}>{{TEXT}}</div>
+{{MAINT}}

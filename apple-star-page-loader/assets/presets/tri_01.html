@@ -1,0 +1,24 @@
+<!-- Preset: tri_01 — مثلث مداری ۱ (SMIL-only, v3.3) -->
+{{LOGO}}
+<svg class="asp-icon-svg" viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+  <animate attributeName="opacity" values="0;1" dur="0.3s" fill="freeze"/>
+  <animateTransform attributeName="transform" type="translate" values="0 8;0 0" dur="0.4s" fill="freeze"/>
+  <g transform="translate(90,90)">
+    <circle cx="48" cy="0" r="7" fill="#ffffff">
+          <animateTransform attributeName="transform" type="rotate" values="0;360" dur="2.00s" begin="0.0s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="48" cy="0" r="7" fill="{{ACCENT}}">
+          <animateTransform attributeName="transform" type="rotate" values="120;480" dur="2.00s" begin="-0.6666666666666666s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="48" cy="0" r="7" fill="#ffffff">
+          <animateTransform attributeName="transform" type="rotate" values="240;600" dur="2.00s" begin="-1.3333333333333333s" repeatCount="indefinite"/>
+    </circle>
+    <polygon points="0,-42 36,21 -36,21" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="2"/>
+    <circle r="8" fill="#ffffff">
+          <animate attributeName="r" values="7;10;7" dur="1.3s" begin="0s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+</svg>
+
+<div class="asp-brand-text" {{DIR}}>{{TEXT}}</div>
+{{MAINT}}

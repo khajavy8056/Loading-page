@@ -1,0 +1,45 @@
+{{LOGO}}
+<svg class="asp-icon-svg" viewBox="0 0 200 110" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="egg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"  stop-color="#ffffff"/>
+      <stop offset="55%" stop-color="{{ACCENT}}" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="{{ACCENT}}" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="egf"><feGaussianBlur stdDeviation="2"/></filter>
+  </defs>
+  <!-- Fade in -->
+  <animate attributeName="opacity" values="0;1" dur=".35s" fill="freeze"/>
+
+  <!-- Base trace line -->
+  <path id="ecgtrace" d="M6,62 L74,62 L82,38 L88,80 L94,46 L100,62 L194,62"
+        stroke="rgba(255,255,255,0.2)" stroke-width="1.6" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+  <!-- Lit trace that follows the blip -->
+  <path d="M6,62 L74,62 L82,38 L88,80 L94,46 L100,62 L194,62"
+        stroke="{{ACCENT}}" stroke-width="1.8" fill="none" stroke-linejoin="round" stroke-linecap="round"
+        stroke-dasharray="220" stroke-dashoffset="220">
+    <animate attributeName="stroke-dashoffset" values="220;0" dur="2s" repeatCount="indefinite"/>
+  </path>
+
+  <!-- Glow -->
+  <circle cx="10" cy="62" r="6" fill="url(#egg)" filter="url(#egf)">
+    <animate attributeName="cx" values="6;194" dur="2s" repeatCount="indefinite"/>
+    <animate attributeName="r"  values="5;22;5" dur="2s" repeatCount="indefinite"/>
+    <animate attributeName="cy" values="62;62;62;38;80;46;62;62" keyTimes="0;0.37;0.41;0.42;0.46;0.50;0.53;1"
+             dur="2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0;0.9;0.9;0" keyTimes="0;0.06;0.94;1" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  <!-- Core blip -->
+  <circle cx="10" cy="62" r="4" fill="#fff" filter="url(#egf)">
+    <animate attributeName="cx" values="6;194" dur="2s" repeatCount="indefinite"/>
+    <animate attributeName="cy" values="62;62;62;38;80;46;62;62" keyTimes="0;0.37;0.41;0.42;0.46;0.50;0.53;1"
+             dur="2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.06;0.94;1" dur="2s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- Tick marks -->
+  <circle cx="6"   cy="62" r="1.6" fill="rgba(255,255,255,0.55)"/>
+  <circle cx="194" cy="62" r="1.6" fill="rgba(255,255,255,0.55)"/>
+</svg>
+<div class="asp-brand-text" {{DIR}}>{{TEXT}}</div>
+{{MAINT}}
