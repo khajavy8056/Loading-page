@@ -1,0 +1,29 @@
+<!-- Preset: orbit_01 — سیاره‌های مداری ۱ (SMIL-only, v3.3) -->
+{{LOGO}}
+<svg class="asp-icon-svg" viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+  <animate attributeName="opacity" values="0;1" dur="0.3s" fill="freeze"/>
+  <animateTransform attributeName="transform" type="translate" values="0 8;0 0" dur="0.4s" fill="freeze"/>
+  <g transform="translate(90,90)">
+    <circle r="30" fill="none" stroke="rgba(255,255,255,.22)" stroke-width="1"/>
+    <g>
+          <animateTransform attributeName="transform" type="rotate" values="0;360" dur="2.40s" begin="0.0s" repeatCount="indefinite"/>
+      <circle r="5" fill="{{ACCENT}}">
+            <animate attributeName="opacity" values="1;.6;1" dur="2.40s" begin="0.0s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+    <circle r="42" fill="none" stroke="rgba(255,255,255,.22)" stroke-width="1"/>
+    <g>
+          <animateTransform attributeName="transform" type="rotate" values="0;360" dur="3.00s" begin="-1.5s" repeatCount="indefinite"/>
+      <circle r="6" fill="#ffffff">
+            <animate attributeName="opacity" values="1;.6;1" dur="3.00s" begin="-1.5s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+    <circle r="14" fill="#ffffff">
+          <animate attributeName="r" values="13;16;13" dur="1.6s" begin="0s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="6" fill="{{ACCENT}}"/>
+  </g>
+</svg>
+
+<div class="asp-brand-text" {{DIR}}>{{TEXT}}</div>
+{{MAINT}}

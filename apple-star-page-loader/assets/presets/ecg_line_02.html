@@ -1,0 +1,17 @@
+<!-- Preset: ecg_line_02 — ضربان قلب ECG ۲ (SMIL-only, v3.3) -->
+{{LOGO}}
+<svg class="asp-icon-svg" viewBox="0 0 220 120" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+  <animate attributeName="opacity" values="0;1" dur="0.3s" fill="freeze"/>
+  <animateTransform attributeName="transform" type="translate" values="0 8;0 0" dur="0.4s" fill="freeze"/>
+  <polyline points="20,60 150,60 168,30 186,88 204,52 220,60 200,60" fill="none" stroke="{{ACCENT}}" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="300 300">
+        <animate attributeName="stroke-dashoffset" values="300;0" dur="2.0s" begin="0s" repeatCount="indefinite"/>
+  </polyline>
+  <circle r="5" fill="#ffffff">
+        <animate attributeName="cx" values="20;200" dur="2.0s" begin="0s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="20" cy="60" r="3" fill="{{ACCENT}}"/>
+  <circle cx="200" cy="60" r="3" fill="{{ACCENT}}"/>
+</svg>
+
+<div class="asp-brand-text" {{DIR}}>{{TEXT}}</div>
+{{MAINT}}
