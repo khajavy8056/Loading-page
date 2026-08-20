@@ -92,11 +92,13 @@ the page even if some asset never loads.
 == Changelog ==
 
 = 3.1.0 =
-* **Bullet-proof animations.** All loader animations now use inline SVG SMIL (`<animate>` / `<animateTransform>` tags inside the SVG itself) — the exact same technique that powers the preset thumbnail icons in the admin panel. This makes the animations immune to CSS/JS optimizer plugins (Autoptimize, WP Rocket, LiteSpeed Cache, SG Optimizer, W3 Total Cache, Cloudflare Rocket Loader, etc.) that were stripping `@keyframes` rules.
-* **Static brand text.** Per request, the brand/site-title text is now rendered as a plain static element — no per-letter spans, no text animation. Persian/RTL text is still rendered word-level with correct direction so Arabic-script letters never mirror or disconnect.
-* Preset HTML files are now clean, style-free fragments that use simple `{{LOGO}}` / `{{TEXT}}` / `{{DIR}}` / `{{TEXT_COLOR}}` / `{{ACCENT}}` / `{{MAINT}}` placeholders replaced server-side.
-* Frontend CSS reduced to pure layout/colors/typography — zero `@keyframes`.
-* Live admin preview rebuilt to mirror the new placeholder-based rendering (still runs real SMIL animations inside the sandboxed iframe).
+* **First-paint guarantee.** Critical loader CSS is now injected in `<head>` at priority `-99999` (before all theme/plugin styles), the loader HTML is inserted as the very first child of `<body>` via an output buffer (works even on themes that forget `wp_body_open()`), and `<html>` is forced to the loader's background color immediately — so the loader is the first thing the browser paints, before any of the page's own content or styles load. The fade/image-wait/countdown control script has been moved to `wp_footer` so it never blocks initial paint.
+* **Bullet-proof animations.** All loader animations now use inline SVG SMIL (`<animate>` / `<animateTransform>` tags inside the SVG itself) — the exact same technique that powers the preset thumbnail icons in the admin panel. This makes animations immune to CSS/JS optimizer plugins (Autoptimize, WP Rocket, LiteSpeed Cache, SG Optimizer, W3 Total Cache, Cloudflare Rocket Loader, etc.) that were stripping `@keyframes` rules.
+* **Static brand text.** Per request, the brand/site-title text is rendered as a plain static element — no per-letter spans, no text animation. Persian/RTL text is rendered with correct `dir` auto-detection so Arabic-script letters never mirror or disconnect.
+* **Richer SMIL visuals.** All 11 presets upgraded with stronger SMIL effects (accent-colored glow gradients, SVG `filter` glow, trail/path-draw, multiple offset rings/wedges, animated stroke-width, fade-in+slide-in on load).
+* Preset HTML files are clean fragments using `{{LOGO}}` / `{{TEXT}}` / `{{DIR}}` / `{{TEXT_COLOR}}` / `{{ACCENT}}` / `{{MAINT}}` placeholders replaced server-side; no `<style>` blocks inside presets.
+* Frontend CSS is pure layout/colors/typography — zero `@keyframes`.
+* Live admin preview rebuilt to mirror the new placeholder-based rendering (SMIL still runs inside the sandboxed iframe).
 
 = 3.0.3 / 3.0.2 / 3.0.1 =
 * Hotfixes trying (and failing) to shield CSS `@keyframes` from optimizer plugins by moving styles to `wp_head`, adding `data-cfasync="false"`, `data-no-optimize="1"`, etc. These approaches all proved unreliable across real-world caching stacks, which is why 3.1.0 moved everything to SMIL.

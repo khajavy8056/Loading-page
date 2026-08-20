@@ -1,27 +1,39 @@
 {{LOGO}}
-<svg class="asp-icon-svg" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg">
-  <g fill="#fff">
-    <rect x="32" y="32" width="8" height="16" rx="2">
-      <animate attributeName="height" values="10;34;10" dur="1s" begin="-0.4s" repeatCount="indefinite"/>
-      <animate attributeName="y"      values="35;23;35"  dur="1s" begin="-0.4s" repeatCount="indefinite"/>
+<svg class="asp-icon-svg" viewBox="0 0 160 110" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="fbg"><feGaussianBlur stdDeviation="0.7"/></filter>
+    <linearGradient id="fgr" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%"  stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="{{ACCENT}}" stop-opacity="0.9"/>
+    </linearGradient>
+  </defs>
+  <g fill="url(#fgr)" filter="url(#fbg)">
+    <animate attributeName="opacity" values="0;1" dur=".35s" fill="freeze"/>
+    <rect x="28"  y="60" width="10" height="30" rx="3">
+      <animate attributeName="height" values="12;46;12" dur="1s" begin="-0.4s" repeatCount="indefinite"/>
+      <animate attributeName="y"      values="58;32;58" dur="1s" begin="-0.4s" repeatCount="indefinite"/>
     </rect>
-    <rect x="46" y="30" width="8" height="20" rx="2">
-      <animate attributeName="height" values="10;40;10" dur="1s" begin="-0.2s" repeatCount="indefinite"/>
-      <animate attributeName="y"      values="35;20;35"  dur="1s" begin="-0.2s" repeatCount="indefinite"/>
+    <rect x="48"  y="55" width="10" height="40" rx="3">
+      <animate attributeName="height" values="12;54;12" dur="1s" begin="-0.2s" repeatCount="indefinite"/>
+      <animate attributeName="y"      values="58;28;58" dur="1s" begin="-0.2s" repeatCount="indefinite"/>
     </rect>
-    <rect x="60" y="20" width="10" height="40" rx="2" fill="{{ACCENT}}">
-      <animate attributeName="height" values="16;46;16" dur="1s" repeatCount="indefinite"/>
-      <animate attributeName="y"      values="32;17;32"  dur="1s" repeatCount="indefinite"/>
+    <rect x="68"  y="40" width="14" height="60" rx="4">
+      <animate attributeName="height" values="18;68;18" dur="1s" repeatCount="indefinite"/>
+      <animate attributeName="y"      values="54;20;54" dur="1s" repeatCount="indefinite"/>
     </rect>
-    <rect x="76" y="30" width="8" height="20" rx="2">
-      <animate attributeName="height" values="10;40;10" dur="1s" begin="-0.2s" repeatCount="indefinite"/>
-      <animate attributeName="y"      values="35;20;35"  dur="1s" begin="-0.2s" repeatCount="indefinite"/>
+    <rect x="92"  y="55" width="10" height="40" rx="3">
+      <animate attributeName="height" values="12;54;12" dur="1s" begin="-0.2s" repeatCount="indefinite"/>
+      <animate attributeName="y"      values="58;28;58" dur="1s" begin="-0.2s" repeatCount="indefinite"/>
     </rect>
-    <rect x="90" y="32" width="8" height="16" rx="2">
-      <animate attributeName="height" values="10;34;10" dur="1s" begin="-0.4s" repeatCount="indefinite"/>
-      <animate attributeName="y"      values="35;23;35"  dur="1s" begin="-0.4s" repeatCount="indefinite"/>
+    <rect x="112" y="60" width="10" height="30" rx="3">
+      <animate attributeName="height" values="12;46;12" dur="1s" begin="-0.4s" repeatCount="indefinite"/>
+      <animate attributeName="y"      values="58;32;58" dur="1s" begin="-0.4s" repeatCount="indefinite"/>
     </rect>
   </g>
+  <!-- Reflection/base -->
+  <rect x="20" y="78" width="120" height="2" rx="1" fill="{{ACCENT}}" opacity="0.55">
+    <animate attributeName="width" values="0;120;0" dur="2s" repeatCount="indefinite" attributeType="XML"/>
+  </rect>
 </svg>
 <div class="asp-brand-text" {{DIR}}>{{TEXT}}</div>
 {{MAINT}}

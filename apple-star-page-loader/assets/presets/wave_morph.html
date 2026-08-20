@@ -1,13 +1,26 @@
 {{LOGO}}
-<svg class="asp-icon-svg" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg">
-  <rect x="60" y="40" width="60" height="6" rx="3" fill="#fff" transform="translate(-30,-3)">
-    <animate attributeName="width"  values="70;14;70" dur="2s" repeatCount="indefinite"/>
-    <animate attributeName="x"      values="25;53;25" dur="2s" repeatCount="indefinite"/>
-    <animate attributeName="height" values="6;50;6"  dur="2s" repeatCount="indefinite"/>
-    <animate attributeName="y"      values="37;15;37" dur="2s" repeatCount="indefinite"/>
-    <animate attributeName="rx"     values="3;25;3"  dur="2s" repeatCount="indefinite"/>
-    <animate attributeName="fill"   values="#ffffff;{{ACCENT}};#ffffff" dur="2s" repeatCount="indefinite"/>
-  </rect>
+<svg class="asp-icon-svg" viewBox="0 0 180 110" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="wmf"><feGaussianBlur stdDeviation="0.6"/></filter>
+  </defs>
+  <g transform="translate(90,55)" filter="url(#wmf)">
+    <animate attributeName="opacity" values="0;1" dur=".4s" fill="freeze"/>
+    <!-- Morphing pill -->
+    <rect x="-40" y="-4" width="80" height="8" rx="4" fill="#fff">
+      <animate attributeName="width"  values="90;12;90" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="height" values="8;60;8"   dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="y"      values="-4;-30;-4" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="rx"     values="4;30;4"   dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="fill"   values="#ffffff;{{ACCENT}};#ffffff" dur="2s" repeatCount="indefinite"/>
+    </rect>
+    <!-- Secondary soft glow shape -->
+    <rect x="-30" y="-3" width="60" height="6" rx="3" fill="{{ACCENT}}" opacity="0.55">
+      <animate attributeName="width"  values="10;70;10" dur="2s" begin="-0.6s" repeatCount="indefinite"/>
+      <animate attributeName="height" values="5;40;5"   dur="2s" begin="-0.6s" repeatCount="indefinite"/>
+      <animate attributeName="y"      values="-3;-20;-3" dur="2s" begin="-0.6s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values=".2;.7;.2" dur="2s" begin="-0.6s" repeatCount="indefinite"/>
+    </rect>
+  </g>
 </svg>
 <div class="asp-brand-text" {{DIR}}>{{TEXT}}</div>
 {{MAINT}}

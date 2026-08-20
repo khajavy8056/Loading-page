@@ -678,22 +678,23 @@ CSS;
 		// Strip any leftover <style> blocks from presets (v3.1 presets don't have any, but be safe)
 		presetHtml = presetHtml.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '').trim();
 
-		// Layout CSS — zero @keyframes; animations live as SMIL inside the inline SVG.
-		var css = 'html,body{margin:0;padding:0;height:100%;background:#0a0a0f;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Vazirmatn",Tahoma,Arial,sans-serif;}'
+		// Layout CSS — zero @keyframes; mirrors frontend early-paint CSS exactly.
+		var css = 'html{background:#000!important;}html,body{margin:0;padding:0;height:100%;background:#0a0a0f;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Vazirmatn",Tahoma,Arial,sans-serif!important;}'
 			+ '#asp-loader-root{position:fixed;inset:0;z-index:1;background:'+bg+';'
 			+ 'backdrop-filter:blur('+blur+'px);-webkit-backdrop-filter:blur('+blur+'px);'
-			+ 'display:flex;align-items:center;justify-content:center;margin:0;padding:0;}'
+			+ 'display:flex;align-items:center;justify-content:center;margin:0!important;padding:0!important;contain:paint;}'
 			+ '#asp-loader-root *,.asp-loader-inner *{box-sizing:border-box;}'
 			+ '.asp-loader-inner{display:flex;flex-direction:column;align-items:center;gap:28px;padding:20px;text-align:center;max-width:92vw;}'
+			+ '.asp-logo{display:block;}'
 			+ '.asp-logo img{max-height:80px;max-width:260px;object-fit:contain;filter:drop-shadow(0 6px 20px rgba(0,0,0,.55));}'
-			+ '.asp-icon-svg{width:clamp(140px,40vw,240px);height:auto;max-height:120px;display:block;overflow:visible;}'
-			+ '.asp-brand-text{font-size:clamp(1.4rem,6.5vw,3.2rem);font-weight:800;letter-spacing:.08em;line-height:1.1;color:'+textCol+';padding:0;margin:0;}'
-			+ '.asp-brand-text[dir="rtl"]{letter-spacing:0;font-weight:700;}'
-			+ '.asp-maint{color:rgba(255,255,255,.9);}'
+			+ '.asp-icon-svg{width:clamp(160px,42vw,280px);height:auto;max-height:150px;display:block;overflow:visible;}'
+			+ '.asp-brand-text{font-size:clamp(1.4rem,6.5vw,3.2rem);font-weight:800;letter-spacing:.08em;line-height:1.1;color:'+textCol+';padding:0;margin:0;-webkit-font-smoothing:antialiased;}'
+			+ '.asp-brand-text[dir="rtl"]{letter-spacing:0;font-weight:700;font-family:"Vazirmatn",Tahoma,Arial,sans-serif;}'
+			+ '.asp-maint{color:rgba(255,255,255,.9);margin-top:8px;}'
 			+ '.asp-maint-lbl{font-size:11px;letter-spacing:.2em;text-transform:uppercase;opacity:.55;margin-bottom:8px;}'
 			+ '.asp-maint-timer{font-family:ui-monospace,SF Mono,Menlo,Consolas,monospace;font-size:clamp(1.2rem,3.5vw,2rem);font-weight:700;letter-spacing:.08em;color:#fff;text-shadow:0 0 20px rgba(255,255,255,.4);direction:ltr;unicode-bidi:isolate;display:inline-block;}'
 			+ '.asp-maint-timer .asp-sep{opacity:.5;}'
-			+ '.asp-maint-msg{margin-top:12px;font-size:clamp(.85rem,1.8vw,1rem);line-height:1.8;opacity:.82;}';
+			+ '.asp-maint-msg{margin-top:12px;font-size:clamp(.85rem,1.8vw,1rem);line-height:1.8;opacity:.82;max-width:560px;}';
 
 		var bodyHtml = '<div id="asp-loader-root"><div class="asp-loader-inner">'+presetHtml+'</div></div>';
 		var doc = '<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1">'

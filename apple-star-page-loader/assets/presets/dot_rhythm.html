@@ -1,22 +1,38 @@
 {{LOGO}}
-<svg class="asp-icon-svg" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg">
-  <g fill="#fff">
-    <circle cx="30" cy="40" r="6">
-      <animate attributeName="cx" values="20;80;20" dur="1.5s" repeatCount="indefinite"/>
-      <animate attributeName="opacity" values="1;0;1" dur="1.5s" repeatCount="indefinite"/>
-      <animate attributeName="r" values="6;2;6" dur="1.5s" repeatCount="indefinite"/>
+<svg class="asp-icon-svg" viewBox="0 0 180 110" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="drg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fff"/>
+      <stop offset="100%" stop-color="{{ACCENT}}" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="drf"><feGaussianBlur stdDeviation="1.3"/></filter>
+  </defs>
+  <g fill="url(#drg)" filter="url(#drf)">
+    <animate attributeName="opacity" values="0;1" dur=".35s" fill="freeze"/>
+    <circle cx="24"  cy="55" r="7">
+      <animate attributeName="cx"      values="24;156;24" dur="1.8s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="1;0;1"    dur="1.8s" repeatCount="indefinite"/>
+      <animate attributeName="r"       values="8;4;8"    dur="1.8s" repeatCount="indefinite"/>
     </circle>
-    <circle cx="30" cy="40" r="6" fill="{{ACCENT}}">
-      <animate attributeName="cx" values="20;80;20" dur="1.5s" begin="0.2s" repeatCount="indefinite"/>
-      <animate attributeName="opacity" values="1;0;1" dur="1.5s" begin="0.2s" repeatCount="indefinite"/>
-      <animate attributeName="r" values="6;2;6" dur="1.5s" begin="0.2s" repeatCount="indefinite"/>
+    <circle cx="24"  cy="55" r="6" fill="{{ACCENT}}">
+      <animate attributeName="cx"      values="24;156;24" dur="1.8s" begin="0.22s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.9;0;0.9" dur="1.8s" begin="0.22s" repeatCount="indefinite"/>
+      <animate attributeName="r"       values="7;3;7"    dur="1.8s" begin="0.22s" repeatCount="indefinite"/>
     </circle>
-    <circle cx="30" cy="40" r="6" opacity="0.6">
-      <animate attributeName="cx" values="20;80;20" dur="1.5s" begin="0.4s" repeatCount="indefinite"/>
-      <animate attributeName="opacity" values="0.6;0;0.6" dur="1.5s" begin="0.4s" repeatCount="indefinite"/>
-      <animate attributeName="r" values="6;2;6" dur="1.5s" begin="0.4s" repeatCount="indefinite"/>
+    <circle cx="24"  cy="55" r="5" opacity="0.7">
+      <animate attributeName="cx"      values="24;156;24" dur="1.8s" begin="0.44s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.7;0;0.7" dur="1.8s" begin="0.44s" repeatCount="indefinite"/>
+      <animate attributeName="r"       values="6;3;6"    dur="1.8s" begin="0.44s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="24"  cy="55" r="4" opacity="0.4">
+      <animate attributeName="cx"      values="24;156;24" dur="1.8s" begin="0.66s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.5;0;0.5" dur="1.8s" begin="0.66s" repeatCount="indefinite"/>
+      <animate attributeName="r"       values="5;2.5;5"  dur="1.8s" begin="0.66s" repeatCount="indefinite"/>
     </circle>
   </g>
+  <!-- anchor dots -->
+  <circle cx="24"  cy="55" r="2" fill="rgba(255,255,255,0.5)"/>
+  <circle cx="156" cy="55" r="2" fill="rgba(255,255,255,0.5)"/>
 </svg>
 <div class="asp-brand-text" {{DIR}}>{{TEXT}}</div>
 {{MAINT}}
