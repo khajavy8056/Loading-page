@@ -1,8 +1,8 @@
 # 🍎 Apple Star Page Loader — WordPress Plugin
 
-Animated Apple-style page preloader for WordPress & WooCommerce. Version **3.3.0**.
+Animated Apple-style page preloader for WordPress & WooCommerce. Version **3.3.1**.
 
-![Version](https://img.shields.io/badge/version-3.3.0-blue) ![WordPress](https://img.shields.io/badge/WordPress-6.0%2B-blue) ![PHP](https://img.shields.io/badge/PHP-7.4%2B-8892bf) ![License](https://img.shields.io/badge/license-GPLv2-green)
+![Version](https://img.shields.io/badge/version-3.3.1-blue) ![WordPress](https://img.shields.io/badge/WordPress-6.0%2B-blue) ![PHP](https://img.shields.io/badge/PHP-7.4%2B-8892bf) ![License](https://img.shields.io/badge/license-GPLv2-green)
 
 ## ✨ ویژگی‌ها (Features)
 
@@ -68,6 +68,9 @@ zip -r dist/apple-star-page-loader.zip apple-star-page-loader -x "*/.DS_Store"
 ```
 
 ## 📝 تغییرات (Changelog)
+
+### 3.3.1
+- **رفع کامل تأخیر انیمیشن (استریم‌کردن اولین فریم):** بافر کل صفحه حذف شد — قبلاً PHP کل صفحه را رندر می‌کرد و بعد یکجا می‌فرستاد؛ برای همین لودینگ تا پایان بارگذاری سایت بی‌حرکت بود. حالا لودینگ بلافاصله بعد از `<body>` اکو و همان لحظه `flush` می‌شود (به‌علاوه هدر `X-Accel-Buffering: no` برای nginx) — انیمیشن SMIL از **همان لحظه‌ی اول باز شدن صفحه** شروع می‌شود، دقیقاً مثل دیجی‌کالا و سایت‌های سریع، در حالی که سرور بقیه صفحه را استریم می‌کند.
 
 ### 3.3.0
 - **۱۰۰ مدل لودینگ** (۱۱ مدل قبلی + **۸۹ مدل جدید**) — همه SMIL-only و مقاوم به بهینه‌سازها

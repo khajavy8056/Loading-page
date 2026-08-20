@@ -1,29 +1,33 @@
 <?php
 /**
- * Frontend — v3.3.0 (INSTANT-START + FAST-REVEAL architecture).
+ * Frontend — v3.3.1 (STREAMED first-paint architecture).
  *
- * Two core guarantees:
- *   1. The loader is the FIRST thing the browser paints and its SMIL
- *      animation starts the moment the <svg> is parsed — no JS, no CSS
- *      @keyframes, nothing optimizer plugins can strip:
- *        - Critical loader CSS is injected in <head> at priority -99999
- *          (before any theme/plugin CSS).
- *        - Loader HTML is injected immediately after the opening <body>
- *          tag via an output buffer (works even when themes forget
- *          wp_body_open()).
- *        - <html> background is forced to the loader bg from the very
- *          first style rule, preventing any white flash.
- *        - The only JS in <body> is a 1-line synchronous scroll-lock;
- *          the control script lives at the end of <body> so it never
- *          blocks the initial paint.
- *   2. The page behind is revealed FAST (v3.3 fix):
- *        - Default: the loader fades out on DOM-ready (DOMContentLoaded),
- *          NOT after every image/font finishes downloading, so the site
- *          behind appears almost immediately.
- *        - Optional legacy mode: wait for window "load" (+ all images)
- *          for pages that really need the full paint.
- *        - Short minimum display time (default 350ms) prevents flicker.
- *        - Hard fallback timeout: the site can never stay locked.
+ * Why this version exists (fixes the "loader appears but does not animate
+ * until the whole page has loaded" bug):
+ *
+ *   v3.1.0/v3.3.0 captured the ENTIRE page in an output buffer
+ *   (ob_start on template_redirect) and only released it when PHP had
+ *   finished rendering the whole page. On heavy sites (Elementor,
+ *   WooCommerce, big plugins) that server-side rendering can take
+ *   seconds — so the browser did not receive the loader markup until the
+ *   very end, and its SMIL animation could not start earlier.
+ *
+ *   v3.3.1 streams instead, the way fast sites (Digikala, etc.) do:
+ *     1. A tiny "no buffering" hint (X-Accel-Buffering: no) is sent for
+ *        nginx/PHP-FPM so chunks reach the browser immediately.
+ *     2. Critical loader CSS is printed at the top of <head>
+ *        (wp_head, priority -99999) — first bytes of the document.
+ *     3. The loader markup + synchronous scroll-lock bootstrap are echoed
+ *        right after <body> opens (wp_body_open, priority -99999) and
+ *        the output is FLUSHED at that moment. The browser paints the
+ *        loader and its SMIL animation starts IMMEDIATELY, while the
+ *        server is still generating the rest of the page.
+ *     4. The control script (fade-out / image-wait / countdown) stays at
+ *        the end of <body> — it never blocks the initial paint.
+ *
+ * The loader is therefore the FIRST thing the visitor sees, animating
+ * from the very first paint, and the page behind is revealed as soon as
+ * the DOM is ready (default) or after full window load (optional).
  *
  * @package Apple_Star_Loader
  */
@@ -38,16 +42,42 @@ class ASPL_Frontend {
 	private $opts     = null;
 
 	public function __construct() {
-		// Start an output buffer early so we can inject the loader right after <body>.
-		add_action( 'template_redirect', array( $this, 'start_buffer' ), 0 );
+		// Disable nginx/PHP-FPM buffering for this response so the loader
+		// can stream to the browser before the page is fully rendered.
+		add_action( 'template_redirect', array( $this, 'stream_headers' ), 0 );
+
 		// Critical CSS in <head>, as early as possible.
 		add_action( 'wp_head', array( $this, 'print_head_css' ), -99999 );
 		// Preload logo image if any.
 		add_action( 'wp_head', array( $this, 'print_preloads' ), 1 );
-		// Keep the legacy wp_body_open hook as a belt-and-suspenders fallback.
-		add_action( 'wp_body_open', array( $this, 'render_fallback' ), -99999 );
+		// PRIMARY injection point: right after <body> opens — then flush so
+		// the loader + its SMIL animation reach the browser immediately.
+		add_action( 'wp_body_open', array( $this, 'render_loader' ), -99999 );
 		// Control script at the end of <body> (does not block initial paint).
 		add_action( 'wp_footer', array( $this, 'print_control_script' ), 0 );
+		// Safety net for themes that never call wp_body_open(): render the
+		// loader just before the control script so it exists in the DOM when
+		// the script runs.
+		add_action( 'wp_footer', array( $this, 'render_fallback' ), -99999 );
+	}
+
+	/* ---------- streaming ---------- */
+
+	/**
+	 * Tell nginx (and any respecting proxy) not to buffer this response.
+	 * Combined with flush() in render_loader(), this streams the loader to
+	 * the browser in the first chunk while the server keeps rendering.
+	 *
+	 * @return void
+	 */
+	public function stream_headers() {
+		if ( is_admin() || headers_sent() ) {
+			return;
+		}
+		if ( ! $this->should_render() ) {
+			return;
+		}
+		@header( 'X-Accel-Buffering: no' ); // phpcs:ignore WordPress.Security.NonceVerification -- response header, not a form action
 	}
 
 	/* ---------- decision ---------- */
@@ -107,58 +137,6 @@ class ASPL_Frontend {
 		return $this->opts;
 	}
 
-	/* ---------- output buffer: inject right after <body> ---------- */
-
-	public function start_buffer() {
-		if ( ! $this->should_render() ) {
-			return;
-		}
-		ob_start( array( $this, 'inject_loader' ) );
-	}
-
-	public function inject_loader( $html ) {
-		if ( $this->rendered ) {
-			return $html;
-		}
-		$this->rendered = true;
-
-		$body_html = $this->build_body_html();
-		if ( '' === $body_html ) {
-			return $html;
-		}
-
-		// Inject loader HTML immediately after the opening <body...> tag.
-		$count = 0;
-		$html  = preg_replace(
-			'/(<body\b[^>]*>)/is',
-			'$1' . $body_html,
-			$html,
-			1,
-			$count
-		);
-		// Fallback for broken markup: prepend before closing </body>.
-		if ( ! $count ) {
-			$html = str_replace( '</body>', $body_html . '</body>', $html );
-		}
-		return $html;
-	}
-
-	/**
-	 * Legacy wp_body_open fallback (runs only if the buffer did not fire, e.g.
-	 * when another plugin already flushed the buffer).
-	 */
-	public function render_fallback() {
-		if ( $this->rendered ) {
-			return;
-		}
-		if ( ! $this->should_render() ) {
-			return;
-		}
-		$this->rendered = true;
-		// The CSS has already been printed by print_head_css().
-		echo $this->build_body_html();
-	}
-
 	/* ---------- head: critical CSS ---------- */
 
 	public function print_head_css() {
@@ -167,12 +145,11 @@ class ASPL_Frontend {
 		}
 		$o = $this->opts();
 
-		$bg      = $this->hex2rgba(
+		$bg       = $this->hex2rgba(
 			isset( $o['bg_color'] )   ? $o['bg_color']   : '#000000',
 			isset( $o['bg_opacity'] ) ? min( 100, max( 0, (int) $o['bg_opacity'] ) ) : 85
 		);
 		$text_col = isset( $o['text_color'] )   ? $o['text_color']   : '#ffffff';
-		$accent   = isset( $o['accent_color'] ) ? $o['accent_color'] : '#00c3ff';
 		$blur     = max( 0, (int) ( isset( $o['blur_amount'] ) ? $o['blur_amount'] : 16 ) );
 		$z        = max( 1000, (int) ( isset( $o['z_index'] ) ? $o['z_index'] : 99999999 ) );
 		$fade     = max( 100, (int) ( isset( $o['fade_duration'] ) ? $o['fade_duration'] : 350 ) );
@@ -227,7 +204,47 @@ body{background:transparent!important;}
 		}
 	}
 
-	/* ---------- body: loader markup ---------- */
+	/* ---------- body: loader markup (PRIMARY injection, streamed) ---------- */
+
+	/**
+	 * Echoes the loader right after <body> opens and FLUSHES the output so
+	 * the browser paints the loader and starts the SMIL animation while the
+	 * server is still rendering the rest of the page.
+	 *
+	 * @return void
+	 */
+	public function render_loader() {
+		if ( $this->rendered || ! $this->should_render() ) {
+			return;
+		}
+		$this->rendered = true;
+
+		echo $this->build_body_html();
+
+		// Push the loader to the browser NOW. On nginx this works with the
+		// X-Accel-Buffering: no header set in stream_headers(); on Apache it
+		// works natively. Result: the loader + animation start at the very
+		// first paint, exactly like fast sites (Digikala, etc.).
+		if ( function_exists( 'flush' ) ) {
+			flush();
+		}
+	}
+
+	/**
+	 * Safety net: if the theme never calls wp_body_open(), render the loader
+	 * right before </body> (at the very end of the page).
+	 *
+	 * @return void
+	 */
+	public function render_fallback() {
+		if ( $this->rendered || ! $this->should_render() ) {
+			return;
+		}
+		$this->rendered = true;
+		echo $this->build_body_html();
+	}
+
+	/* ---------- body: loader markup builder ---------- */
 
 	private function build_body_html() {
 		$o = $this->opts();
@@ -245,8 +262,8 @@ body{background:transparent!important;}
 				$text = $bn;
 			}
 		}
-		$text    = esc_html( $text );
-		$is_rtl  = (bool) preg_match( '/[\x{0600}-\x{06FF}\x{0750}-\x{077F}\x{08A0}-\x{08FF}\x{FB50}-\x{FDFF}\x{FE70}-\x{FEFF}\x{0590}-\x{05FF}]/u', $text );
+		$text     = esc_html( $text );
+		$is_rtl   = (bool) preg_match( '/[\x{0600}-\x{06FF}\x{0750}-\x{077F}\x{08A0}-\x{08FF}\x{FB50}-\x{FDFF}\x{FE70}-\x{FEFF}\x{0590}-\x{05FF}]/u', $text );
 		$dir_attr = $is_rtl ? 'dir="rtl"' : 'dir="ltr"';
 
 		// Logo.
@@ -409,7 +426,7 @@ body{background:transparent!important;}
   function ready(){pageReady=true;finish();}
 
   function onDomReady(){
-    /* v3.3 FAST-REVEAL: the page behind appears as soon as the DOM is
+    /* FAST-REVEAL: the page behind appears as soon as the DOM is
        interactive — no waiting for images/fonts/iframes. */
     ready();
   }

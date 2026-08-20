@@ -4,7 +4,7 @@ Tags: loader, preloader, loading, loading screen, page loader, animated loader, 
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 3.3.0
+Stable tag: 3.3.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -74,6 +74,9 @@ No. A hard fallback timeout (default 15 seconds, up to 600) always releases
 the page even if some asset never loads.
 
 == Changelog ==
+
+= 3.3.1 =
+* **Instant animation fix (streaming first paint).** Removed the whole-page output buffer that held the loader until PHP finished rendering the entire page (the reason the icon appeared frozen until the site finished loading). The loader is now echoed right after `<body>` opens (`wp_body_open`, priority -99999) and the response is flushed at that moment, plus an `X-Accel-Buffering: no` header for nginx. The loader + its SMIL animation now start at the absolute first paint — exactly like fast sites (Digikala, etc.) — while the server keeps streaming the rest of the page. For themes without `wp_body_open` a footer fallback still renders the loader before the control script.
 
 = 3.3.0 =
 * **100 loader presets.** Added 89 new SVG/SMIL designs (pulse rings, glowing halos, bouncing dots, sine waves, equalizers, arc spinners, atom orbits, radar sweeps, twinkling stars, ECG lines, planet orbits, infinity loops, shape morphing, dot matrices, battery charge, spinning clocks, camera aperture, pinwheels, water drops, orbital triangles) on top of the 11 existing ones. Preset picker now shows live animated thumbnails with search and category filter.
